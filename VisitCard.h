@@ -1,4 +1,6 @@
-#pragma once
+#ifndef VisitCard__H_
+#define VisitCard__H_
+
 
 #include "department.h"
 #include "Worker.h"
@@ -12,3 +14,4 @@ private:
 	Worker& hostWorker;
 };
 
+#endif // !VisitCard__H_

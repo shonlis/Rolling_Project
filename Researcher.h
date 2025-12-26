@@ -1,7 +1,9 @@
-#pragma once
+#ifndef Researcher__H_
+#define Researcher__H_
 
 #include "Worker.h"
-class Article;
+#include "Article.h"
+
 
 class Researcher : public Worker
 {
@@ -14,3 +16,4 @@ public:
 
 };
 
+#endif // !Researcher__H_

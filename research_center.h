@@ -1,5 +1,8 @@
-#pragma once
-class Researcher;
+#ifndef research_center__H_
+#define research_center__H_
+
+#include "Researcher.h";
+
 class research_center
 {
 	char* name;
@@ -12,3 +15,4 @@ public:
 	void print() const;
 };
 
+#endif // !research_center__H_

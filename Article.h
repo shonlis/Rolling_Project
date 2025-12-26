@@ -1,4 +1,6 @@
-#pragma once
+#ifndef Article__H_
+#define Article__H_
+
 class Article 
 {
 private:
@@ -10,3 +12,4 @@ public:
 	~Article();
 };
 
+#endif // !Article__H_

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef Worker__H_
+#define Worker__H_
 
 #include "Person.h"
 
@@ -12,3 +13,4 @@ public:
 	~Worker();
 };
 
+#endif // !Worker__H_

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef doctor__H_
+#define doctor__H_
 
 #include "Worker.h"
 class doctor : public Worker
@@ -11,3 +12,4 @@ public:
 
 };
 
+#endif // !doctor__H_

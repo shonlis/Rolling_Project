@@ -1,6 +1,9 @@
-#pragma once
-class department;
+#ifndef hospital__H_
+#define hospital__H_
+
 #include "research_center.h"
+#include "department.h"
+
 class hospital
 {
 	char* name;
@@ -14,3 +17,4 @@ public:
 	void print() const;
 };
 
+#endif // !hospital__H_

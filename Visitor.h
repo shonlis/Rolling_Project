@@ -1,8 +1,9 @@
-#pragma once
+#ifndef Visitor__H_
+#define Visitor__H_
 
 
 #include "Person.h"
-class VisitCard;
+#include "VisitCard.h"
 
 class Visitor : public Person 
 {
@@ -15,3 +16,4 @@ public:
 	~Visitor();
 };
 
+#endif // !Visitor__H_

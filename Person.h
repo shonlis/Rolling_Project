@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef Person__H_
+#define Person__H_
 
 class Person
 {
@@ -17,3 +17,4 @@ public:
 	~Person();
 };
 
+#endif // !Person__H_
