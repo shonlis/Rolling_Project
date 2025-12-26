@@ -1,4 +1,6 @@
 #pragma once
+
+
 class Person
 {
 private:
@@ -10,5 +12,8 @@ protected:
 	int birthYear;
 	Gender gender;
 
+public:
+	Person();
+	~Person();
 };
 

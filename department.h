@@ -1,7 +1,12 @@
 #pragma once
-class department
+class Worker;
+class Visitor;
+class department 
 {
 	char* name;
+	Worker* workers;
+	Visitor* visitors;
+
 public:
 	department(const char* name);
 	~department();
