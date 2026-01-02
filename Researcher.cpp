@@ -44,8 +44,21 @@ bool Researcher::articleExist(const Article& article)
 	return false;
 }
 
+bool Researcher::operator<(const Researcher& researcher) const
+{
+	if (this->currentNumberOfArticles < researcher.currentNumberOfArticles)
+		return true;
+	else
+		return false;
+}
 
-
+bool Researcher::operator>(const Researcher& researcher) const
+{
+	if (this->currentNumberOfArticles > researcher.currentNumberOfArticles)
+		return true;
+	else
+		return false;
+}
 
 const Researcher& Researcher::operator=(const Researcher& researcher)
 {

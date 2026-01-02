@@ -47,5 +47,9 @@ bool Visitor::visitCardExist(const VisitCard& visitCard)
 ostream& operator<<(ostream& os, const Visitor& Visitor)
 {
 	os << "Visitor Details: " << Visitor.getName() << ": ID = " << Visitor.getId() << ", number of visits = " << Visitor.getNumbrtOfCurrentVisits() << endl;
+	for (int i = 0; i < Visitor.getNumbrtOfCurrentVisits(); i++)
+	{
+		os << *Visitor.visits[i] << endl;
+	}
 	return os;
 }
