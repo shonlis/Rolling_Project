@@ -23,7 +23,7 @@ public:
 	// other methods
 	bool addResearcher(Researcher& researcher);
 	bool researcherExist(const Researcher& researcher);
-	
+	friend ostream& operator<<(ostream& os, const research_center& research_center);
 };
 
 #endif // !research_center__H_

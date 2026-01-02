@@ -48,3 +48,13 @@ bool research_center::researcherExist(const Researcher& researcher)
 	}
 	return false;
 }
+
+ostream& operator<<(ostream& os, const research_center& research_center)
+{
+	os << "research_center Details: \nresearch_center:" << research_center.getName()<< "and his researchers:" << endl;
+	for (int i = 0; i < research_center.currentNumberOfResearchers; i++)
+	{
+		os << *(research_center.researchers[i]) << endl;
+	}
+	return os;
+}
