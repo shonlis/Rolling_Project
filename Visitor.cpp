@@ -1,9 +1,51 @@
+#include <iostream>
+using namespace std;
 #include "Visitor.h"
 
-Visitor::Visitor(const char* purpose)
+
+
+Visitor::Visitor(const Person& person) : Person(person)
 {
+	maxNumberOfVisits = 2;
+	visits = new VisitCard* [maxNumberOfVisits];
+	currentNumberOfVisits = 0;
 }
 
-Visitor::~Visitor()
+
+bool Visitor::addVisitCard(VisitCard& visitCard)
 {
+	if (visitCardExist(visitCard))
+		return false;
+
+
+	if (currentNumberOfVisits == maxNumberOfVisits)
+	{
+		maxNumberOfVisits *= 2;
+		VisitCard** temp = new VisitCard * [maxNumberOfVisits];
+		for (int i = 0; i < currentNumberOfVisits; i++)
+			temp[i] = this->visits[i];
+
+		delete[]this->visits;
+		this->visits = temp;
+	}
+	
+	this->visits[currentNumberOfVisits] = &visitCard;
+	currentNumberOfVisits++;
+	return true;
+}
+
+bool Visitor::visitCardExist(const VisitCard& visitCard)
+{
+	for (int i = 0; i < currentNumberOfVisits; i++)
+	{
+		if (visits[i]->getVisitCardNumber() == visitCard.getVisitCardNumber())
+			return true;
+	}
+	return false;
+}
+
+ostream& operator<<(ostream& os, const Visitor& Visitor)
+{
+	os << "Visitor Details: " << Visitor.getName() << ": ID = " << Visitor.getId() << ", number of visits = " << Visitor.getNumbrtOfCurrentVisits() << endl;
+	return os;
 }

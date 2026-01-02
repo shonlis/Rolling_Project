@@ -6,16 +6,45 @@ research_center::research_center(const char* name)
 {
 	this->name = new char[strlen(name) + 1];
 	strcpy(this->name, name);
+	maxNumberOfResearchers = 2;
+	currentNumberOfResearchers = 0;
 }
-research_center::~research_center()
+
+void research_center::setName(const char* name)
 {
-	delete[] name;
+	delete[]this->name;
+	this->name = new char[strlen(name) + 1];
+	strcpy(this->name, name);
 }
-const char* research_center::getName() const
+
+bool research_center::addResearcher(Researcher& researcher)
 {
-	return name;
+	if (researcherExist(researcher))
+		return false;
+
+
+	if (currentNumberOfResearchers == maxNumberOfResearchers)
+	{
+		maxNumberOfResearchers *= 2;
+		Researcher** temp = new Researcher * [maxNumberOfResearchers];
+		for (int i = 0; i < currentNumberOfResearchers; i++)
+			temp[i] = this->researchers[i];
+
+		delete[]this->researchers;
+		this->researchers = temp;
+	}
+
+	this->researchers[currentNumberOfResearchers] = &researcher;
+	currentNumberOfResearchers++;
+	return true;
 }
-void research_center::print() const
+
+bool research_center::researcherExist(const Researcher& researcher)
 {
-	std::cout << "Research Center Name: " << getName() << std::endl;
+	for (int i = 0; i < currentNumberOfResearchers; i++)
+	{
+		if (researchers[i]->getId() == researcher.getId())
+			return true;
+	}
+	return false;
 }
