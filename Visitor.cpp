@@ -7,31 +7,40 @@ using namespace std;
 Visitor::Visitor(const Person& person) : Person(person)
 {
 	maxNumberOfVisits = 2;
-	visits = new VisitCard* [maxNumberOfVisits];
+    visits = new VisitCard* [maxNumberOfVisits];
 	currentNumberOfVisits = 0;
+}
+
+Visitor::~Visitor()
+{
+    for (int i = 0; i < currentNumberOfVisits; ++i) {
+        delete visits[i];
+    }
+    delete[] visits;
 }
 
 
 bool Visitor::addVisitCard(VisitCard& visitCard)
 {
-	if (visitCardExist(visitCard))
-		return false;
+    if (visitCardExist(visitCard))
+        return false;
 
+    if (currentNumberOfVisits == maxNumberOfVisits)
+    {
+        maxNumberOfVisits *= 2;
+        VisitCard** temp = new VisitCard * [maxNumberOfVisits];
+        for (int i = 0; i < currentNumberOfVisits; i++)
+            temp[i] = this->visits[i];
 
-	if (currentNumberOfVisits == maxNumberOfVisits)
-	{
-		maxNumberOfVisits *= 2;
-		VisitCard** temp = new VisitCard * [maxNumberOfVisits];
-		for (int i = 0; i < currentNumberOfVisits; i++)
-			temp[i] = this->visits[i];
+        delete[]this->visits;
+        this->visits = temp;
+    }
 
-		delete[]this->visits;
-		this->visits = temp;
-	}
-	
-	this->visits[currentNumberOfVisits] = &visitCard;
-	currentNumberOfVisits++;
-	return true;
+    // allocate a copy of the visitCard so Visitor owns it
+    VisitCard* copy = new VisitCard(visitCard.getPurposeOfVisit(), visitCard.getVisitingDate(), const_cast<Department&>(visitCard.getDepartmentsToVisit()), const_cast<Worker*>(visitCard.getHostWorker()));
+    this->visits[currentNumberOfVisits] = copy;
+    currentNumberOfVisits++;
+    return true;
 }
 
 bool Visitor::visitCardExist(const VisitCard& visitCard)

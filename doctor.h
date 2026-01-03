@@ -6,17 +6,17 @@
 
 class Doctor : public Worker {
 public:
-    std::string specialization;
+    char* specialization;
 
     // streaming
     friend std::ostream& operator<<(std::ostream& os, const Doctor& d);
 
     Doctor(const Worker& Worker);
     Doctor(const Doctor& other);
-    ~Doctor() = default;
+    ~Doctor();
 
     // getters
-    const char* getSpecialization() const { return specialization.empty() ? nullptr : specialization.c_str(); };
+    const char* getSpecialization() const { return specialization ? specialization : nullptr; };
 
     // setters
     bool setSpecialization(const char* specialization);
