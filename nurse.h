@@ -1,15 +1,29 @@
-#ifndef nurse__H_
-#define nurse__H_
+#ifndef NURSE_H
+#define NURSE_H
 
 #include "Worker.h"
-class nurse : public Worker
-{
-private:
-	int ExperienceYears;
+#include <string>
+
+class Worker;
+
+class Nurse : public Worker {
 public:
-	nurse();
-	~nurse();
+    int ExperienceYears;
+
+    friend std::ostream& operator<<(std::ostream& os, const Nurse& n);
+
+    Nurse(const Worker& worker);
+    ~Nurse();
+
+	// getters
+	int getExperienceYears() const { return ExperienceYears; }
+
+	// setters
+	void setExperienceYears(int experienceYears) { ExperienceYears = experienceYears; }
+
+	// other methods
+	
 
 };
 
-#endif // !nurse__H_
+#endif // NURSE_H

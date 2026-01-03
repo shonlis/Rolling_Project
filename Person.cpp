@@ -4,9 +4,8 @@ using namespace std;
 
 Person::Person(const char* name, int id, int birthYear, Gender gender) :id(id), birthYear(birthYear), gender(gender)
 {
-	delete[] this->name;
-	this->name = new char[strlen(name) + 1];
-	strcpy(this->name, name);
+    this->name = new char[strlen(name) + 1];
+    strcpy(this->name, name);
 }
 
 Person::Person(const Person& person) : Person(person.name, person.id, person.birthYear, person.gender){}

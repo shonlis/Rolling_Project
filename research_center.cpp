@@ -34,6 +34,11 @@ bool research_center::addResearcher(Researcher& researcher)
 		this->researchers = temp;
 	}
 
+	if (!this->researchers) {
+		researchers = new Researcher * [maxNumberOfResearchers];
+		for (int i = 0; i < maxNumberOfResearchers; ++i) researchers[i] = nullptr;
+	}
+
 	this->researchers[currentNumberOfResearchers] = &researcher;
 	currentNumberOfResearchers++;
 	return true;

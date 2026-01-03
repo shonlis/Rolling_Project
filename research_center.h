@@ -16,6 +16,8 @@ public:
 
 	// getters
 	const char* getName() const { return name; };
+	int getCurrentNumberOfResearchers() const { return currentNumberOfResearchers; }
+	Researcher* const* getResearchers() const { return researchers; };
 	
 	//setters
 	void setName(const char* name);

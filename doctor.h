@@ -1,15 +1,28 @@
-#ifndef doctor__H_
-#define doctor__H_
+#ifndef DOCTOR_H
+#define DOCTOR_H
 
 #include "Worker.h"
-class doctor : public Worker
-{
-private:
-	char* Specialization;
-public:	
-	doctor();
-	~doctor();
+#include <string>
+
+class Doctor : public Worker {
+public:
+    std::string specialization;
+
+    // streaming
+    friend std::ostream& operator<<(std::ostream& os, const Doctor& d);
+
+    Doctor(const Worker& Worker);
+    Doctor(const Doctor& other);
+    ~Doctor() = default;
+
+    // getters
+    const char* getSpecialization() const { return specialization.empty() ? nullptr : specialization.c_str(); };
+
+    // setters
+    bool setSpecialization(const char* specialization);
+
+    // other methods
 
 };
 
-#endif // !doctor__H_
+#endif // DOCTOR_H

@@ -1,13 +1,18 @@
 #ifndef Person__H_
 #define Person__H_
 
+using namespace std;
+#include <ostream>
+#pragma warning(disable: 4996)
+
 class Person
 {
+public:
+	enum Gender { Male, Female, Unknown }; // giving iherritants to use this enum
 
 protected:
 
-	enum Gender { Male, Female, unknow }; // giving iherritants to use this enum
-	char* name;
+    char* name = nullptr;
 	const int id;
 	const int birthYear;
 	Gender gender;
