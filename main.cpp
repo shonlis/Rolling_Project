@@ -154,8 +154,8 @@ int main()
 		hospital.addVisitor(*v1);
         if (emergency) emergency->addVisitor(*v1);
         // add a visit card
-        VisitCard* vc1 = new VisitCard("Checkup", nowDate().c_str(), *emergency, nullptr);
-		v1->addVisitCard(*vc1);
+        VisitCard vc1("Checkup", nowDate().c_str(), *emergency, nullptr);
+        v1->addVisitCard(vc1);
 
         Person pv2("John Doe2", 4002, 1965, (Person::Gender)0);
         Visitor* v2 = new Visitor(pv2);
@@ -163,8 +163,8 @@ int main()
 		hospital.addVisitor(*v2);
         if (emergency) emergency->addVisitor(*v2);
         // add a visit card
-        VisitCard* vc2 = new VisitCard("Checkup", nowDate().c_str(), *emergency, nullptr);
-		v2->addVisitCard(*vc2);
+        VisitCard vc2("Checkup", nowDate().c_str(), *emergency, nullptr);
+        v2->addVisitCard(vc2);
 
         Person pv3("John Doe3", 4003, 1965, (Person::Gender)0);
         Visitor* v3 = new Visitor(pv3);
@@ -172,8 +172,8 @@ int main()
 		hospital.addVisitor(*v3);
         if (emergency) emergency->addVisitor(*v3);
         // add a visit card
-        VisitCard* vc3 = new VisitCard("Checkup", nowDate().c_str(), *emergency, nullptr);
-		v3->addVisitCard(*vc3);
+        VisitCard vc3("Checkup", nowDate().c_str(), *emergency, nullptr);
+        v3->addVisitCard(vc3);
 
     }
 

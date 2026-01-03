@@ -17,7 +17,7 @@ private:
 public:
 	
 	Visitor(const Person& person);
-	~Visitor() { delete[]visits; };
+	~Visitor();
 
 	Visitor(const Visitor& visitor) = delete;
 	Visitor(const Visitor&& visitor) = delete;
