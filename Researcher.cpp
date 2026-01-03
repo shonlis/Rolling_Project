@@ -9,6 +9,12 @@ Researcher::Researcher(const Worker& worker) : Worker(worker)
 	currentNumberOfArticles = 0;
 }
 
+std::ostream& operator<<(std::ostream& os, const Researcher& r)
+{
+    os << "Researcher: " << r.getName() << ", ID=" << r.getId() << ", Articles=" << r.getCurrentNumberOfArticles() << std::endl;
+    return os;
+}
+
 
 bool Researcher::addArticle(Article& article)
 {
@@ -38,7 +44,7 @@ bool Researcher::articleExist(const Article& article)
 {
 	for (int i = 0; i < currentNumberOfArticles; i++)
 	{
-		if (publishedArticles[i] == article) // we need to create operator== in Article class/
+		if (*(publishedArticles[i]) == article) // we need to create operator== in Article class
 			return true;
 	}
 	return false;

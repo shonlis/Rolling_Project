@@ -25,6 +25,10 @@ public:
 	// other methods
 	const Researcher& operator=(const Researcher& researcher);
 	bool articleExist(const Article& article);
+	bool operator<(const Researcher& researcher) const;
+	bool operator>(const Researcher& researcher) const;
+
+	friend std::ostream& operator<<(std::ostream& os, const Researcher& r);
 };
 
 #endif // !Researcher__H_

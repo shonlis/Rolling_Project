@@ -1,22 +1,59 @@
-#ifndef Department__H_
-#define Department__H_
+#ifndef DEPARTMENT_H
+#define DEPARTMENT_H
 
-#include "Worker.h";
-#include "Visitor.h";
+#include <string>
+#include <vector>
+#include "doctor.h"
+#include "nurse.h"
+#include "Visitor.h"
 
-class department 
-{
+class Doctor;
+class Nurse;
+class Visitor;
+
+class Department {
 	char* name;
-	Worker* workers;
-	Visitor* visitors;
+	Doctor** doctors;
+	Nurse** nurses;
+	Visitor** visitors;
+	int currentNumberOfDoctors;
+	int maxNumberOfDoctors;
+	int currentNumberOfNurses;
+	int maxNumberOfNurses;
+	int currentNumberOfVisitors;
+	int maxNumberOfVisitors;
 
 public:
-	department(const char* name);
-	~department();
-	const char* getName() const;
-	void print() const;
+	Department(const char* name = "none");
+	~Department();
+
+	// getters
+	const char* getName() const { return name; };
+	int getCurrentNumberOfDoctors() const { return currentNumberOfDoctors; }
+	int getCurrentNumberOfNurses() const { return currentNumberOfNurses; }
+	int getCurrentNumberOfVisitors() const { return currentNumberOfVisitors; }
+
+	Doctor* const* getDoctors() const { return doctors; }
+	Nurse* const* getNurses() const { return nurses; }
+	Visitor* const* getVisitors() const { return visitors; }
+
+	//setters
+	void setName(const char* name);
+
+    // operators
+    Department& operator+=(Doctor& doctor);
+    Department& operator+=(Nurse& nurse);
+
+	// other methods
+	bool addDoctor(Doctor& doctor);
+	bool DoctorExist(const Doctor& doctor);
+	bool addNurse(Nurse& nurse);
+	bool NurseExist(const Nurse& nurse);
+	bool addVisitor(Visitor& visitor);
+	bool VisitorExist(const Visitor& visitor);
+
 };
 
-#endif // !Department__H_
+#endif // DEPARTMENT_H
 
 

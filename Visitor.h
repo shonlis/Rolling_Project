@@ -5,6 +5,8 @@
 #include "Person.h"
 #include "VisitCard.h"
 
+class VisitCard;
+
 class Visitor : public Person 
 {
 private:
