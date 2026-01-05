@@ -2,24 +2,21 @@
 #define NURSE_H
 
 #include "Worker.h"
-#include <string>
 
-class Worker;
 
 class Nurse : public Worker {
 public:
     int ExperienceYears;
 
-    friend std::ostream& operator<<(std::ostream& os, const Nurse& n);
+    friend ostream& operator<<(ostream& os, const Nurse& n);
 
     Nurse(const Worker& worker);
-    ~Nurse();
 
 	// getters
 	int getExperienceYears() const { return ExperienceYears; }
 
 	// setters
-	void setExperienceYears(int experienceYears) { ExperienceYears = experienceYears; }
+	void setExperienceYears(int experienceYears);
 
 	// other methods
 	

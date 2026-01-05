@@ -1,14 +1,20 @@
 // Article implementation
+#pragma warning(disable: 4996)
+using namespace std;
+#include <iostream>
 
 #include "Article.h"
 
 
 Article::Article(const Article& article) : Article(article.title, article.publicationDate, article.magazinName){}
 
-Article::Article(Article&& article) : title(article.title), publicationDate(article.publicationDate), magazinName(article.magazinName)
+Article::Article(Article&& article)
 {
+	this->title = article.title;
 	article.title = nullptr;
+	this->publicationDate = article.publicationDate;
 	article.publicationDate = nullptr;
+	this->magazinName = article.magazinName;
 	article.magazinName = nullptr;
 }
 
@@ -57,6 +63,14 @@ bool Article::setMagazinName(const char* magazinName)
 	this->magazinName = new char[strlen(magazinName) + 1];
 	strcpy(this->magazinName, magazinName);
 	return true;
+}
+
+bool Article::operator==(const Article& other) const
+{
+	// Add operator== to compare Article objects
+	// Compare by pointer equality for now, as the rest of the code uses pointers
+		return this == &other;
+	
 }
 
 ostream& operator<<(ostream& os, const Article& a)

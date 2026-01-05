@@ -1,9 +1,6 @@
 #ifndef ARTICLE_H
 #define ARTICLE_H
 
-using namespace std;
-#include <ostream>
-#pragma warning(disable: 4996)
 
 #include <string>
 #include <vector>
@@ -14,8 +11,8 @@ protected:
 	char* publicationDate;
 	char* magazinName;
 
-	Article(const Article& article); // copy c'tor for iherritants only
-	Article(Article&& article); // move c'tor for iherritants only
+	Article(const Article& article); 
+	Article(Article&& article); 
 
 public:
 
@@ -39,10 +36,8 @@ public:
 
 
     // Add operator== to compare Article objects
-    bool operator==(const Article& other) const {
-        // Compare by pointer equality for now, as the rest of the code uses pointers
-        return this == &other;
-    }
+	bool operator==(const Article& other) const;
+    
 };
 
 #endif // ARTICLE_H

@@ -2,17 +2,18 @@
 #define DOCTOR_H
 
 #include "Worker.h"
-#include <string>
+
 
 class Doctor : public Worker {
 public:
     char* specialization;
 
     // streaming
-    friend std::ostream& operator<<(std::ostream& os, const Doctor& d);
+    friend ostream& operator<<(ostream& os, const Doctor& d);
 
     Doctor(const Worker& Worker);
     Doctor(const Doctor& other);
+    Doctor(Doctor&& other);
     ~Doctor();
 
     // getters

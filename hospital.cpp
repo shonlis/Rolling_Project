@@ -1,7 +1,9 @@
+#pragma warning(disable: 4996)
 #include "hospital.h"
 #include "doctor.h"
 #include "nurse.h"
 #include "Researcher.h"
+#include "Article.h"
 #include <algorithm>
 #include <ctime>
 #include <cstring>

@@ -2,8 +2,7 @@
 #define Researcher__H_
 
 #include "Worker.h"
-#include "Article.h"
-
+class Article;
 
 class Researcher : public Worker
 {
@@ -27,8 +26,6 @@ public:
 	bool articleExist(const Article& article);
 	bool operator<(const Researcher& researcher) const;
 	bool operator>(const Researcher& researcher) const;
-
-	friend std::ostream& operator<<(std::ostream& os, const Researcher& r);
+	friend ostream& operator<<(ostream& os, const Researcher& Researcher);
 };
-
 #endif // !Researcher__H_

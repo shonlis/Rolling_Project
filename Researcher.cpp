@@ -1,6 +1,8 @@
+#pragma warning(disable: 4996)
 #include <iostream>
 using namespace std;
 #include "Researcher.h"
+#include "Article.h"
 
 Researcher::Researcher(const Worker& worker) : Worker(worker)
 {

@@ -1,4 +1,8 @@
+#pragma warning(disable: 4996)
 #include "department.h"
+#include "doctor.h"
+#include "nurse.h"
+#include "Visitor.h"
 
 Department::Department(const char* name)
 {
