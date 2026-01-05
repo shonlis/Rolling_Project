@@ -1,19 +1,18 @@
 #include "nurse.h"
-
+#include <string>
 Nurse::Nurse(const Worker& worker) : Worker(worker)
 {
     this->ExperienceYears = 0;
-    // increment Worker::counter (inherited protected static)
-    counter++;
 }
 
-Nurse::~Nurse()
+void Nurse::setExperienceYears(int experienceYears)
 {
+    ExperienceYears = experienceYears; 
 }
 
-std::ostream& operator<<(std::ostream& os, const Nurse& n)
+ostream& operator<<(ostream& os, const Nurse& n)
 {
-    os << "Nurse: " << n.getName() << ", ID=" << n.getId() << ", ExpYears=" << n.getExperienceYears() << std::endl;
+    os << "Nurse: " << n.getName() << ", ID=" << n.getId() << ", ExpYears=" << n.getExperienceYears() << endl;
     return os;
 }
 

@@ -3,9 +3,6 @@
 
 #include <string>
 #include <vector>
-#include "doctor.h"
-#include "nurse.h"
-#include "Visitor.h"
 
 class Doctor;
 class Nurse;

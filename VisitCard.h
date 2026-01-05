@@ -1,12 +1,8 @@
 #ifndef VisitCard__H_
 #define VisitCard__H_
 
-
-#include <iostream>
 #include "department.h"
-#include "Worker.h"
-
-class Department;
+class Worker;
 
 class VisitCard
 {
@@ -23,7 +19,7 @@ public:
 	VisitCard(const VisitCard&& visitCard) = delete;
 
 //operators overloading
-friend std::ostream& operator<<(std::ostream& os, const VisitCard& VisitCard);
+friend ostream& operator<<(ostream& os, const VisitCard& VisitCard);
 
 	//setters
 	

@@ -1,9 +1,8 @@
 #ifndef Person__H_
 #define Person__H_
 
+#include <iostream>
 using namespace std;
-#include <ostream>
-#pragma warning(disable: 4996)
 
 class Person
 {
