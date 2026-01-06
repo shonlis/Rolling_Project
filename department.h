@@ -30,9 +30,9 @@ public:
 	int getCurrentNumberOfNurses() const { return currentNumberOfNurses; }
 	int getCurrentNumberOfVisitors() const { return currentNumberOfVisitors; }
 
-	Doctor* const* getDoctors() const { return doctors; }
-	Nurse* const* getNurses() const { return nurses; }
-	Visitor* const* getVisitors() const { return visitors; }
+	Doctor* const* const getDoctors() const { return doctors; }
+	Nurse* const* const getNurses() const { return nurses; }
+	Visitor* const* const getVisitors() const { return visitors; }
 
 	//setters
 	void setName(const char* name);

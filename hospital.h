@@ -59,7 +59,9 @@ public:
 
 	void printDepartmentVisitors(const char* departmentName) const;
 	void printAllMedicalStaff() const;
+	void printAllMedicalStaffNamesInDepartment(const char* departmentName) const;
 	void printAllResearchers() const;
+	void printAllDepartments() const;
 	void searchVisitorById(int id) const;
 	};
 

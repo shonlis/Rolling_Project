@@ -198,32 +198,69 @@ void Hospital::printDepartmentVisitors(const char* departmentName) const
 void Hospital::printAllMedicalStaff() const
 {
     if (departments) {
-        cout << "Medical Staff in Hospital " << name << ":\n";
+        cout << "Medical Staff in Hospital " << name << ":" << endl;
         for (int i = 0; i < currentNumberOfDepartments; ++i) {
             Department* dept = departments[i];
-            cout << "Department: " << dept->getName() << "\n";
+            cout << "Department: " << dept->getName() << endl;
             for (int j = 0; j < dept->getCurrentNumberOfDoctors(); ++j) {
-                cout << *(dept->getDoctors()[j]) << "\n";
+                cout << *(dept->getDoctors()[j]) << endl;
             }
             for (int k = 0; k < dept->getCurrentNumberOfNurses(); ++k) {
-                cout << *(dept->getNurses()[k]) << "\n";
+                cout << *(dept->getNurses()[k]) << endl;
             }
         }
     } else {
-        cout << "No departments in the hospital.\n";
+        cout << "No departments in the hospital." << endl;
 	}
+}
+
+void Hospital::printAllMedicalStaffNamesInDepartment(const char* departmentName) const
+{
+    if (departments) {
+        Department* dept = getDepartmentByName(departmentName);
+        if (dept) {
+            cout << "Medical Staff in Department " << departmentName << ":" << endl;
+            for (int j = 0; j < dept->getCurrentNumberOfDoctors(); ++j) {
+                cout << *(dept->getDoctors()[j])->getName() << endl;
+            }
+            for (int k = 0; k < dept->getCurrentNumberOfNurses(); ++k) {
+                cout << *(dept->getNurses()[k])->getName() << endl;
+            }
+        } else {
+            cout << "Department " << departmentName << " not found." << endl;
+        }
+    }
 }
 
 void Hospital::printAllResearchers() const
 {
     if (researchCenters.getCurrentNumberOfResearchers() > 0) {
-        cout << "Researchers in Hospital " << name << ":\n";
+        cout << "Researchers in Hospital " << name << ":" << endl;
         for (int i = 0; i < researchCenters.getCurrentNumberOfResearchers(); ++i) {
             Researcher* researcher = researchCenters.getResearchers()[i];
-            cout << *researcher << "\n";
+            cout << *researcher << endl;
         }
     } else {
-        cout << "No researchers in the hospital.\n";
+        cout << "No researchers in the hospital." << endl;
+	}
+}
+
+void Hospital::printAllDepartments() const
+{
+    if (departments) {
+		cout << "Departments in Hospital " << name << ": ";
+        for (int i = 0; i < currentNumberOfDepartments; ++i) 
+        {
+            Department* department = departments[i];
+            cout << department->getName();
+            if (i < currentNumberOfDepartments - 1)
+            {
+                cout << ", ";
+            }
+        }
+        cout << endl;
+    } else {
+        cout << "No departments in the hospital." << endl;
 	}
 }
 
@@ -235,13 +272,13 @@ void Hospital::searchVisitorById(int id) const
             for (int j = 0; j < dept->getCurrentNumberOfVisitors(); ++j) {
                 Visitor* visitor = dept->getVisitors()[j];
                 if (visitor->getId() == id) {
-                    cout << "Visitor found:\n" << *visitor << "\n";
+                    cout << "Visitor found:" << endl << *visitor << endl;
                     return;
                 }
             }
         }
 	}
-	cout << "Visitor with ID " << id << " not found.\n";
+	cout << "Visitor with ID " << id << " not found." << endl;
 }
 
 

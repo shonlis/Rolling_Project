@@ -17,6 +17,15 @@ Department::Department(const char* name)
 	maxNumberOfNurses = 2;
 	currentNumberOfVisitors = 0;
 	maxNumberOfVisitors = 2;
+
+	doctors = new Doctor * [maxNumberOfDoctors];
+	for (int i = 0; i < maxNumberOfDoctors; ++i) doctors[i] = nullptr;
+
+	nurses = new Nurse * [maxNumberOfNurses];
+	for (int i = 0; i < maxNumberOfNurses; ++i) nurses[i] = nullptr;
+
+	visitors = new Visitor * [maxNumberOfVisitors];
+	for (int i = 0; i < maxNumberOfVisitors; ++i) visitors[i] = nullptr;
 }
 
 Department& Department::operator+=(Doctor& doctor)
@@ -62,11 +71,6 @@ bool Department::addDoctor(Doctor& doctor)
 		this->doctors = temp;
 	}
 
-	if (!this->doctors) {
-	    doctors = new Doctor*[maxNumberOfDoctors];
-	    for (int i=0;i<maxNumberOfDoctors;++i) doctors[i]=nullptr;
-	}
-
 	this->doctors[currentNumberOfDoctors] = &doctor;
 	currentNumberOfDoctors++;
 	return true;
@@ -98,11 +102,6 @@ bool Department::addNurse(Nurse& nurse)
 		this->nurses = temp;
 	}
 
-	if (!this->nurses) {
-		nurses = new Nurse * [maxNumberOfNurses];
-		for (int i = 0; i < maxNumberOfNurses; ++i) nurses[i] = nullptr;
-	}
-
 	this->nurses[currentNumberOfNurses] = &nurse;
 	currentNumberOfNurses++;
 	return true;
@@ -132,11 +131,6 @@ bool Department::addVisitor(Visitor& visitor)
 
 		delete[]this->visitors;
 		this->visitors = temp;
-	}
-
-	if (!this->visitors) {
-		visitors = new Visitor * [maxNumberOfVisitors];
-		for (int i = 0; i < maxNumberOfVisitors; ++i) visitors[i] = nullptr;
 	}
 
 	this->visitors[currentNumberOfVisitors] = &visitor;

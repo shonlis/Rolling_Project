@@ -51,7 +51,7 @@ int main()
     // Hard-coded initial data (coded-hard) so system is not empty
     Department* cardiology = hospital.addDepartment("Cardiology");
     Department* emergency = hospital.addDepartment("Emergency");
-	cout << "Added departments: " << cardiology->getName() << ", " << emergency->getName() << "\n";
+	cout << "Added departments: " << cardiology->getName() << ", " << emergency->getName() << endl;
 
     vector<Doctor*> doctors;
     vector<Nurse*> nurses;
@@ -61,7 +61,7 @@ int main()
 
     // Create one doctor and one nurse and register them in departments
     {
-        // Person args: name, id, birthYear, gender (pass 0 for unknown)
+        // Person args: name, id, birthYear, gender (pass 0 for male)
         Person p1("Dr. Alice", 1001, 1980, (Person::Gender)0);
         Worker w1(p1);
         Doctor* d1 = new Doctor(w1);
@@ -70,9 +70,10 @@ int main()
         hospital.addDoctor(*d1);
         doctors.push_back(d1);
 
-        Person p2("Nurse Carol", 2001, 1990, (Person::Gender)0);
+        Person p2("Nurse Carol", 2001, 1990, (Person::Gender)1);
         Worker w2(p2);
         Nurse* n1 = new Nurse(w2);
+		n1->setExperienceYears(5);
         if (cardiology) cardiology->addNurse(*n1);
         hospital.addNurse(*n1);
         nurses.push_back(n1);
@@ -85,9 +86,10 @@ int main()
         hospital.addDoctor(*d3);
         doctors.push_back(d3);
 
-        Person p4("Nurse Carol", 2002, 1990, (Person::Gender)0);
+        Person p4("Nurse Carol2", 2002, 1990, (Person::Gender)1);
         Worker w4(p4);
         Nurse* n2 = new Nurse(w4);
+        n2->setExperienceYears(3);
         if (cardiology) cardiology->addNurse(*n2);
         hospital.addNurse(*n2);
         nurses.push_back(n2);
@@ -100,9 +102,10 @@ int main()
         hospital.addDoctor(*d2);
         doctors.push_back(d2);
 
-        Person p6("Nurse Carol", 2003, 1990, (Person::Gender)0);
+        Person p6("Nurse Carol3", 2003, 1990, (Person::Gender)1);
         Worker w6(p6);
         Nurse* n3 = new Nurse(w6);
+        n3->setExperienceYears(2);
         if (emergency) emergency->addNurse(*n3);
         hospital.addNurse(*n3);
         nurses.push_back(n3);
@@ -112,7 +115,7 @@ int main()
 
     // Create a research center and a researcher
     research_center* rc = hospital.addResearchCenter(string("Afeka Research"));
-	cout << "Added research center: " << rc->getName() << "\n";
+	cout << "Added research center: " << rc->getName() << endl;
     if (rc) centers.push_back(rc);
     if (rc)
     {
@@ -177,24 +180,24 @@ int main()
 
     }
 
-    cout << "Initial data added. Today=" << nowDate() << "\n";
+    cout << "Initial data added. Today=" << nowDate() << endl;
 
     // Interactive menu
     while (true)
     {
-        cout << "\nMenu:\n";
-        cout << "1) Add department\n";
-        cout << "2) Add nurse and assign to department\n";
-        cout << "3) Add doctor and assign to department\n";
-        cout << "4) Add visit (existing/new visitor)\n";
-        cout << "5) Add researcher to research center\n";
-        cout << "6) Add article for researcher\n";
-        cout << "7) Show all visitors in a department\n";
-        cout << "8) Show all medical staff\n";
-        cout << "9) Show all researchers\n";
-        cout << "10) Search visitor by id\n";
-        cout << "11) Exit\n";
-        cout << "12) Test operators (+= and researcher compare)\n";
+        cout << "\nMenu:" << endl;
+        cout << "1) Add department" << endl;
+        cout << "2) Add nurse and assign to department" << endl;
+        cout << "3) Add doctor and assign to department" << endl;
+        cout << "4) Add visit (existing/new visitor)" << endl;
+        cout << "5) Add researcher to research center" << endl;
+        cout << "6) Add article for researcher" << endl;
+        cout << "7) Show all visitors in a department" << endl;
+        cout << "8) Show all medical staff" << endl;
+        cout << "9) Show all researchers" << endl;
+        cout << "10) Search visitor by id" << endl;
+        cout << "11) Exit" << endl;
+        cout << "12) Test operators (+= and researcher compare)" << endl;
 
         int choice = askInt("Select option: ");
 
@@ -202,21 +205,25 @@ int main()
         {
             string dname = askLine("Department name: ");
             Department* d = hospital.addDepartment(dname.c_str());
-            if (d) cout << "Added department: " << d->getName() << '\n';
-            else cout << "Failed to add department\n";
+            if (d) cout << "Added department: " << d->getName() << endl;
+            else cout << "Failed to add department" << endl;
         }
         else if (choice == 2)
         {
             string name = askLine("Nurse name: ");
             int id = askInt("ID (int): ");
-            int birth = askInt("Birth year: ");
-            string dept = askLine("Department name to assign: ");
+            int birth = askInt("Birth year(DDMMYYYY): ");
+            hospital.printAllDepartments();
+            string dept = askLine("Department name to assign(): ");
             Person p(name.c_str(), id, birth, (Person::Gender)0);
+            p.setGender((Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
             Worker w(p);
             Nurse* n = new Nurse(w);
+			int exp = askInt("Experience years: ");
+			n->setExperienceYears(exp);
             Department* d = hospital.getDepartmentByName(dept.c_str());
-            if (d && d->addNurse(*n)) cout << "Nurse added to department " << d->getName() << '\n';
-            else cout << "Failed to add nurse or department not found\n";
+            if (d && d->addNurse(*n)) cout << "Nurse added to department " << d->getName() << endl;
+            else cout << "Failed to add nurse or department not found" << endl;
             nurses.push_back(n);
             hospital.addNurse(*n);
         }
@@ -224,36 +231,39 @@ int main()
         {
             string name = askLine("Doctor name: ");
             int id = askInt("ID (int): ");
-            int birth = askInt("Birth year: ");
+            int birth = askInt("Birth year(DDMMYYYY): "); 
+            hospital.printAllDepartments();
             string dept = askLine("Department name to assign: ");
             string spec = askLine("Specialization: ");
             Person p(name.c_str(), id, birth, (Person::Gender)0);
+            p.setGender((Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
             Worker w(p);
             Doctor* d = new Doctor(w);
             d->setSpecialization(spec.c_str());
             Department* dep = hospital.getDepartmentByName(dept.c_str());
-            if (dep && dep->addDoctor(*d)) cout << "Doctor added to department " << dep->getName() << '\n';
-            else cout << "Failed to add doctor or department not found\n";
+            if (dep && dep->addDoctor(*d)) cout << "Doctor added to department " << dep->getName() << endl;
+            else cout << "Failed to add doctor or department not found" << endl;
             doctors.push_back(d);
             hospital.addDoctor(*d);
         }
         else if (choice == 4)
         {
-            cout << "Is the visitor already in the system? 1=yes 2=no\n";
+            cout << "Is the visitor already in the system? 1=yes 2=no" << endl;
             int ex = askInt("Choice: ");
             Visitor* v = nullptr;
             if (ex == 1)
             {
                 int vid = askInt("Enter visitor ID: ");
                 for (auto vv : visitors) if (vv->getId() == vid) { v = vv; break; }
-                if (!v) cout << "Visitor not found\n";
+                if (!v) cout << "Visitor not found" << endl;
             }
             else
             {
                 string name = askLine("Visitor name: ");
                 int id = askInt("ID (int): ");
-                int birth = askInt("Birth year: ");
+                int birth = askInt("Birth year(DDMMYYYY): ");
                 Person p(name.c_str(), id, birth, (Person::Gender)0);
+                p.setGender((Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
                 v = new Visitor(p);
                 visitors.push_back(v);
                 hospital.addVisitor(p);
@@ -261,33 +271,31 @@ int main()
 
             if (!v) continue;
 
+            hospital.printAllDepartments();
             string dname = askLine("Department name for visit: ");
             Department* dep = hospital.getDepartmentByName(dname.c_str());
-            if (!dep) { cout << "Department not found\n"; continue; }
+            if (!dep) { cout << "Department not found" << endl; continue; }
 
             string purpose = askLine("Purpose of visit: ");
             string date = nowDate();
 
-            // choose host worker (pick first doctor in department if any)
-            Doctor* host = nullptr;
-            // department keeps array, attempt to use getCurrentNumberOfDoctors and getDoctors() if available
-            // here we try to get first doctor pointer via Department methods
-            if (dep->getCurrentNumberOfDoctors() > 0)
-            {
-                host = dep->getDoctors()[0];
-            }
+            hospital.printAllMedicalStaffNamesInDepartment(dname.c_str());
+			Doctor* host = nullptr;
+			string hostName = askLine("Host doctor name: ");
+			for (Doctor* d : doctors) if (d->getName() == hostName) host = d;
+			if (!host) { cout << "Host doctor not found" << endl; continue; }
 
             if (!dep->VisitorExist(*v)) {
                 dep->addVisitor(*v);            // ensure visitor is in department
-                cout << "DEBUG: department now has " << dep->getCurrentNumberOfVisitors() << " visitors\n";
+                cout << "DEBUG: department now has " << dep->getCurrentNumberOfVisitors() << " visitors" << endl;
             }
             VisitCard* vc = new VisitCard(purpose.c_str(), date.c_str(), *dep, host);
             if (v->addVisitCard(*vc)) {          // attach visit to the visitor
-                cout << "Visit added for visitor id=" << v->getId() << '\n';
-                cout << "DEBUG: visitor now has " << v->getNumbrtOfCurrentVisits() << " visits\n";
+                cout << "Visit added for visitor id=" << v->getId() << endl;
+                cout << "DEBUG: visitor now has " << v->getNumbrtOfCurrentVisits() << " visits" << endl;
             }
             else {
-                cout << "Failed to add visit (duplicate?)\n";
+                cout << "Failed to add visit (duplicate?)" << endl;
                 delete vc;
             }
         }
@@ -302,33 +310,35 @@ int main()
             research_center* use = nullptr;
             for (auto c : centers) if (string(c->getName()) == cname) use = c;
             if (!use && !centers.empty()) use = centers.front();
-            if (!use) { cout << "No research center available\n"; continue; }
+            if (!use) { cout << "No research center available" << endl; continue; }
 
             string name = askLine("Researcher name: ");
             int id = askInt("ID (int): ");
-            int birth = askInt("Birth year: ");
+            int birth = askInt("Birth year(DDMMYYYY): ");
             Person p(name.c_str(), id, birth, (Person::Gender)0);
+            p.setGender((Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
             Worker w(p);
             Researcher* r = new Researcher(w);
-            if (use->addResearcher(*r)) { researchers.push_back(r); hospital.addResearcher(*r); cout << "Researcher added\n"; }
-            else { cout << "Failed to add researcher (may already exist)\n"; delete r; }
+            if (use->addResearcher(*r)) { researchers.push_back(r); hospital.addResearcher(*r); cout << "Researcher added" << endl; }
+            else { cout << "Failed to add researcher (may already exist)" << endl; delete r; }
         }
         else if (choice == 6)
         {
-            if (researchers.empty()) { cout << "No researchers available\n"; continue; }
+            if (researchers.empty()) { cout << "No researchers available" << endl; continue; }
             int rid = askInt("Enter researcher ID to add article to: ");
             Researcher* rr = nullptr;
             for (auto r : researchers) if (r->getId() == rid) { rr = r; break; }
-            if (!rr) { cout << "Researcher not found\n"; continue; }
+            if (!rr) { cout << "Researcher not found" << endl; continue; }
             string title = askLine("Article title: ");
-            string date = askLine("Publication date: ");
+            string date = askLine("Publication date(DDMMYYYY): ");
             string mag = askLine("Magazine name: ");
             Article* a = new Article(title.c_str(), date.c_str(), mag.c_str());
-            if (rr->addArticle(*a)) { hospital.addArticleToResearcher(*a); cout << "Article added\n"; }
-            else { cout << "Failed to add article\n"; delete a; }
+            if (rr->addArticle(*a)) { hospital.addArticleToResearcher(*a); cout << "Article added" << endl; }
+            else { cout << "Failed to add article" << endl; delete a; }
         }
         else if (choice == 7)
         {
+            hospital.printAllDepartments();
             string dname = askLine("Department name: ");
             hospital.printDepartmentVisitors(dname.c_str());
         }
@@ -346,47 +356,47 @@ int main()
             // search visitors vector
             Visitor* vv = nullptr;
             for (auto v : visitors) if (v->getId() == vid) { vv = v; break; }
-            if (!vv) { cout << "Visitor not found\n"; continue; }
-            cout << "Visitor name: " << vv->getName() << '\n';
+            if (!vv) { cout << "Visitor not found" << endl; continue; }
+            cout << "Visitor name: " << vv->getName() << endl;
             // try to find department by scanning departments and their visitors
             bool found = false;
             for (int i = 0; i < hospital.countDepartments(); ++i) {}
-            cout << "Department: (unknown in this minimal implementation)\n";
+            cout << "Department: (unknown in this minimal implementation)" << endl;
         }
         else if (choice == 11)
         {
-            cout << "Exiting...\n";
+            cout << "Exiting..." << endl;
             break;
         }
         else if (choice == 12)
         {
-            cout << "Testing operators:\n";
+            cout << "Testing operators:" << endl;
             // test hospital += doctor/nurse by creating temporary objects
             Person pd("Dr. Bob", 5001, 1970, (Person::Gender)0);
             Worker wd(pd);
             Doctor tempD(wd);
             tempD.setSpecialization("General");
             hospital += tempD;
-            cout << "Added doctor via operator+= to hospital (first department).\n";
+            cout << "Added doctor via operator+= to hospital (first department)." << endl;
 
-            Person pn("Nurse Dan", 6001, 1985, (Person::Gender)0);
+            Person pn("Nurse Dan", 6001, 1985, (Person::Gender)1);
             Worker wn(pn);
             Nurse tempN(wn);
             tempN.setExperienceYears(5);
             hospital += tempN;
-            cout << "Added nurse via operator+= to hospital (first department).\n";
+            cout << "Added nurse via operator+= to hospital (first department)." << endl;
 
             // researcher compare
             if (researchers.size() >= 2) {
                 cout << "Compare researchers: " << *researchers[0] << *researchers[1];
-                if (*researchers[0] < *researchers[1]) cout << researchers[0]->getName() << " has fewer articles\n";
-                else if (*researchers[0] > *researchers[1]) cout << researchers[0]->getName() << " has more articles\n";
-                else cout << "Researchers have equal number of articles\n";
-            } else cout << "Not enough researchers to compare\n";
+                if (*researchers[0] < *researchers[1]) cout << researchers[0]->getName() << " has fewer articles" << endl;
+                else if (*researchers[0] > *researchers[1]) cout << researchers[0]->getName() << " has more articles" << endl;
+                else cout << "Researchers have equal number of articles" << endl;
+            } else cout << "Not enough researchers to compare" << endl;
         }
         else
         {
-            cout << "Invalid option\n";
+            cout << "Invalid option" << endl;
         }
     }
 
