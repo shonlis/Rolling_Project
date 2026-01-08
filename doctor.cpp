@@ -1,6 +1,5 @@
 #pragma warning(disable: 4996)
-#include "doctor.h"
-#include <string>
+#include "Doctor.h"
 
 Doctor::Doctor(const Worker& worker) : Worker(worker)
 {

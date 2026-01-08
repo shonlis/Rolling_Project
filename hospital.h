@@ -9,7 +9,7 @@
 #include "Worker.h"
 #include "VisitCard.h"
 #include "Visitor.h"
-#include "research_center.h"
+#include "Research_Center.h"
 
 // forward declare global types used across the project
 class Doctor;
@@ -29,9 +29,11 @@ public:
 
 	// getters
 	const char* getName() const { return name; };
+	research_center* getResearchCenter() { return &researchCenters; };
 
 	//setters
 	void setName(const char* name);
+	bool setResearchCenter(research_center& center);
 
 	// other methods
 	Department* addDepartment(const char* name);
@@ -47,9 +49,14 @@ public:
 	Researcher* addResearcher(Researcher& researcher);
 	Article* addArticleToResearcher(const Article& article);
 
-	Doctor* findDoctorById(int id);
-	Nurse* findNurseById(int id);
+	Doctor* findDoctorById(int id) const;
+	Nurse* findNurseById(int id) const;
+	Visitor* findVisitorById(int id) const;
+	Researcher* findResearcherById(int id) const;
 	Department* getDepartmentByName(const char* name) const;
+	Doctor* getDoctorByName(const char* name) const;
+	Nurse* getNurseByName(const char* name) const;
+	Visitor* getVisitorByName(const char* name) const;
 
 	int countDoctors() const;
 	int countNurses() const;
@@ -59,7 +66,7 @@ public:
 
 	void printDepartmentVisitors(const char* departmentName) const;
 	void printAllMedicalStaff() const;
-	void printAllMedicalStaffNamesInDepartment(const char* departmentName) const;
+	void printDepartmentMedicalStaff(const char* departmentName) const;
 	void printAllResearchers() const;
 	void printAllDepartments() const;
 	void searchVisitorById(int id) const;

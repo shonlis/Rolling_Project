@@ -1,5 +1,5 @@
 #pragma warning(disable: 4996)
-#include "research_center.h"
+#include "Research_center.h"
 
 #include <iostream>
 using namespace std;

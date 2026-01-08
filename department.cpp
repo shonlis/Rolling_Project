@@ -1,7 +1,7 @@
 #pragma warning(disable: 4996)
-#include "department.h"
-#include "doctor.h"
-#include "nurse.h"
+#include "Department.h"
+#include "Doctor.h"
+#include "Nurse.h"
 #include "Visitor.h"
 
 Department::Department(const char* name)
@@ -146,5 +146,31 @@ bool Department::VisitorExist(const Visitor& visitor)
 			return true;
 	}
 	return false;
+}
+
+void Department::printDoctors()
+{
+	for (int i = 0; i < currentNumberOfDoctors; i++)
+	{
+		cout << doctors[i]->getName();
+		if (i < currentNumberOfDoctors - 1)
+		{
+			cout << ", ";
+		}
+	}
+	cout << endl;
+}
+
+void Department::printNurses()
+{
+	for (int i = 0; i < currentNumberOfNurses; i++)
+	{
+		cout << nurses[i]->getName();
+		if (i < currentNumberOfNurses - 1)
+		{
+			cout << ", ";
+		}
+	}
+	cout << endl;
 }
 

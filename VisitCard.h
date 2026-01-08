@@ -1,7 +1,7 @@
 #ifndef VisitCard__H_
 #define VisitCard__H_
 
-#include "department.h"
+#include "Department.h"
 class Worker;
 
 class VisitCard

@@ -5,13 +5,13 @@
 #include <ctime>
 #include <iomanip>
 
-#include "hospital.h"
-#include "doctor.h"
-#include "nurse.h"
+#include "Hospital.h"
+#include "Doctor.h"
+#include "Nurse.h"
 #include "Visitor.h"
 #include "Researcher.h"
 #include "Article.h"
-#include "research_center.h"
+#include "Research_Center.h"
 
 using namespace std;
 
@@ -115,6 +115,7 @@ int main()
 
     // Create a research center and a researcher
     research_center* rc = hospital.addResearchCenter(string("Afeka Research"));
+	hospital.setResearchCenter(*rc);
 	cout << "Added research center: " << rc->getName() << endl;
     if (rc) centers.push_back(rc);
     if (rc)
@@ -279,10 +280,10 @@ int main()
             string purpose = askLine("Purpose of visit: ");
             string date = nowDate();
 
-            hospital.printAllMedicalStaffNamesInDepartment(dname.c_str());
+			hospital.printDepartmentMedicalStaff(dname.c_str());
 			Doctor* host = nullptr;
-			string hostName = askLine("Host doctor name: ");
 			for (Doctor* d : doctors) if (d->getName() == hostName) host = d;
+			string hostName = askLine("Host doctor/nurse name: ");
 			if (!host) { cout << "Host doctor not found" << endl; continue; }
 
             if (!dep->VisitorExist(*v)) {

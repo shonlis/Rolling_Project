@@ -1,9 +1,6 @@
 #ifndef DEPARTMENT_H
 #define DEPARTMENT_H
 
-#include <string>
-#include <vector>
-
 class Doctor;
 class Nurse;
 class Visitor;
@@ -48,6 +45,9 @@ public:
 	bool NurseExist(const Nurse& nurse);
 	bool addVisitor(Visitor& visitor);
 	bool VisitorExist(const Visitor& visitor);
+
+	void printDoctors();
+	void printNurses();
 
 };
 
