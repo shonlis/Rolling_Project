@@ -1,8 +1,6 @@
 #ifndef HOSPITAL_H
 #define HOSPITAL_H
 
-#include <string>
-#include <vector>
 #include <memory>
 
 #include "Department.h"
@@ -37,7 +35,7 @@ public:
 
 	// other methods
 	Department* addDepartment(const char* name);
-	research_center* addResearchCenter(const std::string& name);
+	research_center* addResearchCenter(const char* name);
 
 	Doctor* addDoctor(const Doctor& doctor);
 	Nurse* addNurse(const Nurse& nurse);

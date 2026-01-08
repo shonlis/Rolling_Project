@@ -9,7 +9,6 @@
 #include <ctime>
 #include <cstring>
 #include <memory>
-#include <vector>
 #include <iostream>
 
 
@@ -60,8 +59,8 @@ Department* Hospital::addDepartment(const char* name) {
     return d;
 }
 
-research_center* Hospital::addResearchCenter(const std::string &name) {
-    research_center* rc = new research_center(name.c_str());
+research_center* Hospital::addResearchCenter(const char* name) {
+    research_center* rc = new research_center(name);
 	return rc;
 }
 

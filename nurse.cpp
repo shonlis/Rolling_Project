@@ -1,4 +1,3 @@
-#include <string>
 #include "Nurse.h"
 
 Nurse::Nurse(const Worker& worker) : Worker(worker)
