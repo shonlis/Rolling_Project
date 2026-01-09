@@ -246,7 +246,7 @@ int main()
             int vid = askInt("Enter visitor ID: ");
             if (hospital.findVisitorById(vid))
             {
-                if (hospital.findVisitorById(vid)->getId() == vid) { found = 1; break; }
+                if (hospital.findVisitorById(vid)->getId() == vid) { found = 1;}
             }
             if (!found){
 
@@ -270,9 +270,12 @@ int main()
             name = askLine("Host doctor/nurse name: ");
             if (!hospital.getDoctorByName(name) && !hospital.getNurseByName(name))
             {
-                cout << "Host doctor not found" << endl; continue;
+                cout << "Host doctor not found" << endl;
             }
-			vc.setHostWorker(hospital.getDoctorByName(name) ? hospital.getDoctorByName(name)->getName() : hospital.getNurseByName(name)->getName());
+            else
+            {
+                vc.setHostWorker(hospital.getDoctorByName(name) ? hospital.getDoctorByName(name)->getName() : hospital.getNurseByName(name)->getName());
+            }
             if(found)
                 hospital.findVisitorById(vid)->addVisitCard(vc);
             else
@@ -288,10 +291,11 @@ int main()
             Worker w(p);
             Researcher r(w);
             hospital.addResearcher(r);
-            cout << "Researcher" << name << "added" << endl;
+            cout << "Researcher " << name << " added" << endl;
         }
         else if (choice == 6)
         {
+            hospital.printAllResearchers();
             int rid = askInt("Enter researcher ID to add article to: ");
             if (hospital.findResearcherById(rid)) { cout << "Researcher not found" << endl; continue; }
 
@@ -300,7 +304,7 @@ int main()
             char* mag = askLine("Magazine name: ");
             Article a  = Article(title, date, mag);
             hospital.findResearcherById(rid)->addArticle(a);
-            cout << "Article" << a.getTitle() << "added" << endl;
+            cout << "Article " << a.getTitle() << " added" << endl;
         }
         else if (choice == 7)
         {
@@ -324,7 +328,7 @@ int main()
             for (int i = 0; i < hospital.countVisitors(); ++i)
             {
                 hospital.findVisitorById(vid);
-                if (hospital.findVisitorById(vid)->getId() == vid) { found = 1; break; }
+                if (hospital.findVisitorById(vid)->getId() == vid) { found = 1;}
             }
             if (found) 
             {
