@@ -12,7 +12,7 @@ class research_center
 
 public:
 	research_center(const char* name = "There is no Name");
-	~research_center() { delete[]researchers; };
+	~research_center();
 
 	// getters
 	const char* getName() const { return name; };

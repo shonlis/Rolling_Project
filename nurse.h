@@ -11,6 +11,9 @@ public:
     friend ostream& operator<<(ostream& os, const Nurse& n);
 
     Nurse(const Worker& worker);
+	Nurse(const Nurse& nurse);
+	Nurse(Nurse&& nurse);
+
 
 	// getters
 	int getExperienceYears() const { return ExperienceYears; }

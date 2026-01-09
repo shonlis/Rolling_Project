@@ -13,6 +13,9 @@ private:
 
 public:
 	Researcher(const Worker& worker);
+	Researcher(const Researcher& researcher);
+	Researcher(Researcher&& researcher);
+
 	~Researcher() {delete[]publishedArticles;};
 	bool addArticle(Article& article);
 

@@ -2,8 +2,6 @@
 using namespace std;
 #include "Visitor.h"
 
-
-
 Visitor::Visitor(const Person& person) : Person(person)
 {
 	maxNumberOfVisits = 2;
@@ -17,6 +15,26 @@ Visitor::~Visitor()
         delete visits[i];
     }
     delete[] visits;
+}
+
+Visitor::Visitor(const Visitor& visitor) :Person(visitor)
+{
+	maxNumberOfVisits = visitor.maxNumberOfVisits;
+	currentNumberOfVisits = visitor.currentNumberOfVisits;
+    visits = new VisitCard * [maxNumberOfVisits];
+    for (int i = 0; i < currentNumberOfVisits; i++)
+    {
+        visits[i] = visitor.visits[i];
+    }
+
+}
+Visitor::Visitor(Visitor&& visitor) :Visitor(visitor)
+{
+    for (int i = 0; i < currentNumberOfVisits; i++)
+    {
+        visitor.visits[i] = nullptr;
+    }
+	visitor.visits = nullptr;
 }
 
 
@@ -36,9 +54,7 @@ bool Visitor::addVisitCard(VisitCard& visitCard)
         this->visits = temp;
     }
 
-    // allocate a copy of the visitCard so Visitor owns it
-    VisitCard* copy = new VisitCard(visitCard.getPurposeOfVisit(), visitCard.getVisitingDate(), const_cast<Department&>(visitCard.getDepartmentsToVisit()), const_cast<Worker*>(visitCard.getHostWorker()));
-    this->visits[currentNumberOfVisits] = copy;
+    this->visits[currentNumberOfVisits] = &visitCard;
     currentNumberOfVisits++;
     return true;
 }

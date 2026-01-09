@@ -1,6 +1,5 @@
 #pragma warning(disable: 4996)
-#include "research_center.h"
-
+#include "Research_center.h"
 #include <iostream>
 using namespace std;
 #include <cstring>
@@ -10,21 +9,28 @@ research_center::research_center(const char* name)
 	this->name = new char[strlen(name) + 1];
 	strcpy(this->name, name);
 	maxNumberOfResearchers = 2;
+	researchers = new Researcher * [maxNumberOfResearchers];
 	currentNumberOfResearchers = 0;
 }
-
+research_center::~research_center()
+{
+	delete[]name;
+	for (int i = 0; i < currentNumberOfResearchers; i++)
+	{
+		delete researchers[i];
+	}
+	delete[]researchers;
+}
 void research_center::setName(const char* name)
 {
 	delete[]this->name;
 	this->name = new char[strlen(name) + 1];
 	strcpy(this->name, name);
 }
-
 bool research_center::addResearcher(Researcher& researcher)
 {
 	if (researcherExist(researcher))
 		return false;
-
 
 	if (currentNumberOfResearchers == maxNumberOfResearchers)
 	{
@@ -37,16 +43,11 @@ bool research_center::addResearcher(Researcher& researcher)
 		this->researchers = temp;
 	}
 
-	if (!this->researchers) {
-		researchers = new Researcher * [maxNumberOfResearchers];
-		for (int i = 0; i < maxNumberOfResearchers; ++i) researchers[i] = nullptr;
-	}
-
-	this->researchers[currentNumberOfResearchers] = &researcher;
+	Researcher* researcherCopy = new Researcher(researcher);
+	this->researchers[currentNumberOfResearchers] = researcherCopy;
 	currentNumberOfResearchers++;
 	return true;
 }
-
 bool research_center::researcherExist(const Researcher& researcher)
 {
 	for (int i = 0; i < currentNumberOfResearchers; i++)
@@ -56,10 +57,9 @@ bool research_center::researcherExist(const Researcher& researcher)
 	}
 	return false;
 }
-
 ostream& operator<<(ostream& os, const research_center& research_center)
 {
-	os << "research_center Details: \nresearch_center:" << research_center.getName()<< "and his researchers:" << endl;
+	os << "research_center Details: \nresearch_center:" << research_center.getName() << "and his researchers:" << endl;
 	for (int i = 0; i < research_center.currentNumberOfResearchers; i++)
 	{
 		os << *(research_center.researchers[i]) << endl;

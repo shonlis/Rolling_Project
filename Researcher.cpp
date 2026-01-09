@@ -10,14 +10,29 @@ Researcher::Researcher(const Worker& worker) : Worker(worker)
 	this->publishedArticles = new Article*[maxNumberOfArticles];
 	currentNumberOfArticles = 0;
 }
-
-std::ostream& operator<<(std::ostream& os, const Researcher& r)
+Researcher::Researcher(const Researcher& researcher) : Worker(researcher)
 {
-    os << "Researcher: " << r.getName() << ", ID=" << r.getId() << ", Articles=" << r.getCurrentNumberOfArticles() << std::endl;
-    return os;
+	maxNumberOfArticles = researcher.maxNumberOfArticles;
+	currentNumberOfArticles = researcher.currentNumberOfArticles;
+	publishedArticles = new Article * [maxNumberOfArticles];
+	for (int i = 0; i < maxNumberOfArticles; i++)
+	{
+		publishedArticles[i] = researcher.publishedArticles[i];
+	}
+}
+Researcher::Researcher(Researcher&& researcher) : Worker(move(researcher))
+{
+	maxNumberOfArticles = researcher.maxNumberOfArticles;
+	currentNumberOfArticles = researcher.currentNumberOfArticles;
+	publishedArticles = researcher.publishedArticles;
+	researcher.publishedArticles = nullptr;
 }
 
-
+ostream& operator<<(ostream& os, const Researcher& researcher)
+{
+    os << "Researcher: " << researcher.getName() << ", ID=" << researcher.getId() << ", Articles=" << researcher.getCurrentNumberOfArticles() << endl;
+    return os;
+}
 bool Researcher::addArticle(Article& article)
 {
 
@@ -41,7 +56,6 @@ bool Researcher::addArticle(Article& article)
 	return true;
 
 }
-
 bool Researcher::articleExist(const Article& article)
 {
 	for (int i = 0; i < currentNumberOfArticles; i++)
@@ -51,7 +65,6 @@ bool Researcher::articleExist(const Article& article)
 	}
 	return false;
 }
-
 bool Researcher::operator<(const Researcher& researcher) const
 {
 	if (this->currentNumberOfArticles < researcher.currentNumberOfArticles)
@@ -59,7 +72,6 @@ bool Researcher::operator<(const Researcher& researcher) const
 	else
 		return false;
 }
-
 bool Researcher::operator>(const Researcher& researcher) const
 {
 	if (this->currentNumberOfArticles > researcher.currentNumberOfArticles)
@@ -67,7 +79,6 @@ bool Researcher::operator>(const Researcher& researcher) const
 	else
 		return false;
 }
-
 const Researcher& Researcher::operator=(const Researcher& researcher)
 {
 	if (this->workerNumber == researcher.workerNumber)

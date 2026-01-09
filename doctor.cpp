@@ -1,44 +1,40 @@
+
 #pragma warning(disable: 4996)
-#include "doctor.h"
-#include <string>
+#include "Doctor.h"
 
 Doctor::Doctor(const Worker& worker) : Worker(worker)
 {
     specialization = nullptr;
 }
-
-Doctor::Doctor(const Doctor& other) : Worker(other)
+Doctor::Doctor(const Doctor& doctor) : Worker(doctor)
 {
-    if (other.specialization)
+    if (doctor.specialization)
     {
-        specialization = new char[strlen(other.specialization) + 1];
-        strcpy(specialization, other.specialization);
+        specialization = new char[strlen(doctor.specialization) + 1];
+        strcpy(specialization, doctor.specialization);
     }
-    else 
+    else
         specialization = nullptr;
 }
-
-Doctor::Doctor(Doctor&& other) : Worker(std::move(other))
+Doctor::Doctor(Doctor&& doctor) : Worker(move(doctor))
 {
-	specialization = other.specialization;
-	other.specialization = nullptr;
+    specialization = doctor.specialization;
+    doctor.specialization = nullptr;
 }
-
 Doctor::~Doctor()
 {
     delete[] specialization;
 }
-
 bool Doctor::setSpecialization(const char* specialization)
 {
     if (this->specialization) delete[] this->specialization;
     if (specialization) {
         this->specialization = new char[strlen(specialization) + 1];
         strcpy(this->specialization, specialization);
-    } else this->specialization = nullptr;
+    }
+    else this->specialization = nullptr;
     return true;
 }
-
 ostream& operator<<(ostream& os, const Doctor& d)
 {
     os << "Doctor: " << d.getName() << ", ID=" << d.getId();
@@ -46,8 +42,3 @@ ostream& operator<<(ostream& os, const Doctor& d)
     os << std::endl;
     return os;
 }
-
-
-
-
-

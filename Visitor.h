@@ -19,8 +19,8 @@ public:
 	Visitor(const Person& person);
 	~Visitor();
 
-	Visitor(const Visitor& visitor) = delete;
-	Visitor(const Visitor&& visitor) = delete;
+	Visitor(const Visitor& visitor);
+	Visitor(Visitor&& visitor);
 
 	//setters
 	

@@ -1,3 +1,4 @@
+
 // Article implementation
 #pragma warning(disable: 4996)
 using namespace std;
@@ -6,7 +7,7 @@ using namespace std;
 #include "Article.h"
 
 
-Article::Article(const Article& article) : Article(article.title, article.publicationDate, article.magazinName){}
+Article::Article(const Article& article) : Article(article.title, article.publicationDate, article.magazinName) {}
 
 Article::Article(Article&& article)
 {
@@ -69,8 +70,8 @@ bool Article::operator==(const Article& other) const
 {
 	// Add operator== to compare Article objects
 	// Compare by pointer equality for now, as the rest of the code uses pointers
-		return this == &other;
-	
+	return this == &other;
+
 }
 
 ostream& operator<<(ostream& os, const Article& a)

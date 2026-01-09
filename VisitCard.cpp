@@ -11,7 +11,7 @@ VisitCard::VisitCard(const char* purposeOfVisit, const char* visitingDate, Depar
 	this->purposeOfVisit = new char[strlen(purposeOfVisit) + 1];
 	strcpy(this->purposeOfVisit, purposeOfVisit);
 
-    strncpy(this->visitingDate, visitingDate, sizeof(this->visitingDate)-1);//?
+    strncpy(this->visitingDate, visitingDate, sizeof(this->visitingDate)-1);
     this->visitingDate[sizeof(this->visitingDate)-1] = '\0';
 }
 

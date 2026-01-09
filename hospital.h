@@ -1,15 +1,13 @@
 #ifndef HOSPITAL_H
 #define HOSPITAL_H
 
-#include <string>
-#include <vector>
 #include <memory>
 
 #include "Department.h"
 #include "Worker.h"
 #include "VisitCard.h"
 #include "Visitor.h"
-#include "research_center.h"
+#include "Research_Center.h"
 
 // forward declare global types used across the project
 class Doctor;
@@ -19,37 +17,63 @@ class Researcher;
 class Hospital {
 	char* name;
 	Department** departments;
-	research_center& researchCenters;
+	research_center& researchCenter;
+	Doctor** doctors;
+	Nurse** nurses;
+	Visitor** visitors;
+
 	int currentNumberOfDepartments;
 	int maxNumberOfDepartments;
 
+	int currentNumberOfDoctors;
+	int maxNumberOfDoctors;
+	
+	int currentNumberOfNurses;
+	int maxNumberOfNurses;
+	
+	int currentNumberOfVisitors;
+	int maxNumberOfVisitors;
+
+
 public:
-	Hospital(const char* name = "none");
+	Hospital(const char* name, research_center& researchCenter);
 	~Hospital();
 
 	// getters
 	const char* getName() const { return name; };
+	const research_center& getResearchCenter() const { return researchCenter; };
 
 	//setters
 	void setName(const char* name);
 
 	// other methods
-	Department* addDepartment(const char* name);
-	research_center* addResearchCenter(const std::string& name);
+	bool addDepartment(Department& department);
+	bool addDoctor(Doctor& doctor);
+	bool addNurse(Nurse& nurse);
+	bool addVisitor(Visitor& visitor);
+	bool addResearcher(Researcher& researcher);
 
-	Doctor* addDoctor(const Doctor& doctor);
-	Nurse* addNurse(const Nurse& nurse);
-    // operator to add staff
-    Hospital& operator+=(const Doctor& doctor);
-    Hospital& operator+=(const Nurse& nurse);
-	Visitor* addVisitor(const Person& person);
-	void addVisit(const VisitCard& vc);
-	Researcher* addResearcher(Researcher& researcher);
-	Article* addArticleToResearcher(const Article& article);
+	// operator to add staff
+	Hospital& operator+=(const Doctor& doctor);
+	Hospital& operator+=(const Nurse& nurse);
 
-	Doctor* findDoctorById(int id);
-	Nurse* findNurseById(int id);
+	
+
+	bool addVisit(Visitor& visitor, VisitCard& Visitcard, Department& department);
+
+
+
+
+
+
+	Doctor* findDoctorById(int id) const;
+	Nurse* findNurseById(int id) const;
+	Visitor* findVisitorById(int id) const;
+	
 	Department* getDepartmentByName(const char* name) const;
+	Doctor* getDoctorByName(const char* name) const;
+	Nurse* getNurseByName(const char* name) const;
+	Visitor* getVisitorByName(const char* name) const;
 
 	int countDoctors() const;
 	int countNurses() const;
@@ -59,10 +83,17 @@ public:
 
 	void printDepartmentVisitors(const char* departmentName) const;
 	void printAllMedicalStaff() const;
-	void printAllMedicalStaffNamesInDepartment(const char* departmentName) const;
+	void printDepartmentMedicalStaff(const char* departmentName) const;
 	void printAllResearchers() const;
 	void printAllDepartments() const;
 	void searchVisitorById(int id) const;
-	};
+
+	bool DepartmentExist(const Department& department);
+	bool NurseExist(const Nurse& nurse);
+	bool DoctorExist(const Doctor& doctor);
+	bool visitorExist(const Visitor& visitor);
+
+
+};
 
 #endif // HOSPITAL_H

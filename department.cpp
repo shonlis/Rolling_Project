@@ -1,39 +1,28 @@
 #pragma warning(disable: 4996)
-#include "department.h"
-#include "doctor.h"
-#include "nurse.h"
+#include <iostream>
+using namespace std;
+#include "Department.h"
+#include "Doctor.h"
+#include "Nurse.h"
 #include "Visitor.h"
 
 Department::Department(const char* name)
 {
 	this->name = new char[strlen(name) + 1];
 	strcpy(this->name, name);
-	doctors = nullptr;
-	nurses = nullptr;
-	visitors = nullptr;
-	currentNumberOfDoctors = 0;
 	maxNumberOfDoctors = 2;
-	currentNumberOfNurses = 0;
-	maxNumberOfNurses = 2;
-	currentNumberOfVisitors = 0;
-	maxNumberOfVisitors = 2;
-
 	doctors = new Doctor * [maxNumberOfDoctors];
-	for (int i = 0; i < maxNumberOfDoctors; ++i) doctors[i] = nullptr;
+	currentNumberOfDoctors = 0;
 
+	maxNumberOfNurses = 2;
 	nurses = new Nurse * [maxNumberOfNurses];
-	for (int i = 0; i < maxNumberOfNurses; ++i) nurses[i] = nullptr;
+	currentNumberOfNurses = 0;
 
+	maxNumberOfVisitors = 2;
 	visitors = new Visitor * [maxNumberOfVisitors];
-	for (int i = 0; i < maxNumberOfVisitors; ++i) visitors[i] = nullptr;
-}
+	currentNumberOfVisitors = 0;
 
-Department& Department::operator+=(Doctor& doctor)
-{
-    addDoctor(doctor);
-    return *this;
 }
-
 Department::~Department()
 {
 	delete[] name;
@@ -41,23 +30,9 @@ Department::~Department()
 	delete[] nurses;
 	delete[] visitors;
 }
-
-Department& Department::operator+=(Nurse& nurse)
+bool Department::addDoctor(Doctor* doctor)
 {
-    addNurse(nurse);
-    return *this;
-}
-
-void Department::setName(const char* name)
-{
-	delete[]this->name;
-	this->name = new char[strlen(name) + 1];
-	strcpy(this->name, name);
-}
-
-bool Department::addDoctor(Doctor& doctor)
-{
-	if (DoctorExist(doctor))
+	if (DoctorExist(*doctor))
 		return false;
 
 	if (currentNumberOfDoctors == maxNumberOfDoctors)
@@ -71,11 +46,10 @@ bool Department::addDoctor(Doctor& doctor)
 		this->doctors = temp;
 	}
 
-	this->doctors[currentNumberOfDoctors] = &doctor;
+	this->doctors[currentNumberOfDoctors] = doctor;
 	currentNumberOfDoctors++;
 	return true;
 }
-
 bool Department::DoctorExist(const Doctor& doctor)
 {
 	for (int i = 0; i < currentNumberOfDoctors; i++)
@@ -85,10 +59,9 @@ bool Department::DoctorExist(const Doctor& doctor)
 	}
 	return false;
 }
-
-bool Department::addNurse(Nurse& nurse)
+bool Department::addNurse(Nurse* nurse)
 {
-	if (NurseExist(nurse))
+	if (NurseExist(*nurse))
 		return false;
 
 	if (currentNumberOfNurses == maxNumberOfNurses)
@@ -102,11 +75,10 @@ bool Department::addNurse(Nurse& nurse)
 		this->nurses = temp;
 	}
 
-	this->nurses[currentNumberOfNurses] = &nurse;
+	this->nurses[currentNumberOfNurses] = nurse;
 	currentNumberOfNurses++;
 	return true;
 }
-
 bool Department::NurseExist(const Nurse& nurse)
 {
 	for (int i = 0; i < currentNumberOfNurses; i++)
@@ -116,10 +88,9 @@ bool Department::NurseExist(const Nurse& nurse)
 	}
 	return false;
 }
-
-bool Department::addVisitor(Visitor& visitor)
+bool Department::addVisitor(Visitor* visitor)
 {
-	if (VisitorExist(visitor))
+	if (VisitorExist(*visitor))
 		return false;
 
 	if (currentNumberOfVisitors == maxNumberOfVisitors)
@@ -133,11 +104,10 @@ bool Department::addVisitor(Visitor& visitor)
 		this->visitors = temp;
 	}
 
-	this->visitors[currentNumberOfVisitors] = &visitor;
+	this->visitors[currentNumberOfVisitors] = visitor;
 	currentNumberOfVisitors++;
 	return true;
 }
-
 bool Department::VisitorExist(const Visitor& visitor)
 {
 	for (int i = 0; i < currentNumberOfVisitors; i++)
@@ -147,4 +117,45 @@ bool Department::VisitorExist(const Visitor& visitor)
 	}
 	return false;
 }
-
+/*******************************************************************************/
+void Department::printDoctors()
+{
+	for (int i = 0; i < currentNumberOfDoctors; i++)
+	{
+		cout << doctors[i]->getName();
+		if (i < currentNumberOfDoctors - 1)
+		{
+			cout << ", ";
+		}
+	}
+	cout << endl;
+}
+void Department::printNurses()
+{
+	for (int i = 0; i < currentNumberOfNurses; i++)
+	{
+		cout << nurses[i]->getName();
+		if (i < currentNumberOfNurses - 1)
+		{
+			cout << ", ";
+		}
+	}
+	cout << endl;
+}
+Department& Department::operator+=(Nurse& nurse)
+{
+	addNurse(&nurse);
+	return *this;
+}
+Department& Department::operator+=(Doctor& doctor)
+{
+	addDoctor(&doctor);
+	return *this;
+}
+void Department::setName(const char* name)
+{
+	delete[]this->name;
+	this->name = new char[strlen(name) + 1];
+	strcpy(this->name, name);
+}
+/*******************************************************************************/
