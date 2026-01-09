@@ -6,13 +6,24 @@ using namespace std;
 
 int VisitCard::counter = 0;
 
-VisitCard::VisitCard(const char* purposeOfVisit, const char* visitingDate, Department& departmentsToVisit, Worker* hostWorker) : departmentsToVisit(departmentsToVisit), hostWorker(hostWorker), VisitCardNumber(++counter)
+VisitCard::VisitCard(const char* purposeOfVisit, const char* visitingDate, Department& departmentsToVisit, char* hostWorker) : departmentsToVisit(departmentsToVisit), hostWorker(hostWorker), VisitCardNumber(++counter)
 {
 	this->purposeOfVisit = new char[strlen(purposeOfVisit) + 1];
 	strcpy(this->purposeOfVisit, purposeOfVisit);
 
-    strncpy(this->visitingDate, visitingDate, sizeof(this->visitingDate)-1);//?
+    strncpy(this->visitingDate, visitingDate, sizeof(this->visitingDate)-1);
     this->visitingDate[sizeof(this->visitingDate)-1] = '\0';
+
+	if (hostWorker)
+    {
+        size_t len = strlen(hostWorker) + 1;
+        this->hostWorker = new char[len];
+        strcpy_s(this->hostWorker, len, hostWorker);
+    }
+    else
+    {
+        this->hostWorker = nullptr;
+	}
 }
 
 
@@ -22,7 +33,7 @@ ostream& operator<<(ostream& os, const VisitCard& vc)
         << ", Purpose = " << vc.getPurposeOfVisit()
         << ", Department = " << vc.getDepartmentsToVisit().getName();
     if (vc.getHostWorker()) {
-        os << ", Host Worker Name = " << vc.getHostWorker()->getName() << endl;
+        os << ", Host Worker Name = " << vc.getHostWorker() << endl;
     }
     else {
         os << ", Host Worker Name = (none)" << endl;

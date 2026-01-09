@@ -11,10 +11,10 @@ protected:
 	char* publicationDate;
 	char* magazinName;
 
-	Article(const Article& article); 
-	Article(Article&& article); 
 
 public:
+	Article(const Article& article); 
+	Article(Article&& article); 
 
 	// constructors and destructor
 	Article(const char* title, const char* publicationDate, const char* magazinName);

@@ -43,7 +43,6 @@ public:
     Hospital& operator+=(const Doctor& doctor);
     Hospital& operator+=(const Nurse& nurse);
 	Visitor* addVisitor(const Person& person);
-	void addVisit(const VisitCard& vc);
 	Researcher* addResearcher(Researcher& researcher);
 	Article* addArticleToResearcher(const Article& article);
 

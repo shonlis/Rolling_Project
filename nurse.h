@@ -5,8 +5,8 @@
 
 
 class Nurse : public Worker {
-public:
     int ExperienceYears;
+public:
 
     friend ostream& operator<<(ostream& os, const Nurse& n);
 

@@ -17,6 +17,8 @@ Hospital::Hospital(const char* name)
 {
     this->name = new char[strlen(name) + 1];
     strcpy(this->name, name);
+    departments = new Department * [maxNumberOfDepartments];
+    for (int i = 0; i < maxNumberOfDepartments; ++i) departments[i] = nullptr;
 }
 
 Hospital::~Hospital()
@@ -98,32 +100,6 @@ Hospital& Hospital::operator+=(const Nurse& nurse)
 Visitor* Hospital::addVisitor(const Person& person) {
     Visitor* newVisitor = new Visitor(person);
     return newVisitor;
-}
-
-void Hospital::addVisit(const VisitCard& vc) {
-    for (int i = 0; i < currentNumberOfDepartments; ++i) {
-        Department* dept = departments[i];
-        if (strcmp(dept->getName(), vc.getDepartmentsToVisit().getName()) == 0) {
-            Visitor* visitor = nullptr;
-            for (int j = 0; j < dept->getCurrentNumberOfVisitors(); ++j) {
-                if (dept->getVisitors()[j]->getId() == vc.getHostWorker()->getId()) {
-                    visitor = dept->getVisitors()[j];
-                    break;
-                }
-            }
-            if (visitor) {
-                // Create a new VisitCard using the available constructor, not the copy constructor
-                VisitCard* newVisitCard = new VisitCard(
-                    vc.getPurposeOfVisit(),
-                    vc.getVisitingDate(),
-                    const_cast<Department&>(vc.getDepartmentsToVisit()),
-                    const_cast<Worker*>(vc.getHostWorker())
-                );
-                visitor->addVisitCard(*newVisitCard);
-            }
-            break;
-        }
-    }
 }
 
 Researcher* Hospital::addResearcher(Researcher& researcher)

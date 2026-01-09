@@ -37,7 +37,7 @@ bool Visitor::addVisitCard(VisitCard& visitCard)
     }
 
     // allocate a copy of the visitCard so Visitor owns it
-    VisitCard* copy = new VisitCard(visitCard.getPurposeOfVisit(), visitCard.getVisitingDate(), const_cast<Department&>(visitCard.getDepartmentsToVisit()), const_cast<Worker*>(visitCard.getHostWorker()));
+    VisitCard* copy = new VisitCard(visitCard.getPurposeOfVisit(), visitCard.getVisitingDate(), const_cast<Department&>(visitCard.getDepartmentsToVisit()), const_cast<char*>(visitCard.getHostWorker()));
     this->visits[currentNumberOfVisits] = copy;
     currentNumberOfVisits++;
     return true;

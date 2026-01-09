@@ -23,11 +23,6 @@ Doctor::Doctor(Doctor&& other) : Worker(std::move(other))
 	other.specialization = nullptr;
 }
 
-Doctor::~Doctor()
-{
-    delete[] specialization;
-}
-
 bool Doctor::setSpecialization(const char* specialization)
 {
     if (this->specialization) delete[] this->specialization;

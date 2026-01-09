@@ -11,7 +11,7 @@ public:
 	static int counter;
 	// constructors and destructor
 	
-	VisitCard(const char* purposeOfVisit, const char* visitingDate, Department& departmentsToVisit, Worker* hostWorker);
+	VisitCard(const char* purposeOfVisit, const char* visitingDate, Department& departmentsToVisit, char* hostWorker);
 	inline ~VisitCard();
 
 	// disable copy and move c'tors
@@ -22,6 +22,20 @@ public:
 friend ostream& operator<<(ostream& os, const VisitCard& VisitCard);
 
 	//setters
+	void setHostWorker(const char* hostWorker) 
+	{ 
+		delete[] this->hostWorker;
+		if (hostWorker)
+		{
+			size_t len = strlen(hostWorker) + 1;
+			this->hostWorker = new char[len];
+			strcpy_s(this->hostWorker, len, hostWorker);
+		}
+		else
+		{
+			this->hostWorker = nullptr;
+		}
+	}
 	
 
 	// getters
@@ -29,7 +43,7 @@ friend ostream& operator<<(ostream& os, const VisitCard& VisitCard);
 	const char* getVisitingDate() const { return visitingDate; }
 	int getVisitCardNumber() const { return VisitCardNumber; }
 	const Department& getDepartmentsToVisit() const { return departmentsToVisit; }
-	const Worker* getHostWorker() const { return hostWorker; }
+	const char* getHostWorker() const { return hostWorker; }
 	
 
 
@@ -37,12 +51,13 @@ private:
 	char* purposeOfVisit;
     char visitingDate[32];
 	const Department& departmentsToVisit;
-	const Worker* hostWorker;
+	char* hostWorker;
 };
 
 VisitCard::~VisitCard()
 {
 	delete[]purposeOfVisit;
+	delete[]hostWorker;
 }
 
 
