@@ -163,7 +163,7 @@ int main()
 
     cout << "Initial data added. Today=" << nowDate() << endl;
 
-    char* name;
+    char* name = nullptr;
     // Interactive menu
     while (true)
     {
@@ -205,10 +205,9 @@ int main()
 
             hospital.printAllDepartments();
             name = askLine("Department name to assign(): ");
-            hospital.getDepartmentByName(name);
             cout << "Nurse added to department " << name << endl;
             hospital.addNurse(n);
-
+            hospital.addNurseToDepartment(n, name);
         }
         else if (choice == 3)
         {
@@ -228,9 +227,11 @@ int main()
             hospital.getDepartmentByName(name);
             cout << "Doctor added to department " << name << endl;
             hospital.addDoctor(d);
+			hospital.addDoctorToDepartment(d, name);
         }
         else if (choice == 4)
         {
+			char* departmentName = nullptr;
             int found = 0;
             int id;
             int vid = askInt("Enter visitor ID: ");
@@ -250,28 +251,35 @@ int main()
             }
 
             hospital.printAllDepartments();
-            name = askLine("Department name for visit: ");
-            if (!hospital.getDepartmentByName(name)) { cout << "Department not found" << endl; continue; }
+            departmentName = askLine("Department name for visit: ");
+            if (!hospital.getDepartmentByName(departmentName)) { cout << "Department not found" << endl; continue; }
 
             char* purpose = askLine("Purpose of visit: ");
             char* date = nowDate();
 
-            VisitCard vc(purpose, date, *hospital.getDepartmentByName(name), nullptr);
-            hospital.printDepartmentMedicalStaff(name);
+            VisitCard vc(purpose, date, *hospital.getDepartmentByName(departmentName), nullptr);
+            hospital.printDepartmentMedicalStaff(departmentName);
             name = askLine("Host doctor/nurse name: ");
+            printf("Host worker: %d and %d", !hospital.getDoctorByName(name), !hospital.getNurseByName(name));
             if (!hospital.getDoctorByName(name) && !hospital.getNurseByName(name))
             {
                 cout << "Host doctor not found" << endl;
-
             }
             else
             {
                 vc.setHostWorker(hospital.getDoctorByName(name) ? hospital.getDoctorByName(name)->getName() : hospital.getNurseByName(name)->getName());
             }
-            if(found)
+            if (found)
+            {
                 hospital.findVisitorById(vid)->addVisitCard(vc);
+				hospital.addVisitorToDepartment(*hospital.findVisitorById(vid), departmentName);
+            }
             else
-				hospital.findVisitorById(id)->addVisitCard(vc);
+            {
+                hospital.findVisitorById(id)->addVisitCard(vc);
+                hospital.addVisitorToDepartment(*hospital.findVisitorById(id), departmentName);
+            }
+			delete[] departmentName;
         }
         else if (choice == 5)
         {
@@ -289,7 +297,7 @@ int main()
         {
             hospital.printAllResearchers();
             int rid = askInt("Enter researcher ID to add article to: ");
-            if (hospital.findResearcherById(rid)) { cout << "Researcher not found" << endl; continue; }
+            if (!hospital.findResearcherById(rid)) { cout << "Researcher not found" << endl; continue; }
 
             char* title = askLine("Article title: ");
             char* date = askLine("Publication date(DDMMYYYY): ");
@@ -339,7 +347,7 @@ int main()
         else if (choice == 12)
         {
             cout << "Testing operators:" << endl;
-            // test hospital += doctor/nurse by creating temporary objects
+            // add temporary doctor/nurse via operator+= as before
             Person pd("Dr. Bob", 5001, 1970, (Person::Gender)0);
             Worker wd(pd);
             Doctor tempD(wd);
@@ -354,15 +362,27 @@ int main()
             hospital += tempN;
             cout << "Added nurse via operator+= to hospital (first department)." << endl;
 
-            // researcher compare
+            // Compare researchers safely: do not assume IDs 1 and 2 exist
             if (hospital.countResearchers() >= 2) {
-                cout << "Compare researchers: " << *hospital.findResearcherById(1) << *hospital.findResearcherById(2);
-                if (*hospital.findResearcherById(1) < *hospital.findResearcherById(2)) cout << hospital.findResearcherById(1)->getName() << " has fewer articles" << endl;
-                else if (*hospital.findResearcherById(1) > *hospital.findResearcherById(2)) cout << hospital.findResearcherById(1)->getName() << " has more articles" << endl;
-                else cout << "Researchers have equal number of articles" << endl;
+                hospital.printAllResearchers();
+                int id1 = askInt("Enter first researcher ID to compare: ");
+                int id2 = askInt("Enter second researcher ID to compare: ");
+                Researcher* r1 = hospital.findResearcherById(id1);
+                Researcher* r2 = hospital.findResearcherById(id2);
+                if (!r1 || !r2) {
+                    cout << "One or both researchers not found." << endl;
+                }
+                else {
+                    cout << "Compare researchers: " << *r1 << *r2;
+                    if (*r1 < *r2) cout << r1->getName() << " has fewer articles" << endl;
+                    else if (*r1 > *r2) cout << r1->getName() << " has more articles" << endl;
+                    else cout << "Researchers have equal number of articles" << endl;
+                }
             }
-            else cout << "Not enough researchers to compare" << endl;
-        }
+            else {
+                cout << "Not enough researchers to compare" << endl;
+            }
+            }
         else
         {
             cout << "Invalid option" << endl;

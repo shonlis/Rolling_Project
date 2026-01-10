@@ -76,7 +76,7 @@ bool Hospital::addDepartment(Department& department)
         this->departments = temp;
     }
 
-	Department* departmentCopy = new Department(department);
+    Department* departmentCopy = new Department(department.getName());
     this->departments[currentNumberOfDepartments] = departmentCopy;
     currentNumberOfDepartments++;
     return true;
@@ -161,23 +161,23 @@ bool Hospital::addVisit(Visitor& visitor, VisitCard& Visitcard, const char* depa
         if (strcmp(departments[i]->getName(), department) == 0)
         {
             addVisitor(visitor);
-                for (int j = 0; j < currentNumberOfVisitors; j++)
+            for (int j = 0; j < currentNumberOfVisitors; j++)
+            {
+                if (visitors[j]->getId() == visitor.getId())
                 {
-                    if (visitors[j]->getId() == visitor.getId())
-                    {
-                        visitors[j]->addVisitCard(Visitcard);
-                        departments[i]->addVisitor(visitors[j]);
-                        return true;
-                    }
+                    visitors[j]->addVisitCard(Visitcard);
+                    departments[i]->addVisitor(visitors[j]);
+                    return true;
                 }
-        }
-        else
-        {
+            }
+            // found department but didn't find visitor in hospital -> fail
             return false;
         }
     }
+    // department not found
     return false;
 }
+
 bool Hospital::addNurseToDepartment(Nurse& nurse, const char* departmentName)
 {
     /*
@@ -199,14 +199,14 @@ bool Hospital::addNurseToDepartment(Nurse& nurse, const char* departmentName)
                     return true;
                 }
             }
-        }
-        else
-        {
+            // found department but nurse not present in hospital -> fail
             return false;
         }
     }
+    // department not found
     return false;
 }
+
 bool Hospital::addDoctorToDepartment(Doctor& doctor, const char* departmentName)
 {
     /*
@@ -228,14 +228,43 @@ bool Hospital::addDoctorToDepartment(Doctor& doctor, const char* departmentName)
                     return true;
                 }
             }
-        }
-        else
-        {
+            // found department but doctor not present in hospital -> fail
             return false;
         }
     }
+    // department not found
     return false;
 }
+
+bool Hospital::addVisitorToDepartment(Visitor& visitor, const char* departmentName)
+{
+    /*
+    * this function getts a visitor and department name.
+    * first checking if the department exists in the hospital.
+    * add the visitor to the hospitals visitors list.
+    * find the visitor in the hospital's visitors list and add it to the department's visitors list.
+    */
+    for (int i = 0; i < currentNumberOfDepartments; i++)
+    {
+        if (strcmp(departments[i]->getName(), departmentName) == 0)
+        {
+            addVisitor(visitor);
+            for (int j = 0; j < currentNumberOfVisitors; j++)
+            {
+                if (visitors[j]->getId() == visitor.getId())
+                {
+                    departments[i]->addVisitor(visitors[j]);
+                    return true;
+                }
+            }
+            // found department but visitor not present in hospital -> fail
+            return false;
+        }
+    }
+    // department not found
+    return false;
+}
+
 bool Hospital::addArticleToResearchCenter(Researcher& researcher, Article& article)
 {
 	
@@ -250,7 +279,6 @@ bool Hospital::addArticleToResearchCenter(Researcher& researcher, Article& artic
     return false;
 }
 
-/***************************************************************************************************/
 Hospital& Hospital::operator+=(const Doctor& doctor)
 {
     // create a copy and add to first department if exists
@@ -268,7 +296,6 @@ Hospital& Hospital::operator+=(const Nurse& nurse)
     }
     return *this;
 }
-/***************************************************************************************************/
 
 int Hospital::countDoctors() const {
     return currentNumberOfDoctors;
@@ -404,21 +431,23 @@ Researcher* Hospital::getResearcherByName(const char* name) const
             }
         }
 	}
+	return nullptr;
 }
-/***************************************************************************************************/
 
 void Hospital::printDepartmentVisitors(const char* departmentName) const
 {
-    Department* dept = getDepartmentByName(departmentName);
-    if (dept) {
-        cout << "Visitors in Department " << departmentName << endl;
-        for (int i = 0; i < dept->getCurrentNumberOfVisitors(); ++i) {
-            cout << *(dept->getVisitors()[i]) << endl;
+    if (departments) {
+        Department* dept = getDepartmentByName(departmentName);
+        if (dept) {
+            cout << "Visitors in Department " << departmentName << ":" << endl;
+            for (int i = 0; i < dept->getCurrentNumberOfVisitors(); ++i) {
+                cout << *(dept->getVisitors()[i]) << endl;
+            }
         }
-    }
-    else {
-        cout << "Department " << departmentName << " not found." << endl;
-    }
+        else {
+            cout << "Department " << departmentName << " not found." << endl;
+        }
+	}
 }
 void Hospital::printAllMedicalStaff() const
 {
@@ -489,7 +518,6 @@ void Hospital::printAllDepartments() const
         cout << "No departments in the hospital." << endl;
     }
 }
-/***************************************************************************************************/
 
 bool Hospital::DepartmentExist(const Department& department)
 {

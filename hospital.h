@@ -56,13 +56,12 @@ public:
 	bool addVisit(Visitor& visitor, VisitCard& Visitcard, const char* department);
 	bool addNurseToDepartment(Nurse& nurse, const char* departmentName);
 	bool addDoctorToDepartment(Doctor& doctor, const char* departmentName);
+	bool addVisitorToDepartment(Visitor& visitor, const char* departmentName);
 	bool addArticleToResearchCenter(Researcher& researcher, Article& article);
 
-	/****************************************************************************/
 	// operator to add staff
 	Hospital& operator+=(const Doctor& doctor);
 	Hospital& operator+=(const Nurse& nurse);
-	/****************************************************************************/
 
 	int countDoctors() const;
 	int countNurses() const;
@@ -80,15 +79,13 @@ public:
 	Nurse* getNurseByName(const char* name) const;
 	Visitor* getVisitorByName(const char* name) const;
 	Researcher* getResearcherByName(const char* name) const;
-	/****************************************************************************/
-
 
 	void printDepartmentVisitors(const char* departmentName) const;
 	void printAllMedicalStaff() const;
 	void printDepartmentMedicalStaff(const char* departmentName) const;
 	void printAllResearchers() const;
 	void printAllDepartments() const;
-	/****************************************************************************/
+	
 	bool DepartmentExist(const Department& department);
 	bool NurseExist(const Nurse& nurse);
 	bool DoctorExist(const Doctor& doctor);

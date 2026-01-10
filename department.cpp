@@ -25,24 +25,18 @@ Department::Department(const char* name)
 }
 Department::~Department()
 {
+    // Department owns only the arrays and its own name.
+    // The individual Doctor/Nurse/Visitor objects are owned by Hospital, so DO NOT delete them here.
 	delete[] name;
+
 	if (doctors) {
-		for (int i = 0; i < currentNumberOfDoctors; ++i) {
-			delete doctors[i];
-		}
 		delete[] doctors;
 	}
 
 	if (nurses) {
-		for (int i = 0; i < currentNumberOfNurses; ++i) {
-			delete nurses[i];
-		}
 		delete[] nurses;
 	}
 	if (visitors) {
-		for (int i = 0; i < currentNumberOfVisitors; ++i) {
-			delete visitors[i];
-		}
 		delete[] visitors;
 	}
 }
@@ -174,4 +168,4 @@ void Department::setName(const char* name)
 	this->name = new char[strlen(name) + 1];
 	strcpy(this->name, name);
 }
-/*******************************************************************************/
+/******************************************************************************/
