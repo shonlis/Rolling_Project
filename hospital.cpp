@@ -163,7 +163,7 @@ bool Hospital::addVisit(Visitor& visitor, VisitCard& Visitcard, const char* depa
             addVisitor(visitor);
                 for (int j = 0; j < currentNumberOfVisitors; j++)
                 {
-                    if (visitors[j]->getId() == visitor.getId());
+                    if (visitors[j]->getId() == visitor.getId())
                     {
                         visitors[j]->addVisitCard(Visitcard);
                         departments[i]->addVisitor(visitors[j]);
@@ -193,7 +193,7 @@ bool Hospital::addNurseToDepartment(Nurse& nurse, const char* departmentName)
             addNurse(nurse);
             for (int j = 0; j < currentNumberOfNurses; j++)
             {
-                if (nurses[j]->getId() == nurse.getId());
+                if (nurses[j]->getId() == nurse.getId())
                 {
                     departments[i]->addNurse(nurses[j]);
                     return true;
@@ -222,7 +222,7 @@ bool Hospital::addDoctorToDepartment(Doctor& doctor, const char* departmentName)
             addDoctor(doctor);
             for (int j = 0; j < currentNumberOfDoctors; j++)
             {
-                if (doctors[j]->getId() == doctor.getId());
+                if (doctors[j]->getId() == doctor.getId())
                 {
                     departments[i]->addDoctor(doctors[j]);
                     return true;

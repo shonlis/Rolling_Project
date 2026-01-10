@@ -27,7 +27,6 @@ Researcher::Researcher(Researcher&& researcher) : Worker(move(researcher))
 	publishedArticles = researcher.publishedArticles;
 	researcher.publishedArticles = nullptr;
 }
-
 ostream& operator<<(ostream& os, const Researcher& researcher)
 {
     os << "Researcher: " << researcher.getName() << ", ID=" << researcher.getId() << ", Articles=" << researcher.getCurrentNumberOfArticles() << endl;

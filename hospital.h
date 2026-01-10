@@ -53,17 +53,15 @@ public:
 	bool addVisitor(Visitor& visitor);
 	bool addResearcher(Researcher& researcher);
 
+	bool addVisit(Visitor& visitor, VisitCard& Visitcard, const char* department);
+	bool addNurseToDepartment(Nurse& nurse, const char* departmentName);
+	bool addDoctorToDepartment(Doctor& doctor, const char* departmentName);
+	bool addResearcherToResearchCenter(Researcher& researcher, Article& article);
+
+	/****************************************************************************/
 	// operator to add staff
 	Hospital& operator+=(const Doctor& doctor);
 	Hospital& operator+=(const Nurse& nurse);
-
-	
-
-	bool addVisit(Visitor& visitor, VisitCard& Visitcard, Department& department);
-
-
-
-
 
 
 	Doctor* findDoctorById(int id) const;
@@ -87,7 +85,7 @@ public:
 	void printAllResearchers() const;
 	void printAllDepartments() const;
 	void searchVisitorById(int id) const;
-
+	/****************************************************************************/
 	bool DepartmentExist(const Department& department);
 	bool NurseExist(const Nurse& nurse);
 	bool DoctorExist(const Doctor& doctor);
