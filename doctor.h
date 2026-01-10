@@ -5,8 +5,8 @@
 
 
 class Doctor : public Worker {
-public:
     char* specialization;
+public:
 
     // streaming
     friend ostream& operator<<(ostream& os, const Doctor& d);
@@ -14,7 +14,7 @@ public:
     Doctor(const Worker& Worker);
     Doctor(const Doctor& other);
     Doctor(Doctor&& other);
-    ~Doctor();
+    ~Doctor() { delete[] specialization; }
 
     // getters
     const char* getSpecialization() const { return specialization ? specialization : nullptr; };

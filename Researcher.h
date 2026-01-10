@@ -9,7 +9,7 @@ class Researcher : public Worker
 private:
 	int maxNumberOfArticles;
 	int currentNumberOfArticles;
-	Article** publishedArticles;
+	Article ** publishedArticles;
 
 public:
 	Researcher(const Worker& worker);

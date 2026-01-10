@@ -56,13 +56,12 @@ public:
 	bool addVisit(Visitor& visitor, VisitCard& Visitcard, const char* department);
 	bool addNurseToDepartment(Nurse& nurse, const char* departmentName);
 	bool addDoctorToDepartment(Doctor& doctor, const char* departmentName);
-	bool addResearcherToResearchCenter(Researcher& researcher, Article& article);
+	bool addArticleToResearchCenter(Researcher& researcher, Article& article);
 
 	/****************************************************************************/
 	// operator to add staff
 	Hospital& operator+=(const Doctor& doctor);
 	Hospital& operator+=(const Nurse& nurse);
-
 
 	Doctor* findDoctorById(int id) const;
 	Nurse* findNurseById(int id) const;

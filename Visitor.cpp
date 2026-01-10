@@ -8,7 +8,6 @@ Visitor::Visitor(const Person& person) : Person(person)
     visits = new VisitCard* [maxNumberOfVisits];
 	currentNumberOfVisits = 0;
 }
-
 Visitor::~Visitor()
 {
     for (int i = 0; i < currentNumberOfVisits; ++i) {
@@ -16,7 +15,6 @@ Visitor::~Visitor()
     }
     delete[] visits;
 }
-
 Visitor::Visitor(const Visitor& visitor) :Person(visitor)
 {
 	maxNumberOfVisits = visitor.maxNumberOfVisits;
@@ -36,8 +34,6 @@ Visitor::Visitor(Visitor&& visitor) :Visitor(visitor)
     }
 	visitor.visits = nullptr;
 }
-
-
 bool Visitor::addVisitCard(VisitCard& visitCard)
 {
     if (visitCardExist(visitCard))
@@ -53,7 +49,6 @@ bool Visitor::addVisitCard(VisitCard& visitCard)
         delete[]this->visits;
         this->visits = temp;
     }
-
     this->visits[currentNumberOfVisits] = &visitCard;
     currentNumberOfVisits++;
     return true;

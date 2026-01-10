@@ -12,6 +12,7 @@ public:
 	// constructors and destructor
 
 	VisitCard(const char* purposeOfVisit, const char* visitingDate, Department& departmentsToVisit, Worker* hostWorker);
+
 	inline ~VisitCard();
 
 	// disable copy and move c'tors
@@ -23,7 +24,6 @@ public:
 
 	//setters
 
-
 	// getters
 	const char* getPurposeOfVisit() const { return purposeOfVisit; }
 	const char* getVisitingDate() const { return visitingDate; }
@@ -31,13 +31,11 @@ public:
 	const Department& getDepartmentsToVisit() const { return departmentsToVisit; }
 	const Worker* getHostWorker() const { return hostWorker; }
 
-
-
 private:
 	char* purposeOfVisit;
 	char visitingDate[32];
 	const Department& departmentsToVisit;
-	const Worker* hostWorker;
+	Worker* hostWorker;
 };
 
 VisitCard::~VisitCard()

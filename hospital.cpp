@@ -236,9 +236,9 @@ bool Hospital::addDoctorToDepartment(Doctor& doctor, const char* departmentName)
     }
     return false;
 }
-bool Hospital::addResearcherToResearchCenter(Researcher& researcher, Article& article)
+bool Hospital::addArticleToResearchCenter(Researcher& researcher, Article& article)
 {
-	addResearcher(researcher);
+	
 	for (int i = 0; i < researchCenter.getCurrentNumberOfResearchers(); i++)
 	{
 		if (researchCenter.getResearchers()[i]->getId() == researcher.getId())
@@ -268,6 +268,7 @@ Hospital& Hospital::operator+=(const Nurse& nurse)
     }
     return *this;
 }
+
 int Hospital::countDoctors() const {
     int c = 0;
 

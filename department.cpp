@@ -26,9 +26,25 @@ Department::Department(const char* name)
 Department::~Department()
 {
 	delete[] name;
-	delete[] doctors;
-	delete[] nurses;
-	delete[] visitors;
+	if (doctors) {
+		for (int i = 0; i < currentNumberOfDoctors; ++i) {
+			delete doctors[i];
+		}
+		delete[] doctors;
+	}
+
+	if (nurses) {
+		for (int i = 0; i < currentNumberOfNurses; ++i) {
+			delete nurses[i];
+		}
+		delete[] nurses;
+	}
+	if (visitors) {
+		for (int i = 0; i < currentNumberOfVisitors; ++i) {
+			delete visitors[i];
+		}
+		delete[] visitors;
+	}
 }
 bool Department::addDoctor(Doctor* doctor)
 {
