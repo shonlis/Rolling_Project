@@ -7,7 +7,7 @@
 
 class VisitCard;
 
-class Visitor : public Person 
+class Visitor : public Person
 {
 private:
 
@@ -15,7 +15,7 @@ private:
 	int maxNumberOfVisits;
 	int currentNumberOfVisits;
 public:
-	
+
 	Visitor(const Person& person);
 	~Visitor();
 
@@ -23,7 +23,7 @@ public:
 	Visitor(Visitor&& visitor);
 
 	//setters
-	
+
 
 	//getters
 	int getNumbrtOfCurrentVisits() const { return currentNumberOfVisits; }
@@ -31,7 +31,7 @@ public:
 	// other methods
 	bool addVisitCard(VisitCard& visitCard);
 	bool visitCardExist(const VisitCard& visitCard);
-	
+
 	//operators overloading
 	friend ostream& operator<<(ostream& os, const Visitor& Visitor);
 };

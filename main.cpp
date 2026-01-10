@@ -140,7 +140,7 @@ int main()
         VisitCard vc1("Checkup", nowDate(), *hospital.getDepartmentByName("Emergency"), nullptr);
         v1.addVisitCard(vc1);
         hospital.addVisitor(v1);
-		hospital.getDepartmentByName("Emergency")->addVisitor(&v1);
+		hospital.getDepartmentByName("Emergency")->addVisitor(hospital.getVisitorByName("John Doe1"));
 
 
         Person p2("John Doe2", 4002, 1965, (Person::Gender)0);
@@ -149,7 +149,7 @@ int main()
         VisitCard vc2("Checkup", nowDate(), *hospital.getDepartmentByName("Emergency"), nullptr);
         v2.addVisitCard(vc2);
         hospital.addVisitor(v2);
-        hospital.getDepartmentByName("Emergency")->addVisitor(&v2);
+        hospital.getDepartmentByName("Emergency")->addVisitor(hospital.getVisitorByName("John Doe2"));
 
         Person p3("John Doe3", 4003, 1965, (Person::Gender)0);
         Visitor v3(p3);
@@ -157,7 +157,7 @@ int main()
         VisitCard vc3("Checkup", nowDate(), *hospital.getDepartmentByName("Emergency"), nullptr);
         v3.addVisitCard(vc3);
         hospital.addVisitor(v3);
-		hospital.getDepartmentByName("Emergency")->addVisitor(&v3);
+		hospital.getDepartmentByName("Emergency")->addVisitor(hospital.getVisitorByName("John Doe3"));
 
     }
 

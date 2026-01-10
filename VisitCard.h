@@ -14,11 +14,14 @@ public:
 
 	VisitCard(const char* purposeOfVisit, const char* visitingDate, Department& departmentsToVisit, char* hostWorker);
 
+	// allow copying - store same VisitCardNumber so copied object represents same card
+	VisitCard(const VisitCard& other);
+
 	inline ~VisitCard();
 
-	// disable copy and move c'tors
-	VisitCard(const VisitCard& visitCard) = delete;
-	VisitCard(const VisitCard&& visitCard) = delete;
+	// disable move & assignment if you want (optional)
+	VisitCard& operator=(const VisitCard&) = delete;
+	VisitCard(VisitCard&&) = delete;
 
 	//operators overloading
 	friend ostream& operator<<(ostream& os, const VisitCard& VisitCard);
@@ -32,6 +35,7 @@ public:
 			size_t len = strlen(hostWorker) + 1;
 			this->hostWorker = new char[len];
 			strncpy(this->hostWorker, hostWorker, len);
+			this->hostWorker[len - 1] = '\0';
 		}
 		else
 		{
@@ -55,11 +59,11 @@ private:
 
 VisitCard::~VisitCard()
 {
-	if(purposeOfVisit)
+	if (purposeOfVisit)
 	{
 		delete[] purposeOfVisit;
 	}
-	if(hostWorker)
+	if (hostWorker)
 	{
 		delete[] hostWorker;
 	}
