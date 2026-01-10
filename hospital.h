@@ -62,15 +62,7 @@ public:
 	// operator to add staff
 	Hospital& operator+=(const Doctor& doctor);
 	Hospital& operator+=(const Nurse& nurse);
-
-	Doctor* findDoctorById(int id) const;
-	Nurse* findNurseById(int id) const;
-	Visitor* findVisitorById(int id) const;
-	
-	Department* getDepartmentByName(const char* name) const;
-	Doctor* getDoctorByName(const char* name) const;
-	Nurse* getNurseByName(const char* name) const;
-	Visitor* getVisitorByName(const char* name) const;
+	/****************************************************************************/
 
 	int countDoctors() const;
 	int countNurses() const;
@@ -78,12 +70,24 @@ public:
 	int countResearchers() const;
 	int countDepartments() const;
 
+	Doctor* findDoctorById(int id) const;
+	Nurse* findNurseById(int id) const;
+	Visitor* findVisitorById(int id) const;
+	Researcher* findResearcherById(int id) const;
+	
+	Department* getDepartmentByName(const char* name) const;
+	Doctor* getDoctorByName(const char* name) const;
+	Nurse* getNurseByName(const char* name) const;
+	Visitor* getVisitorByName(const char* name) const;
+	Researcher* getResearcherByName(const char* name) const;
+	/****************************************************************************/
+
+
 	void printDepartmentVisitors(const char* departmentName) const;
 	void printAllMedicalStaff() const;
 	void printDepartmentMedicalStaff(const char* departmentName) const;
 	void printAllResearchers() const;
 	void printAllDepartments() const;
-	void searchVisitorById(int id) const;
 	/****************************************************************************/
 	bool DepartmentExist(const Department& department);
 	bool NurseExist(const Nurse& nurse);

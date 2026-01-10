@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <limits>
 #include <ctime>
@@ -135,32 +134,30 @@ int main()
 
     // Add a visitor
     {
-        Person pv1("John Doe1", 4001, 1965, (Person::Gender)0);
-
-        Visitor v1(pv1);
-        hospital.addVisitor(v1);
-		hospital.getDepartmentByName("Emergency")->addVisitor(v1);
-
+        Person p1("John Doe1", 4001, 1965, (Person::Gender)0);
+        Visitor v1(p1);
         // add a visit card
         VisitCard vc1("Checkup", nowDate(), *hospital.getDepartmentByName("Emergency"), nullptr);
         v1.addVisitCard(vc1);
+        hospital.addVisitor(v1);
+		hospital.getDepartmentByName("Emergency")->addVisitor(&v1);
 
-        Person pv2("John Doe2", 4002, 1965, (Person::Gender)0);
-        Visitor v2(pv2);
-        hospital.addVisitor(v2);
-        hospital.getDepartmentByName("Emergency")->addVisitor(v2);
 
+        Person p2("John Doe2", 4002, 1965, (Person::Gender)0);
+        Visitor v2(p2);
         // add a visit card
         VisitCard vc2("Checkup", nowDate(), *hospital.getDepartmentByName("Emergency"), nullptr);
         v2.addVisitCard(vc2);
+        hospital.addVisitor(v2);
+        hospital.getDepartmentByName("Emergency")->addVisitor(&v2);
 
-        Person pv3("John Doe3", 4003, 1965, (Person::Gender)0);
-        Visitor v3(pv3);
-        hospital.addVisitor(v3);
-		hospital.getDepartmentByName("Emergency")->addVisitor(v3);
+        Person p3("John Doe3", 4003, 1965, (Person::Gender)0);
+        Visitor v3(p3);
         // add a visit card
         VisitCard vc3("Checkup", nowDate(), *hospital.getDepartmentByName("Emergency"), nullptr);
         v3.addVisitCard(vc3);
+        hospital.addVisitor(v3);
+		hospital.getDepartmentByName("Emergency")->addVisitor(&v3);
 
     }
 
@@ -189,7 +186,8 @@ int main()
         if (choice == 1)
         {
             name = askLine("Department name: ");
-            hospital.addDepartment(name);
+			Department dept(name);
+            hospital.addDepartment(dept);
             cout << "Added department: " << name << endl;
         }
         else if (choice == 2)
@@ -247,7 +245,8 @@ int main()
                 int birth = askInt("Birth year(DDMMYYYY): ");
                 Person p(name, id, birth, (Person::Gender)0);
                 p.setGender((Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
-                hospital.addVisitor(p);
+				Visitor  v(p);
+                hospital.addVisitor(v);
             }
 
             hospital.printAllDepartments();

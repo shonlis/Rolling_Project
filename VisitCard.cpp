@@ -6,13 +6,40 @@ using namespace std;
 
 int VisitCard::counter = 0;
 
-VisitCard::VisitCard(const char* purposeOfVisit, const char* visitingDate, Department& departmentsToVisit, Worker* hostWorker) : departmentsToVisit(departmentsToVisit), hostWorker(hostWorker), VisitCardNumber(++counter)
+VisitCard::VisitCard(const char* purposeOfVisit, const char* visitingDate, Department& departmentsToVisit, char* hostWorker) : departmentsToVisit(departmentsToVisit), hostWorker(hostWorker), VisitCardNumber(++counter)
 {
-    this->purposeOfVisit = new char[strlen(purposeOfVisit) + 1];
-    strcpy(this->purposeOfVisit, purposeOfVisit);
+    if(purposeOfVisit)
+    {
+        this->purposeOfVisit = new char[strlen(purposeOfVisit) + 1];
+        strcpy(this->purposeOfVisit, purposeOfVisit);
+        this->purposeOfVisit[sizeof(this->purposeOfVisit)] = '\0';
+    }
+    else
+    {
+        this->purposeOfVisit = nullptr;
+    }
 
-    strncpy(this->visitingDate, visitingDate, sizeof(this->visitingDate) - 1);
-    this->visitingDate[sizeof(this->visitingDate) - 1] = '\0';
+    if(visitingDate)
+    {
+        strncpy(this->visitingDate, visitingDate, sizeof(this->visitingDate) - 1);
+        this->visitingDate[sizeof(this->visitingDate) - 1] = '\0';
+    }
+    else
+    {
+        this->visitingDate[0] = '\0';
+    }
+	if (hostWorker)
+    {
+        size_t len = strlen(hostWorker) + 1;
+        this->hostWorker = new char[len];
+        strncpy(this->hostWorker, hostWorker, len);
+        this->hostWorker[len-1] = '\0';
+    }
+    else
+    {
+		this->hostWorker = nullptr;
+    }
+
 }
 ostream& operator<<(ostream& os, const VisitCard& vc)
 {
