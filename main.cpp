@@ -1,3 +1,4 @@
+using namespace std;
 #include <iostream>
 #include <limits>
 #include <ctime>
@@ -12,8 +13,6 @@
 #include "Researcher.h"
 #include "Article.h"
 #include "Research_Center.h"
-
-using namespace std;
 
 #define new DBG_NEW
 
@@ -87,21 +86,21 @@ int main()
 
         Person p3("Dr. Pop", 1002, 1980, (Person::Gender)0);
         Worker w3(p3);
-        Doctor d3(w3);
-        d3.setSpecialization("Cardiology");
-        hospital.addDoctorToDepartment(d3, department1.getName());
+        Doctor d2(w3);
+        d2.setSpecialization("Cardiology");
+        hospital.addDoctorToDepartment(d2, department2.getName());
 
         Person p4("Nurse Carol2", 2002, 1990, (Person::Gender)1);
         Worker w4(p4);
         Nurse n2(w4);
         n2.setExperienceYears(3);
-		hospital.addNurseToDepartment(n2, department1.getName());
+		hospital.addNurseToDepartment(n2, department2.getName());
 
         Person p5("Dr. Bob", 1003, 1985, (Person::Gender)0);
         Worker w5(p5);
-        Doctor d2(w5);
-        d2.setSpecialization("Emergency");
-		hospital.addDoctorToDepartment(d2, department2.getName());
+        Doctor d3(w5);
+        d3.setSpecialization("Emergency");
+		hospital.addDoctorToDepartment(d3, department3.getName());
 
         Person p6("Nurse Carol3", 2003, 1990, (Person::Gender)1);
         Worker w6(p6);
@@ -132,34 +131,25 @@ int main()
         Article a3 = Article("Cardiac 3", "2026-01-01", "Journal of Heart2");
         hospital.addArticleToResearchCenter(r2, a3);
 
-    // Add a visitor
-    {
-        Person p1("John Doe1", 4001, 1965, (Person::Gender)0);
-        Visitor v1(p1);
+    
+        Person person1("John Doe1", 4001, 1965, (Person::Gender)0);
+        Visitor v1(person1);
         // add a visit card
         VisitCard vc1("Checkup", nowDate(), *hospital.getDepartmentByName("Emergency"), nullptr);
-        v1.addVisitCard(vc1);
-        hospital.addVisitor(v1);
-		hospital.getDepartmentByName("Emergency")->addVisitor(hospital.getVisitorByName("John Doe1"));
+        hospital.addVisit(v1, vc1, "Emergency");
 
-
-        Person p2("John Doe2", 4002, 1965, (Person::Gender)0);
-        Visitor v2(p2);
+        Person person2("John Doe2", 4002, 1965, (Person::Gender)0);
+        Visitor v2(person2);
         // add a visit card
         VisitCard vc2("Checkup", nowDate(), *hospital.getDepartmentByName("Emergency"), nullptr);
-        v2.addVisitCard(vc2);
-        hospital.addVisitor(v2);
-        hospital.getDepartmentByName("Emergency")->addVisitor(hospital.getVisitorByName("John Doe2"));
+        hospital.addVisit(v2, vc2, "Cardiology");
 
-        Person p3("John Doe3", 4003, 1965, (Person::Gender)0);
-        Visitor v3(p3);
+        Person person3("John Doe3", 4003, 1965, (Person::Gender)0);
+        Visitor v3(person3);
         // add a visit card
         VisitCard vc3("Checkup", nowDate(), *hospital.getDepartmentByName("Emergency"), nullptr);
-        v3.addVisitCard(vc3);
-        hospital.addVisitor(v3);
-		hospital.getDepartmentByName("Emergency")->addVisitor(hospital.getVisitorByName("John Doe3"));
-
-    }
+        hospital.addVisit(v3, vc3, "Oncology");
+ 
 
     cout << "Initial data added. Today=" << nowDate() << endl;
 
@@ -194,7 +184,7 @@ int main()
         {
             name = askLine("Nurse name: ");
             int id = askInt("ID (int): ");
-            int birth = askInt("Birth year(DDMMYYYY): ");
+            int birth = askInt("Birth year(YYYY): ");
             Person p(name, id, birth, (Person::Gender)0);
             p.setGender((Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
             Worker w(p);
@@ -213,7 +203,7 @@ int main()
         {
             name = askLine("Doctor name: ");
             int id = askInt("ID (int): ");
-            int birth = askInt("Birth year(DDMMYYYY): ");
+            int birth = askInt("Birth year(YYYY): ");
 
             Person p(name, id, birth, (Person::Gender)0);
             p.setGender((Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
@@ -243,7 +233,7 @@ int main()
 
                 char* name = askLine("Visitor name: ");
                 id = askInt("ID (int): ");
-                int birth = askInt("Birth year(DDMMYYYY): ");
+                int birth = askInt("Birth year(YYYY): ");
                 Person p(name, id, birth, (Person::Gender)0);
                 p.setGender((Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
 				Visitor  v(p);
@@ -285,7 +275,7 @@ int main()
         {
             name = askLine("Researcher name: ");
             int id = askInt("ID (int): ");
-            int birth = askInt("Birth year(DDMMYYYY): ");
+            int birth = askInt("Birth year(YYYY): ");
             Person p(name, id, birth, (Person::Gender)0);
             p.setGender((Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
             Worker w(p);
@@ -303,7 +293,7 @@ int main()
             char* date = askLine("Publication date(DDMMYYYY): ");
             char* mag = askLine("Magazine name: ");
             Article a  = Article(title, date, mag);
-            hospital.findResearcherById(rid)->addArticle(a);
+			hospital.addArticleToResearchCenter(*hospital.findResearcherById(rid), a);
             cout << "Article " << a.getTitle() << " added" << endl;
         }
         else if (choice == 7)
@@ -322,22 +312,12 @@ int main()
         }
         else if (choice == 10)
         {
-            int found = 0;
             int vid = askInt("Enter visitor ID: ");
-            // search visitors vector
-            for (int i = 0; i < hospital.countVisitors(); ++i)
-            {
-                hospital.findVisitorById(vid);
-                if (hospital.findVisitorById(vid)->getId() == vid) { found = 1;}
-            }
-            if (found) 
+            if (hospital.findVisitorById(vid))
             {
                 cout << "Visitor name: " << hospital.findVisitorById(vid)->getName() << endl;
             }
-            else
-            { 
-                cout << "Visitor not found" << endl;
-            }
+            
         }
         else if (choice == 11)
         {
