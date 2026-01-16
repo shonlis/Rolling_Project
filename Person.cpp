@@ -27,5 +27,6 @@ bool Person::setGender(Gender gender)
 ostream& operator<<(ostream& os, const Person& p)
 {
 	os << "Person Details: " << p.getName() <<": ID = " << p.getId() <<", BirthYear = " <<p.getBirthYear() <<", Gender = "<<p.getGender() << endl;
+	p.toOs(os);
 	return os;
 }

@@ -8,9 +8,7 @@ class Doctor : public Worker {
     char* specialization;
 public:
 
-    // streaming
-    friend ostream& operator<<(ostream& os, const Doctor& d);
-
+    Doctor(const char* name, int id, int birthYear, Gender gender, const char* specialization = nullptr);
     Doctor(const Worker& Worker);
     Doctor(const Doctor& other);
     Doctor(Doctor&& other);
@@ -23,7 +21,11 @@ public:
     bool setSpecialization(const char* specialization);
 
     // other methods
-
+    virtual void showthis() const override{
+        Worker::showthis();
+		cout << "Specialization: " << (specialization ? specialization : "not defined") << endl;
+    }
+    virtual void toOs(ostream& os) const override;
 };
 
 #endif // DOCTOR_H

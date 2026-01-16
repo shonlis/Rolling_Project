@@ -8,8 +8,7 @@ class Nurse : public Worker {
     int ExperienceYears;
 public:
 
-    friend ostream& operator<<(ostream& os, const Nurse& n);
-
+	Nurse(const char* name, int id, int birthYear, Gender gender, int ExperienceYears = 0);
     Nurse(const Worker& worker);
 	Nurse(const Nurse& nurse);
 	Nurse(Nurse&& nurse);
@@ -22,7 +21,12 @@ public:
 	void setExperienceYears(int experienceYears);
 
 	// other methods
-	
+	virtual void showthis() const override {
+		Worker::showthis();
+		cout << "Experience Years: " << ExperienceYears << endl;
+	}
+
+	virtual void toOs(ostream& os) const override;
 
 };
 

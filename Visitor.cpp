@@ -2,6 +2,22 @@
 using namespace std;
 #include "Visitor.h"
 
+Visitor::Visitor(const char* name, int id, int birthYear, Gender gender, Visitor** visitors)
+	: Person(name, id, birthYear, gender), maxNumberOfVisits(2), currentNumberOfVisits(0)
+{
+    this->visits = new VisitCard * [maxNumberOfVisits];
+    if (visitors != nullptr)
+    {
+        for (int i = 0; i < maxNumberOfVisits; i++)
+        {
+            this->visits[i] = visitors[i];
+        }
+    }
+    else {
+        for (int i = 0; i < maxNumberOfVisits; ++i) visits[i] = nullptr;
+    }
+}
+
 // default initial max visits value kept as before
 Visitor::Visitor(const Person& person) : Person(person)
 {
@@ -45,6 +61,18 @@ Visitor::Visitor(Visitor&& visitor) : Person(std::move(visitor))
     visitor.currentNumberOfVisits = 0;
     visitor.maxNumberOfVisits = 0;
 }
+
+void Visitor::showthis() const
+{
+    Person::showthis();
+    std::cout << "Number of visits: " << currentNumberOfVisits << std::endl;
+    for (int i = 0; i < currentNumberOfVisits; ++i) {
+        if (visits[i]) {
+            std::cout << *visits[i] << std::endl;
+        }
+	}
+}
+
 bool Visitor::addVisitCard(VisitCard& visitCard)
 {
     if (visitCardExist(visitCard))

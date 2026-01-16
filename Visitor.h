@@ -16,6 +16,7 @@ private:
 	int currentNumberOfVisits;
 public:
 
+	Visitor(const char* name, int id, int birthYear, Gender gender, Visitor** visitors = nullptr);
 	Visitor(const Person& person);
 	~Visitor();
 
@@ -29,6 +30,7 @@ public:
 	int getNumbrtOfCurrentVisits() const { return currentNumberOfVisits; }
 
 	// other methods
+	void showthis() const override;
 	bool addVisitCard(VisitCard& visitCard);
 	bool visitCardExist(const VisitCard& visitCard);
 

@@ -23,7 +23,7 @@ public:
 
 	// constructors and destructor
 	Person(const char* name, int id, int birthYear, Gender gender);
-	~Person() { delete[]name; };
+	virtual ~Person() { delete[]name; };
 
 
 	// getters
@@ -35,6 +35,15 @@ public:
 	// setters
 	bool setGender(Gender gender); /* you can change your gender */
 	
+	//other methods
+	virtual void showthis() const = 0 
+	{
+		cout << "Person: " << name << ", ID: " << id << ", Birth Year: "
+			<< birthYear << ", Gender: " << (gender == Male ? "Male" : gender == Female ? "Female" : "Unknown") << endl;
+	};
+
+	virtual void toOs(ostream& os) const {}
+
 	//operators overloading
 	friend ostream& operator<<(ostream& os, const Person& p);
 

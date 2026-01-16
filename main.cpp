@@ -72,56 +72,38 @@ int main()
     hospital.printAllDepartments();
     // Create one doctor and one nurse and register them in departments
         // Person args: name, id, birthYear, gender (pass 0 for male)
-        Person p1("Dr. Alice", 1001, 1980, (Person::Gender)0);
-        Worker w1(p1);
-        Doctor d1(w1);
+        Doctor d1("Dr. Alice", 1001, 1980, (Person::Gender)0, "Cardiology");
         d1.setSpecialization("Cardiology");
         hospital.addDoctorToDepartment(d1, department1.getName());
         
-        Person p2("Nurse Carol", 2001, 1990, (Person::Gender)1);
-        Worker w2(p2);
-        Nurse n1(w2);
+        Nurse n1("Nurse Carol", 2001, 1990, (Person::Gender)1, 5);
         n1.setExperienceYears(5);
         hospital.addNurseToDepartment(n1, department1.getName());
 
-        Person p3("Dr. Pop", 1002, 1980, (Person::Gender)0);
-        Worker w3(p3);
-        Doctor d2(w3);
+        Doctor d2("Dr. Pop", 1002, 1980, (Person::Gender)0, "Cardiology");
         d2.setSpecialization("Cardiology");
         hospital.addDoctorToDepartment(d2, department2.getName());
 
-        Person p4("Nurse Carol2", 2002, 1990, (Person::Gender)1);
-        Worker w4(p4);
-        Nurse n2(w4);
+        Nurse n2("Nurse Carol2", 2002, 1990, (Person::Gender)1, 3);
         n2.setExperienceYears(3);
 		hospital.addNurseToDepartment(n2, department2.getName());
 
-        Person p5("Dr. Bob", 1003, 1985, (Person::Gender)0);
-        Worker w5(p5);
-        Doctor d3(w5);
+        Doctor d3("Dr. Bob", 1003, 1985, (Person::Gender)0, "Emergency");
         d3.setSpecialization("Emergency");
 		hospital.addDoctorToDepartment(d3, department3.getName());
 
-        Person p6("Nurse Carol3", 2003, 1990, (Person::Gender)1);
-        Worker w6(p6);
-        Nurse n3(w6);
+        Nurse n3("Nurse Carol3", 2003, 1990, (Person::Gender)1, 2);
         n3.setExperienceYears(2);
 		hospital.addNurseToDepartment(n3, department1.getName());
 
-    
-        Person pr1("Res. Frank", 3001, 1975, (Person::Gender)0);
-        Worker wr1(pr1);
-        Researcher r1 =  Researcher(wr1);
+        Researcher r1 =  Researcher("Res. Frank", 3001, 1975, (Person::Gender)0);
         
         hospital.addResearcher(r1);
             // add one article
         Article a1 = Article("Cardiac Study", "2023-05-01", "Journal of Heart");
         hospital.addArticleToResearchCenter(r1, a1);
 
-
-        Person pr2("Res. Prank", 3002, 1975, (Person::Gender)0);
-        Worker wr2(pr2);
-        Researcher r2 = Researcher(wr2);
+        Researcher r2 = Researcher("Res. Fun", 3002, 1975, (Person::Gender)0);
      
         hospital.addResearcher(r2);
             // add one article
@@ -131,21 +113,17 @@ int main()
         Article a3 = Article("Cardiac 3", "2026-01-01", "Journal of Heart2");
         hospital.addArticleToResearchCenter(r2, a3);
 
-    
-        Person person1("John Doe1", 4001, 1965, (Person::Gender)0);
-        Visitor v1(person1);
+        Visitor v1("John Doe1", 4001, 1965, (Person::Gender)0);
         // add a visit card
         VisitCard vc1("Checkup", nowDate(), *hospital.getDepartmentByName("Emergency"), nullptr);
         hospital.addVisit(v1, vc1, "Emergency");
 
-        Person person2("John Doe2", 4002, 1965, (Person::Gender)0);
-        Visitor v2(person2);
+        Visitor v2("John Doe2", 4002, 1965, (Person::Gender)0);
         // add a visit card
         VisitCard vc2("Checkup", nowDate(), *hospital.getDepartmentByName("Emergency"), nullptr);
         hospital.addVisit(v2, vc2, "Cardiology");
 
-        Person person3("John Doe3", 4003, 1965, (Person::Gender)0);
-        Visitor v3(person3);
+        Visitor v3("John Doe3", 4003, 1965, (Person::Gender)0);
         // add a visit card
         VisitCard vc3("Checkup", nowDate(), *hospital.getDepartmentByName("Emergency"), nullptr);
         hospital.addVisit(v3, vc3, "Oncology");
@@ -185,11 +163,8 @@ int main()
             name = askLine("Nurse name: ");
             int id = askInt("ID (int): ");
             int birth = askInt("Birth year(YYYY): ");
-            Person p(name, id, birth, (Person::Gender)0);
-            p.setGender((Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
-            Worker w(p);
 
-            Nurse n(w);
+            Nurse n((const char*)name, id, birth, (Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
             int exp = askInt("Experience years: ");
             n.setExperienceYears(exp);
 
@@ -205,10 +180,7 @@ int main()
             int id = askInt("ID (int): ");
             int birth = askInt("Birth year(YYYY): ");
 
-            Person p(name, id, birth, (Person::Gender)0);
-            p.setGender((Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
-            Worker w(p);
-            Doctor d(w);
+            Doctor d((const char*)name, id, birth, (Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
             name = askLine("Specialization: ");
             d.setSpecialization(name);
 
@@ -234,9 +206,7 @@ int main()
                 char* name = askLine("Visitor name: ");
                 id = askInt("ID (int): ");
                 int birth = askInt("Birth year(YYYY): ");
-                Person p(name, id, birth, (Person::Gender)0);
-                p.setGender((Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
-				Visitor  v(p);
+				Visitor  v((const char*)name, id, birth, (Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
                 hospital.addVisitor(v);
             }
 
@@ -276,10 +246,7 @@ int main()
             name = askLine("Researcher name: ");
             int id = askInt("ID (int): ");
             int birth = askInt("Birth year(YYYY): ");
-            Person p(name, id, birth, (Person::Gender)0);
-            p.setGender((Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
-            Worker w(p);
-            Researcher r(w);
+            Researcher r((const char*)name, id, birth, (Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
             hospital.addResearcher(r);
             cout << "Researcher " << name << " added" << endl;
         }
@@ -328,17 +295,11 @@ int main()
         {
             cout << "Testing operators:" << endl;
             // add temporary doctor/nurse via operator+= as before
-            Person pd("Dr. Bob", 5001, 1970, (Person::Gender)0);
-            Worker wd(pd);
-            Doctor tempD(wd);
-            tempD.setSpecialization("General");
+            Doctor tempD("Dr. Bob", 5001, 1970, (Person::Gender)0, "General");
             hospital += tempD;
             cout << "Added doctor via operator+= to hospital (first department)." << endl;
 
-            Person pn("Nurse Dan", 6001, 1985, (Person::Gender)1);
-            Worker wn(pn);
-            Nurse tempN(wn);
-            tempN.setExperienceYears(5);
+            Nurse tempN("Nurse Dan", 6001, 1985, (Person::Gender)1, 5);
             hospital += tempN;
             cout << "Added nurse via operator+= to hospital (first department)." << endl;
 

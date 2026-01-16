@@ -17,11 +17,19 @@ protected:
 	Worker(Worker&& worker); // move c'tor for inheritance.
 public:
 	
+	Worker(const char* name, int id, int birthYear, Gender gender);
 	Worker(const Person& person);
 	
+	virtual void showthis() const = 0 {
+		Person::showthis();
+		cout << "Worker Number: " << workerNumber << endl;
+	}
 
 	void operator=(const Worker& worker) = delete;
 	void operator=(const Worker&& worker) = delete;
+
+	virtual void toOs(ostream& os) const override 
+	{ os << "Worker Number: " << workerNumber << endl; }
 
 };
 

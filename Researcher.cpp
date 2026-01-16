@@ -4,12 +4,29 @@ using namespace std;
 #include "Researcher.h"
 #include "Article.h"
 
+Researcher::Researcher(const char* name, int id, int birthYear, Gender gender, Article** articles)
+	: Worker(name, id, birthYear, gender), maxNumberOfArticles(2), currentNumberOfArticles(0)
+{
+	this->publishedArticles = new Article*[maxNumberOfArticles];
+	if(articles != nullptr)
+	{
+		for (int i = 0; i < maxNumberOfArticles; i++)
+		{
+			this->publishedArticles[i] = articles[i];
+		}
+	}
+	else {
+		for (int i = 0; i < maxNumberOfArticles; ++i) publishedArticles[i] = nullptr;
+	}
+}
+
 Researcher::Researcher(const Worker& worker) : Worker(worker)
 {
 	maxNumberOfArticles = 2;
 	this->publishedArticles = new Article*[maxNumberOfArticles];
 	currentNumberOfArticles = 0;
 }
+
 Researcher::Researcher(const Researcher& researcher) : Worker(researcher)
 {
 	maxNumberOfArticles = researcher.maxNumberOfArticles;
@@ -20,6 +37,7 @@ Researcher::Researcher(const Researcher& researcher) : Worker(researcher)
 		publishedArticles[i] = researcher.publishedArticles[i];
 	}
 }
+
 Researcher::Researcher(Researcher&& researcher) : Worker(move(researcher))
 {
 	maxNumberOfArticles = researcher.maxNumberOfArticles;
@@ -27,11 +45,8 @@ Researcher::Researcher(Researcher&& researcher) : Worker(move(researcher))
 	publishedArticles = researcher.publishedArticles;
 	researcher.publishedArticles = nullptr;
 }
-ostream& operator<<(ostream& os, const Researcher& researcher)
-{
-    os << "Researcher: " << researcher.getName() << ", ID=" << researcher.getId() << ", Articles=" << researcher.getCurrentNumberOfArticles() << endl;
-    return os;
-}
+
+
 bool Researcher::addArticle(Article& article)
 {
 
@@ -55,6 +70,16 @@ bool Researcher::addArticle(Article& article)
 	return true;
 
 }
+
+void Researcher::showthis() const
+{
+	Worker::showthis();
+	cout << "Number of Published Articles: " << currentNumberOfArticles << endl;
+	for (int i = 0; i < currentNumberOfArticles; i++) {
+		cout << "Article " << i + 1 << ": " << (publishedArticles[i] ? publishedArticles[i]->getTitle() : "not defined") << endl;
+	}
+};
+
 bool Researcher::articleExist(const Article& article)
 {
 	for (int i = 0; i < currentNumberOfArticles; i++)
@@ -64,6 +89,7 @@ bool Researcher::articleExist(const Article& article)
 	}
 	return false;
 }
+
 bool Researcher::operator<(const Researcher& researcher) const
 {
 	if (this->currentNumberOfArticles < researcher.currentNumberOfArticles)
@@ -71,6 +97,7 @@ bool Researcher::operator<(const Researcher& researcher) const
 	else
 		return false;
 }
+
 bool Researcher::operator>(const Researcher& researcher) const
 {
 	if (this->currentNumberOfArticles > researcher.currentNumberOfArticles)
@@ -88,4 +115,13 @@ const Researcher& Researcher::operator=(const Researcher& researcher)
 	this->currentNumberOfArticles = researcher.currentNumberOfArticles;
 
 	return *this;
+}
+
+void Researcher::toOs(ostream& os) const
+{
+	Worker::toOs(os);
+	os << "Number of Published Articles: " << currentNumberOfArticles << endl;
+	for (int i = 0; i < currentNumberOfArticles; i++) {
+		os << "Article " << i + 1 << ": " << (publishedArticles[i] ? publishedArticles[i]->getTitle() : "not defined") << endl;
+	}
 }

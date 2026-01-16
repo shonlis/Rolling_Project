@@ -1,5 +1,10 @@
 #include "Nurse.h"
 
+Nurse::Nurse(const char* name, int id, int birthYear, Gender gender, int ExperienceYears)
+	: Worker(name, id, birthYear, gender), ExperienceYears(ExperienceYears)
+{
+}
+
 Nurse::Nurse(const Worker& worker) : Worker(worker)
 {
     this->ExperienceYears = 0;
@@ -13,8 +18,9 @@ void Nurse::setExperienceYears(int experienceYears)
 {
     ExperienceYears = experienceYears;
 }
-ostream& operator<<(ostream& os, const Nurse& n)
+
+void Nurse::toOs(ostream& os) const
 {
-    os << "Nurse: " << n.getName() << ", ID=" << n.getId() << ", ExpYears=" << n.getExperienceYears() << endl;
-    return os;
+    Worker::toOs(os);
+	os << "Experience Years: " << ExperienceYears << endl;
 }

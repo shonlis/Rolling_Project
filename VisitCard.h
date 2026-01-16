@@ -17,13 +17,14 @@ public:
 	// allow copying - store same VisitCardNumber so copied object represents same card
 	VisitCard(const VisitCard& other);
 
-	inline ~VisitCard();
+	virtual ~VisitCard();
 
 	// disable move & assignment if you want (optional)
 	VisitCard& operator=(const VisitCard&) = delete;
 	VisitCard(VisitCard&&) = delete;
 
 	//operators overloading
+	virtual void toOs(ostream& os) const {}
 	friend ostream& operator<<(ostream& os, const VisitCard& VisitCard);
 
 	//setters

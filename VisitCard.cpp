@@ -85,5 +85,6 @@ ostream& operator<<(ostream& os, const VisitCard& vc)
     else {
         os << ", Host Worker Name = (none)" << endl;
     }
+	vc.toOs(os);
     return os;
 }
