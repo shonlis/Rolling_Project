@@ -10,10 +10,8 @@ class Surgen : public Doctor
 
 	public:
 
-		friend ostream& operator<<(ostream& os, const Surgen& s);
-
-		Surgen(const Worker& worker);
-
+		
+		Surgen(const Doctor& doctor);
 		Surgen(const Surgen& surgen);
 		Surgen(Surgen&& surgen);
 
@@ -22,6 +20,10 @@ class Surgen : public Doctor
 
 		// getters
 		int getNumberOfOperations() const { return numberOfOperations; }
+
+		// other methods
+
+		void toOs(ostream& os) const override;
 
 };
 

@@ -4,11 +4,13 @@
 #include "Worker.h"
 
 
-class Doctor : public Worker {
+class Doctor : virtual public Worker
+{
     char* specialization;
 public:
 
     Doctor(const char* name, int id, int birthYear, Gender gender, const char* specialization = nullptr);
+
     Doctor(const Worker& Worker);
     Doctor(const Doctor& other);
     Doctor(Doctor&& other);
@@ -26,6 +28,7 @@ public:
 		cout << "Specialization: " << (specialization ? specialization : "not defined") << endl;
     }
     virtual void toOs(ostream& os) const override;
+
 };
 
 #endif // DOCTOR_H

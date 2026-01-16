@@ -4,7 +4,7 @@
 #include "Worker.h"
 class Article;
 
-class Researcher : public Worker
+class Researcher : virtual public Worker
 {
 private:
 	int maxNumberOfArticles;

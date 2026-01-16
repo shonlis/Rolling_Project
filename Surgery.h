@@ -22,6 +22,8 @@ class Surgery : public VisitCard
 		int getSurgeryRoomNumber() const { return surgeryRoomNumber; }
 		bool getIsFast() const { return isFast; }
 
+		// other methods
+		void toOs(ostream& os) const override;
 
 };
 

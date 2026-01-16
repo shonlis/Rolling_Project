@@ -1,6 +1,6 @@
 #include "Surgen.h"
 
-Surgen::Surgen(const Worker& worker) : Doctor(worker)
+Surgen::Surgen(const Doctor& doctor) : Doctor(doctor)
 {
 	this->numberOfOperations = 0;
 }
@@ -17,10 +17,12 @@ void Surgen::setNumberOfOperations(int numberOfOperations)
 	this->numberOfOperations = numberOfOperations;
 }
 
-ostream& operator<<(ostream& os, const Surgen& s)
+void Surgen::toOs(ostream& os) const
 {
-	os << "Surgen: " << s.getName() << ", ID=" << s.getId() << ", NumOperations=" << s.getNumberOfOperations() << endl;
-	return os;
+	
+	Doctor::toOs(os);
+	os << "Number of operations: " << this->numberOfOperations << endl;
+
 }
 
 
