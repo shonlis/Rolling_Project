@@ -1,10 +1,11 @@
-
 #pragma warning(disable: 4996)
 #include "Doctor.h"
+#include "Worker.h"
 
-Doctor::Doctor(const char* name, int id, int birthYear, Gender gender, char* specialization) : Worker(name, id, birthYear, gender)
+Doctor::Doctor(const char* name, int id, int birthYear, Gender gender, const char* specialization)
+    : Worker(name, id, birthYear, gender)
 {
-        if (specialization)
+    if (specialization)
     {
         this->specialization = new char[strlen(specialization) + 1];
         strcpy(this->specialization, specialization);
@@ -53,5 +54,6 @@ void Doctor::toOs(ostream& os) const
     Worker::toOs(os);
 	os << "Specialization: " << (specialization ? specialization : "not defined") << endl;
 }
+
 
 

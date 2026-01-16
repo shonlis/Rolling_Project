@@ -27,7 +27,7 @@ void research_center::setName(const char* name)
 	this->name = new char[strlen(name) + 1];
 	strcpy(this->name, name);
 }
-bool research_center::addResearcher(Researcher& researcher)
+bool research_center::addResearcher(const Researcher& researcher, const Doctor doctor)
 {
 	if (researcherExist(researcher))
 		return false;
@@ -43,7 +43,17 @@ bool research_center::addResearcher(Researcher& researcher)
 		this->researchers = temp;
 	}
 
-	Researcher* researcherCopy = new Researcher(researcher);
+	Researcher* researcherCopy = nullptr;
+	if (dynamic_cast<const ResearcherDoctor*>(&researcher))
+	{
+		researcherCopy = new ResearcherDoctor(researcher, doctor);
+	}
+	else if (dynamic_cast<const Researcher*>(&researcher))
+	{
+		researcherCopy = new Researcher(researcher);
+	}
+	else
+		return false;
 	this->researchers[currentNumberOfResearchers] = researcherCopy;
 	currentNumberOfResearchers++;
 	return true;
@@ -57,6 +67,7 @@ bool research_center::researcherExist(const Researcher& researcher)
 	}
 	return false;
 }
+
 ostream& operator<<(ostream& os, const research_center& research_center)
 {
 	os << "research_center Details: \nresearch_center:" << research_center.getName() << "and his researchers:" << endl;
