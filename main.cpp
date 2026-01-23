@@ -8,6 +8,8 @@ using namespace std;
 
 #include "Hospital.h"
 #include "Doctor.h"
+#include "Surgen.h"
+#include "Surgery.h"
 #include "Nurse.h"
 #include "Visitor.h"
 #include "Researcher.h"
@@ -138,16 +140,17 @@ int main()
         cout << "\nMenu:" << endl;
         cout << "1) Add department" << endl;
         cout << "2) Add nurse and assign to department" << endl;
-        cout << "3) Add doctor and assign to department" << endl;
+        cout << "3) Add doctor(surgeon) and assign to department" << endl;
         cout << "4) Add visit (existing/new visitor)" << endl;
-        cout << "5) Add researcher to research center" << endl;
+        cout << "5) Add researcher(doctor) to research center" << endl;
         cout << "6) Add article for researcher" << endl;
         cout << "7) Show all visitors in a department" << endl;
         cout << "8) Show all medical staff" << endl;
-        cout << "9) Show all researchers" << endl;
-        cout << "10) Search visitor by id" << endl;
-        cout << "11) Exit" << endl;
-        cout << "12) Test operators (+= and researcher compare)" << endl;
+        cout << "9) Show all surgeons" << endl;
+        cout << "10) Show all researchers" << endl;
+        cout << "11) Search visitor by id" << endl;
+        cout << "12) Exit" << endl;
+        cout << "13) Test operators (+= and researcher compare)" << endl;
 
         int choice = askInt("Select option: ");
 
@@ -183,13 +186,28 @@ int main()
             Doctor d((const char*)name, id, birth, (Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
             name = askLine("Specialization: ");
             d.setSpecialization(name);
+            char* is_sutgen = askLine("Doctor is surgeon (1=Yes, 0=No): ");
+            if(is_sutgen == "1" || is_sutgen == "Yes" || is_sutgen == "y" || is_sutgen == "Y") {
+                Surgen s(d);
+				int num_ops = askInt("Number of operations performed: ");
+				s.setNumberOfOperations(num_ops);
 
-            hospital.printAllDepartments();
-            name = askLine("Department name to assign: ");
-            hospital.getDepartmentByName(name);
-            cout << "Doctor added to department " << name << endl;
-            hospital.addDoctor(d);
-			hospital.addDoctorToDepartment(d, name);
+                hospital.printAllDepartments();
+                name = askLine("Department name to assign: ");
+                hospital.getDepartmentByName(name);
+                cout << "Doctor added to department " << name << endl;
+                hospital.addDoctor(s);
+                hospital.addDoctorToDepartment(s, name);
+            }
+            else
+            {
+                hospital.printAllDepartments();
+                name = askLine("Department name to assign: ");
+                hospital.getDepartmentByName(name);
+                cout << "Doctor added to department " << name << endl;
+                hospital.addDoctor(d);
+			    hospital.addDoctorToDepartment(d, name);
+            }
         }
         else if (choice == 4)
         {
@@ -214,8 +232,18 @@ int main()
             departmentName = askLine("Department name for visit: ");
             if (!hospital.getDepartmentByName(departmentName)) { cout << "Department not found" << endl; continue; }
 
-            char* purpose = askLine("Purpose of visit: ");
+            
+            char* purpose = askLine("Purpose of visit: test or surgery ");
+            while(purpose != "test" && purpose != "surgery") {
+                cout << "Invalid purpose. Please enter 'test' or 'surgery'." << endl;
+                purpose = askLine("Purpose of visit: test or surgery ");
+			}
             char* date = nowDate();
+            if(purpose == "surgery") {
+                Surgery s(purpose, date, *hospital.getDepartmentByName(departmentName), nullptr,
+                    askInt("Surgery room number: "), 
+					(askInt("Is it a fast surgery? (1=Yes, 0=No): ") == 1) ? true : false);
+			}
 
             VisitCard vc(purpose, date, *hospital.getDepartmentByName(departmentName), nullptr);
             hospital.printDepartmentMedicalStaff(departmentName);
@@ -243,12 +271,25 @@ int main()
         }
         else if (choice == 5)
         {
-            name = askLine("Researcher name: ");
-            int id = askInt("ID (int): ");
-            int birth = askInt("Birth year(YYYY): ");
-            Researcher r((const char*)name, id, birth, (Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
-            hospital.addResearcher(r);
-            cout << "Researcher " << name << " added" << endl;
+            char* is_doctor = askLine("Researcher is a doctor (1=Yes, 0=No): ");
+            if (is_doctor == "1" || is_doctor == "Yes" || is_doctor == "y" || is_doctor == "Y") {
+				hospital.printAllDoctors();
+                name = askLine("Doctor name to promote to researcher: ");
+                Doctor* doc = hospital.getDoctorByName(name);
+                if (!doc) { cout << "Doctor not found" << endl; continue; }
+                ResearcherDoctor rd(*doc);
+                hospital.addResearcher(rd);
+				cout << "Researcher " << name << " added" << endl;
+            }
+            else {
+                name = askLine("Researcher name: ");
+                int id = askInt("ID (int): ");
+                int birth = askInt("Birth year(YYYY): ");
+                Researcher r((const char*)name, id, birth, (Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
+
+                hospital.addResearcher(r);
+                cout << "Researcher " << name << " added" << endl;
+            }
         }
         else if (choice == 6)
         {
@@ -275,23 +316,28 @@ int main()
         }
         else if (choice == 9)
         {
-            hospital.printAllResearchers();
+            //hospital.printAllSurgeons();
         }
         else if (choice == 10)
+        {
+            hospital.printAllResearchers();
+        }
+        else if (choice == 11)
         {
             int vid = askInt("Enter visitor ID: ");
             if (hospital.findVisitorById(vid))
             {
                 cout << "Visitor name: " << hospital.findVisitorById(vid)->getName() << endl;
+				cout << "Visits: " << hospital.findVisitorById(vid) << endl;
             }
             
         }
-        else if (choice == 11)
+        else if (choice == 12)
         {
             cout << "Exiting..." << endl;
             break;
         }
-        else if (choice == 12)
+        else if (choice == 13)
         {
             cout << "Testing operators:" << endl;
             // add temporary doctor/nurse via operator+= as before
