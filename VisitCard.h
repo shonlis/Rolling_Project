@@ -3,7 +3,6 @@
 #pragma warning(disable: 4996)
 
 #include "Department.h"
-class Worker;
 
 class VisitCard
 {
@@ -58,17 +57,6 @@ private:
 	char* hostWorker;
 };
 
-VisitCard::~VisitCard()
-{
-	if (purposeOfVisit)
-	{
-		delete[] purposeOfVisit;
-	}
-	if (hostWorker)
-	{
-		delete[] hostWorker;
-	}
-}
 
 
 #endif // !VisitCard__H_

@@ -4,6 +4,7 @@ using namespace std;
 #include "VisitCard.h"
 #include "Worker.h"
 
+
 int VisitCard::counter = 0;
 
 VisitCard::VisitCard(const char* purposeOfVisit, const char* visitingDate, Department& departmentsToVisit, char* hostWorker)
@@ -87,4 +88,16 @@ ostream& operator<<(ostream& os, const VisitCard& vc)
     }
 	vc.toOs(os);
     return os;
+}
+ 
+VisitCard::~VisitCard()
+{
+    if (purposeOfVisit)
+    {
+        delete[] purposeOfVisit;
+    }
+    if (hostWorker)
+    {
+        delete[] hostWorker;
+    }
 }

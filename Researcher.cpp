@@ -1,8 +1,10 @@
 #pragma warning(disable: 4996)
 #include <iostream>
 using namespace std;
+
 #include "Researcher.h"
 #include "Article.h"
+#include "Worker.h"
 
 Researcher::Researcher(const char* name, int id, int birthYear, Gender gender, Article** articles)
 	: Worker(name, id, birthYear, gender), maxNumberOfArticles(2), currentNumberOfArticles(0)

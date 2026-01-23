@@ -1,8 +1,10 @@
 #pragma warning(disable: 4996)
-#include "Research_center.h"
+
 #include <iostream>
 using namespace std;
 #include <cstring>
+#include "Research_center.h"
+#include "Researcher.h"
 
 research_center::research_center(const char* name)
 {

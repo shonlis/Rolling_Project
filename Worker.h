@@ -15,10 +15,12 @@ protected:
 	static int counter;
 	Worker(const Worker& worker); // copy c'tor for Researcher
 	Worker(Worker&& worker); // move c'tor for inheritance.
-public:
-	
+
 	Worker(const char* name, int id, int birthYear, Gender gender);
 	Worker(const Person& person);
+public:
+	
+	
 	
 	virtual void showthis() const = 0 {
 		Person::showthis();

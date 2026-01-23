@@ -1,7 +1,7 @@
 #ifndef Researcher__H_
 #define Researcher__H_
-
 #include "Worker.h"
+
 class Article;
 
 class Researcher : virtual public Worker

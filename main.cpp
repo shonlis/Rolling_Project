@@ -13,6 +13,10 @@ using namespace std;
 #include "Researcher.h"
 #include "Article.h"
 #include "Research_Center.h"
+#include "Department.h"
+#include "VisitCard.h"
+
+
 
 #define new DBG_NEW
 
@@ -304,7 +308,7 @@ int main()
             cout << "Added nurse via operator+= to hospital (first department)." << endl;
 
             // Compare researchers safely: do not assume IDs 1 and 2 exist
-            if (hospital.countResearchers() >= 2) {
+            if (hospital.getNumberOfResearchers() >= 2) {
                 hospital.printAllResearchers();
                 int id1 = askInt("Enter first researcher ID to compare: ");
                 int id2 = askInt("Enter second researcher ID to compare: ");

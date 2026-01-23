@@ -1,31 +1,23 @@
 #include <iostream>
 using namespace std;
 #include "Visitor.h"
+#include "VisitCard.h"
 
-Visitor::Visitor(const char* name, int id, int birthYear, Gender gender, Visitor** visitors)
+Visitor::Visitor(const char* name, int id, int birthYear, Gender gender)
 	: Person(name, id, birthYear, gender), maxNumberOfVisits(2), currentNumberOfVisits(0)
 {
     this->visits = new VisitCard * [maxNumberOfVisits];
-    if (visitors != nullptr)
-    {
-        for (int i = 0; i < maxNumberOfVisits; i++)
-        {
-            this->visits[i] = visitors[i];
-        }
-    }
-    else {
-        for (int i = 0; i < maxNumberOfVisits; ++i) visits[i] = nullptr;
-    }
+    for (int i = 0; i < maxNumberOfVisits; ++i) visits[i] = nullptr;
 }
 
 // default initial max visits value kept as before
-Visitor::Visitor(const Person& person) : Person(person)
-{
-    maxNumberOfVisits = 2;
-    visits = new VisitCard * [maxNumberOfVisits];
-    for (int i = 0; i < maxNumberOfVisits; ++i) visits[i] = nullptr;
-    currentNumberOfVisits = 0;
-}
+//Visitor::Visitor(const Person& person) : Person(person)
+//{
+//    maxNumberOfVisits = 2;
+//    visits = new VisitCard * [maxNumberOfVisits];
+//    for (int i = 0; i < maxNumberOfVisits; ++i) visits[i] = nullptr;
+//    currentNumberOfVisits = 0;
+//}
 Visitor::~Visitor()
 {
     for (int i = 0; i < currentNumberOfVisits; ++i) {

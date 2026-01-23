@@ -10,8 +10,6 @@ class Doctor : virtual public Worker
 public:
 
     Doctor(const char* name, int id, int birthYear, Gender gender, const char* specialization = nullptr);
-
-    Doctor(const Worker& Worker);
     Doctor(const Doctor& other);
     Doctor(Doctor&& other);
     ~Doctor() { delete[] specialization; }
@@ -23,7 +21,8 @@ public:
     bool setSpecialization(const char* specialization);
 
     // other methods
-    virtual void showthis() const override{
+    virtual void showthis() const
+    {
         Worker::showthis();
 		cout << "Specialization: " << (specialization ? specialization : "not defined") << endl;
     }

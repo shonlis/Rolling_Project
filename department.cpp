@@ -128,7 +128,7 @@ bool Department::VisitorExist(const Visitor& visitor)
 	return false;
 }
 /*******************************************************************************/
-void Department::printDoctors()
+void Department::printDoctors() const
 {
 	for (int i = 0; i < currentNumberOfDoctors; i++)
 	{
@@ -140,7 +140,7 @@ void Department::printDoctors()
 	}
 	cout << endl;
 }
-void Department::printNurses()
+void Department::printNurses() const 
 {
 	for (int i = 0; i < currentNumberOfNurses; i++)
 	{

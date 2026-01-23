@@ -1,7 +1,7 @@
 #ifndef research_center__H_
 #define research_center__H_
 
-#include "Researcher.h"
+class Researcher;
 
 class research_center
 {

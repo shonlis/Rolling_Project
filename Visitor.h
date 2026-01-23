@@ -3,7 +3,6 @@
 
 
 #include "Person.h"
-#include "VisitCard.h"
 
 class VisitCard;
 
@@ -16,8 +15,8 @@ private:
 	int currentNumberOfVisits;
 public:
 
-	Visitor(const char* name, int id, int birthYear, Gender gender, Visitor** visitors = nullptr);
-	Visitor(const Person& person);
+	Visitor(const char* name, int id, int birthYear, Gender gender);
+	//Visitor(const Person& person);
 	~Visitor();
 
 	Visitor(const Visitor& visitor);

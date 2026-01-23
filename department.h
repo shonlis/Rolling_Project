@@ -51,8 +51,8 @@ public:
 	bool addVisitor(Visitor* visitor);
 	bool VisitorExist(const Visitor& visitor);
 
-	void printDoctors();
-	void printNurses();
+	void printDoctors() const;
+	void printNurses() const;
 
 };
 

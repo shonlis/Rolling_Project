@@ -1,11 +1,20 @@
 #pragma warning(disable: 4996)
 #include <iostream>
+using namespace std;
+
+#include "Worker.h"
 #include "Hospital.h"
 #include "Doctor.h"
 #include "Nurse.h"
 #include "Research_Center.h"
 #include "Researcher.h"
 #include "Article.h"
+#include "Surgen.h"
+#include "Department.h"
+#include "Visitor.h"
+#include "VisitCard.h"
+
+
 #include <algorithm>
 #include <ctime>
 #include <cstring>
@@ -22,14 +31,10 @@ Hospital::Hospital(const char* name, research_center& researchCenter) : research
     departments = new Department * [maxNumberOfDepartments];
     currentNumberOfDepartments = 0;
 
-    maxNumberOfDoctors = 2;
-    doctors = new Doctor * [maxNumberOfDoctors];
-    currentNumberOfDoctors = 0;
+    maxNumberOfWorkers = 2;
+    workers = new Worker * [maxNumberOfWorkers];
+    currentNumberOfWorkers = 0;
 
-    maxNumberOfNurses = 2;
-    nurses = new Nurse * [maxNumberOfNurses];
-    currentNumberOfNurses = 0;
-    
     maxNumberOfVisitors = 2;
     visitors = new Visitor * [maxNumberOfVisitors];
     currentNumberOfVisitors = 0;
@@ -44,16 +49,11 @@ Hospital::~Hospital()
         }
         delete[] departments;
 
-        for (int i = 0; i < currentNumberOfDoctors; ++i) {
-            delete doctors[i];
+        for (int i = 0; i < currentNumberOfWorkers; ++i) {
+            delete workers[i];
         }
-        delete[] doctors;
-
-        for (int i = 0; i < currentNumberOfNurses; ++i) {
-            delete nurses[i];
-        }
-        delete[] nurses;
-
+        delete[] workers;
+       
         for (int i = 0; i < currentNumberOfVisitors; ++i) {
             delete visitors[i];
         }
@@ -86,19 +86,19 @@ bool Hospital::addDoctor(Doctor& doctor)
     if (DoctorExist(doctor))
         return false;
 
-    if (currentNumberOfDoctors == maxNumberOfDoctors)
+    if (currentNumberOfWorkers == maxNumberOfWorkers)
     {
-        maxNumberOfDoctors *= 2;
-        Doctor** temp = new Doctor * [maxNumberOfDoctors];
-        for (int i = 0; i < currentNumberOfDoctors; i++)
-            temp[i] = this->doctors[i];
+        maxNumberOfWorkers *= 2;
+        Worker** temp = new Worker * [maxNumberOfWorkers];
+        for (int i = 0; i < currentNumberOfWorkers; i++)
+            temp[i] = this->workers[i];
 
-        delete[]this->doctors;
-        this->doctors = temp;
+        delete[]this->workers;
+        this->workers = temp;
     }
-    Doctor* doctorCopy = new Doctor(doctor);
-    this->doctors[currentNumberOfDoctors] = doctorCopy;
-    currentNumberOfDoctors++;
+    Worker* doctorCopy = new Doctor(doctor);
+    this->workers[currentNumberOfWorkers] = doctorCopy;
+    currentNumberOfWorkers++;
     return true;
 }
 bool Hospital::addNurse(Nurse& nurse)
@@ -106,20 +106,20 @@ bool Hospital::addNurse(Nurse& nurse)
     if (NurseExist(nurse))
         return false;
 
-    if (currentNumberOfNurses == maxNumberOfNurses)
+    if (currentNumberOfWorkers == maxNumberOfWorkers)
     {
-        maxNumberOfNurses *= 2;
-        Nurse** temp = new Nurse * [maxNumberOfNurses];
-        for (int i = 0; i < currentNumberOfNurses; i++)
-            temp[i] = this->nurses[i];
+        maxNumberOfWorkers *= 2;
+        Worker** temp = new Worker * [maxNumberOfWorkers];
+        for (int i = 0; i < currentNumberOfWorkers; i++)
+            temp[i] = this->workers[i];
 
-        delete[]this->nurses;
-        this->nurses = temp;
+        delete[]this->workers;
+        this->workers = temp;
     }
 
-    Nurse* nurseCopy = new Nurse(nurse);
-    this->nurses[currentNumberOfNurses] = nurseCopy;
-    currentNumberOfNurses++;
+    Worker* nurseCopy = new Nurse(nurse);
+    this->workers[currentNumberOfWorkers] = nurseCopy;
+    currentNumberOfWorkers++;
     return true;
 }
 bool Hospital::addVisitor(Visitor& visitor)
@@ -146,6 +146,45 @@ bool Hospital::addVisitor(Visitor& visitor)
 bool Hospital::addResearcher(Researcher& researcher)
 {
     return this->researchCenter.addResearcher(researcher);
+}
+bool Hospital::addWorker(Worker& worker)
+{
+    Doctor& tempDoctor = dynamic_cast<Doctor&>(worker);
+    if (typeid(tempDoctor) == typeid(Doctor))
+    {
+        
+        return addDoctor(tempDoctor);
+    }
+    Nurse& tempNurse = dynamic_cast<Nurse&>(worker);
+    if (typeid(tempNurse) == typeid(Nurse))
+    {
+        
+        return addNurse(tempNurse);
+    }
+    else
+    {
+        return false;
+    }
+}
+bool Hospital::addWorkerToDepartment(Worker& worker, const char* departmentName)
+{
+
+    Doctor& tempDoctor = dynamic_cast<Doctor&>(worker);
+    if (typeid(tempDoctor) == typeid(Doctor))
+    {
+
+        return addDoctorToDepartment(tempDoctor, departmentName);
+    }
+    Nurse& tempNurse = dynamic_cast<Nurse&>(worker);
+    if (typeid(tempNurse) == typeid(Nurse))
+    {
+
+        return addNurseToDepartment(tempNurse, departmentName);
+    }
+    else
+    {
+        return false;
+    }
 }
 bool Hospital::addVisit(Visitor& visitor, VisitCard& Visitcard, const char* department)
 {
@@ -177,27 +216,25 @@ bool Hospital::addVisit(Visitor& visitor, VisitCard& Visitcard, const char* depa
     // department not found
     return false;
 }
-
 bool Hospital::addNurseToDepartment(Nurse& nurse, const char* departmentName)
 {
-    /*
-	* this function getts a nurse and department name.
-	* first checking if the department exists in the hospital.
-	* add the nurse to the hospitals nurses list.
-	* find the nurse in the hospital's nurses list and add it to the department's nurses list.
-    */
     for (int i = 0; i < currentNumberOfDepartments; i++)
     {
         if (strcmp(departments[i]->getName(), departmentName) == 0)
         {
             addNurse(nurse);
-            for (int j = 0; j < currentNumberOfNurses; j++)
+            for (int j = 0; j < currentNumberOfWorkers; j++)
             {
-                if (nurses[j]->getId() == nurse.getId())
+				Nurse* tempNurse = dynamic_cast<Nurse*>(workers[j]);
+                if (tempNurse)
                 {
-                    departments[i]->addNurse(nurses[j]);
-                    return true;
+                    if (tempNurse->getId() == nurse.getId())
+                    {
+                        departments[i]->addNurse(tempNurse);
+                        return true;
+                    }
                 }
+                
             }
             // found department but nurse not present in hospital -> fail
             return false;
@@ -209,24 +246,23 @@ bool Hospital::addNurseToDepartment(Nurse& nurse, const char* departmentName)
 
 bool Hospital::addDoctorToDepartment(Doctor& doctor, const char* departmentName)
 {
-    /*
-    * this function getts a doctor and department name.
-    * first checking if the department exists in the hospital.
-    * add the doctor to the hospitals doctors list.
-    * find the doctor in the hospital's doctors list and add it to the department's doctors list.
-    */
     for (int i = 0; i < currentNumberOfDepartments; i++)
     {
         if (strcmp(departments[i]->getName(), departmentName) == 0)
         {
             addDoctor(doctor);
-            for (int j = 0; j < currentNumberOfDoctors; j++)
+            for (int j = 0; j < currentNumberOfWorkers; j++)
             {
-                if (doctors[j]->getId() == doctor.getId())
+				Doctor* tempDoctor = dynamic_cast<Doctor*>(workers[j]);
+                if (tempDoctor)
                 {
-                    departments[i]->addDoctor(doctors[j]);
-                    return true;
+                    if (tempDoctor->getId() == doctor.getId())
+                    {
+                        departments[i]->addDoctor(tempDoctor);
+                        return true;
+                    }
                 }
+                
             }
             // found department but doctor not present in hospital -> fail
             return false;
@@ -264,7 +300,6 @@ bool Hospital::addVisitorToDepartment(Visitor& visitor, const char* departmentNa
     // department not found
     return false;
 }
-
 bool Hospital::addArticleToResearchCenter(Researcher& researcher, Article& article)
 {
 	
@@ -297,20 +332,38 @@ Hospital& Hospital::operator+=(const Nurse& nurse)
     return *this;
 }
 
-int Hospital::countDoctors() const {
-    return currentNumberOfDoctors;
-}
 
-int Hospital::countNurses() const {
-    return currentNumberOfNurses;
-}
-
-int Hospital::countVisitors() const
+int Hospital::getNumberOfNurses() const
 {
-	return currentNumberOfVisitors;
+	int numberOfNurses = 0;
+    for (int j = 0; j < currentNumberOfWorkers; j++)
+    {
+        Nurse* tempNurse = dynamic_cast<Nurse*>(workers[j]);
+        if (tempNurse)
+        {
+            numberOfNurses++;
+        }
+
+    }
+	return numberOfNurses;
 }
 
-int Hospital::countResearchers() const
+int Hospital::getNumberOfDoctors() const
+{
+    int numberOfDoctors = 0;
+    for (int j = 0; j < currentNumberOfWorkers; j++)
+    {
+        Doctor* tempDoctor = dynamic_cast<Doctor*>(workers[j]);
+        if (tempDoctor)
+        {
+            numberOfDoctors++;
+        }
+
+    }
+	return numberOfDoctors;
+}
+
+int Hospital::getNumberOfResearchers() const
 {
     if (researchCenter.getCurrentNumberOfResearchers() > 0) {
         return researchCenter.getCurrentNumberOfResearchers();
@@ -318,37 +371,49 @@ int Hospital::countResearchers() const
     return 0;
 }
 
-int Hospital::countDepartments() const {
-    return currentNumberOfDepartments;
-}
 
-Doctor* Hospital::findDoctorById(int id) const
+
+ Doctor* Hospital::findDoctorById(int id) const
 {
-    if (doctors) {
-        for (int i = 0; i < currentNumberOfDoctors; ++i) {
-            if (doctors[i]->getId() == id) {
-                return doctors[i];
+    if (workers)
+    {
+        for (int i = 0; i < currentNumberOfWorkers; i++)
+        {
+			Doctor* tempDoctor = dynamic_cast<Doctor*>(workers[i]);
+            if (tempDoctor)
+            {
+                if (tempDoctor->getId() == id)
+                {
+                    return tempDoctor;
+                }
             }
+            
         }
     }
     cout << "Doctor with ID " << id << " not found." << endl;
     return nullptr;
 }
 
-Nurse* Hospital::findNurseById(int id) const
+ Nurse* Hospital::findNurseById(int id) const
 {
-    if (nurses) {
-        for (int i = 0; i < currentNumberOfNurses; ++i) {
-            if (nurses[i]->getId() == id) {
-                return nurses[i];
-            }
+    if (workers) {
+        for (int i = 0; i < currentNumberOfWorkers; i++)
+        {
+			Nurse* tempNurse = dynamic_cast<Nurse*>(workers[i]);
+			if (tempNurse)
+			{
+				if (tempNurse->getId() == id)
+				{
+					return tempNurse;
+				}
+			}
         }
     }
     cout << "Nurse with ID " << id << " not found." << endl;
     return nullptr;
 }
 
-Visitor* Hospital::findVisitorById(int id) const
+ Visitor* Hospital::findVisitorById(int id) const
 {
     if (visitors) {
         for (int i = 0; i < currentNumberOfVisitors; ++i) {
@@ -361,7 +426,7 @@ Visitor* Hospital::findVisitorById(int id) const
 	return nullptr;
 }
 
-Researcher* Hospital::findResearcherById(int id) const
+ Researcher* Hospital::findResearcherById(int id) const
 {
     if (researchCenter.getResearchers()) {
         for (int i = 0; i < researchCenter.getCurrentNumberOfResearchers(); ++i) {
@@ -374,7 +439,7 @@ Researcher* Hospital::findResearcherById(int id) const
     return nullptr;
 }
 
-Department* Hospital::getDepartmentByName(const char* name) const
+ Department* Hospital::getDepartmentByName(const char* name) const
 {
     if (departments) {
         for (int i = 0; i < currentNumberOfDepartments; i++) {
@@ -386,31 +451,45 @@ Department* Hospital::getDepartmentByName(const char* name) const
     return nullptr;
 }
 
-Doctor* Hospital::getDoctorByName(const char* name) const
+ Doctor* Hospital::getDoctorByName(const char* name) const
 {
-    if (doctors) {
-        for (int i = 0; i < currentNumberOfDoctors; i++) {
-            if (strcmp(doctors[i]->getName(), name) == 0) {
-                return doctors[i];
-            }
+    if (workers)
+    {
+        for (int i = 0; i < currentNumberOfWorkers; i++)
+        {
+			Doctor* tempDoctor = dynamic_cast<Doctor*>(workers[i]);
+			if (tempDoctor)
+			{
+				if (strcmp(tempDoctor->getName(), name) == 0)
+                {
+					return tempDoctor;
+				}
+			}
         }
     }
     return nullptr;
 }
 
-Nurse* Hospital::getNurseByName(const char* name) const
+ Nurse* Hospital::getNurseByName(const char* name) const
 {
-    if (nurses) {
-        for (int i = 0; i < currentNumberOfNurses; i++) {
-            if (strcmp(nurses[i]->getName(), name) == 0) {
-                return nurses[i];
+    if (workers)
+    {
+        for (int i = 0; i < currentNumberOfWorkers; i++)
+        {
+			Nurse* tempNurse = dynamic_cast<Nurse*>(workers[i]);
+            if (tempNurse)
+            {
+				if (strcmp(tempNurse->getName(), name) == 0)
+                {
+					return tempNurse;
+				}
             }
         }
     }
     return nullptr;
 }   
 
-Visitor* Hospital::getVisitorByName(const char* name) const
+ Visitor* Hospital::getVisitorByName(const char* name) const
 {
     if (visitors) {
         for (int i = 0; i < currentNumberOfVisitors; i++) {
@@ -422,7 +501,7 @@ Visitor* Hospital::getVisitorByName(const char* name) const
     return nullptr;
 }
 
-Researcher* Hospital::getResearcherByName(const char* name) const
+ Researcher* Hospital::getResearcherByName(const char* name) const
 {
     if (researchCenter.getResearchers()) {
         for (int i = 0; i < researchCenter.getCurrentNumberOfResearchers(); i++) {
@@ -434,10 +513,17 @@ Researcher* Hospital::getResearcherByName(const char* name) const
 	return nullptr;
 }
 
+void Hospital::setName(const char* name)
+{
+	delete[] this->name;
+	this->name = new char[strlen(name) + 1];
+	strcpy(this->name, name);
+}
+
 void Hospital::printDepartmentVisitors(const char* departmentName) const
 {
     if (departments) {
-        Department* dept = getDepartmentByName(departmentName);
+        const Department* dept = getDepartmentByName(departmentName);
         if (dept) {
             cout << "Visitors in Department " << departmentName << ":" << endl;
             for (int i = 0; i < dept->getCurrentNumberOfVisitors(); ++i) {
@@ -471,7 +557,7 @@ void Hospital::printAllMedicalStaff() const
 void Hospital::printDepartmentMedicalStaff(const char* departmentName) const
 {
     if (departments) {
-        Department* dept = getDepartmentByName(departmentName);
+        const Department* dept = getDepartmentByName(departmentName);
         if (dept) {
             cout << "Medical Staff in Department " << departmentName << ":" << endl;
             cout << "Doctors:";
@@ -519,6 +605,31 @@ void Hospital::printAllDepartments() const
     }
 }
 
+void Hospital::printAllSurgens() const
+{
+	if (workers)
+    {
+		cout << "Surgeons in Hospital " << name << ":" << endl;
+		for (int i = 0; i < currentNumberOfWorkers; ++i)
+        {
+			Doctor* tempDoctor = dynamic_cast<Doctor*>(workers[i]);
+			if (tempDoctor)
+            {
+                Surgen* tempSurgen = dynamic_cast<Surgen*>(tempDoctor);
+                if (tempSurgen)
+                {
+					cout << *tempSurgen << endl;
+					
+                }
+			}
+		}
+	}
+	else
+    {
+		cout << "No workers in the hospital." << endl;
+	}
+}
+
 bool Hospital::DepartmentExist(const Department& department)
 {
     for (int i = 0; i < currentNumberOfDepartments; i++)
@@ -530,19 +641,28 @@ bool Hospital::DepartmentExist(const Department& department)
 }
 bool Hospital::NurseExist(const Nurse& nurse)
 {
-    for (int i = 0; i < currentNumberOfNurses; i++)
+    for (int i = 0; i < currentNumberOfWorkers; i++)
     {
-        if (nurses[i]->getId() == nurse.getId())
-            return true;
+        Nurse* tempDoctor = dynamic_cast<Nurse*>(workers[i]);
+        if (tempDoctor)
+        {
+            if (tempDoctor->getId() == nurse.getId())
+                return true;
+        }
     }
     return false;
 }
 bool Hospital::DoctorExist(const Doctor& doctor)
 {
-    for (int i = 0; i < currentNumberOfDoctors; i++)
+	
+    for (int i = 0; i < currentNumberOfWorkers; i++)
     {
-        if (doctors[i]->getId() == doctor.getId())
-            return true;
+		Doctor* tempDoctor = dynamic_cast<Doctor*>(workers[i]);
+        if (tempDoctor)
+        {
+			if (tempDoctor->getId() == doctor.getId())
+				return true;
+        }
     }
     return false;
 }

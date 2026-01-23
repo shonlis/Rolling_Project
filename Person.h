@@ -18,12 +18,13 @@ protected:
 
 	Person(const Person& person); // copy c'tor for iherritants only
 	Person(Person&& person); // move c'tor for iherritants only
-
-public:
-
+	
 	// constructors and destructor
 	Person(const char* name, int id, int birthYear, Gender gender);
 	virtual ~Person() { delete[]name; };
+
+
+public:
 
 
 	// getters

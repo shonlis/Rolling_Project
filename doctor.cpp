@@ -1,10 +1,9 @@
-
 #pragma warning(disable: 4996)
 #include "Doctor.h"
 
-Doctor::Doctor(const char* name, int id, int birthYear, Gender gender, char* specialization) : Worker(name, id, birthYear, gender)
+Doctor::Doctor(const char* name, int id, int birthYear, Gender gender, const char* specialization) : Worker(name, id, birthYear, gender )
 {
-        if (specialization)
+    if (specialization)
     {
         this->specialization = new char[strlen(specialization) + 1];
         strcpy(this->specialization, specialization);
@@ -13,11 +12,6 @@ Doctor::Doctor(const char* name, int id, int birthYear, Gender gender, char* spe
     {
         this->specialization = nullptr;
     }
-}
-
-Doctor::Doctor(const Worker& worker) : Worker(worker)
-{
-    specialization = nullptr;
 }
 
 Doctor::Doctor(const Doctor& doctor) : Worker(doctor)

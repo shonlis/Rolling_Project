@@ -1,16 +1,16 @@
 #include "Surgen.h"
 
-Surgen::Surgen(const Doctor& doctor) : Doctor(doctor)
+Surgen::Surgen(const Doctor& doctor) : Worker(doctor), Doctor(doctor)
 {
 	this->numberOfOperations = 0;
 }
 
-Surgen::Surgen(const Surgen& surgen) : Doctor(surgen)
+Surgen::Surgen(const Surgen& surgen) : Worker(surgen), Doctor(surgen)
 {
 	this->numberOfOperations = surgen.numberOfOperations;
 }
 
-Surgen::Surgen(Surgen&& surgen) : Doctor(move(surgen)), numberOfOperations(surgen.numberOfOperations) {}
+Surgen::Surgen(Surgen&& surgen) :Worker(move(surgen)), Doctor(move(surgen)), numberOfOperations(surgen.numberOfOperations) {}
 
 void Surgen::setNumberOfOperations(int numberOfOperations)
 {
