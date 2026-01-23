@@ -2,6 +2,8 @@
 #define research_center__H_
 
 class Researcher;
+class Doctor;
+class ResearcherDoctor;
 
 class research_center
 {
@@ -23,7 +25,7 @@ public:
 	void setName(const char* name);
 
 	// other methods
-	bool addResearcher(Researcher& researcher);
+	bool addResearcher( Researcher& researcher);
 	bool researcherExist(const Researcher& researcher);
 	friend ostream& operator<<(ostream& os, const research_center& research_center);
 };

@@ -13,6 +13,7 @@ using namespace std;
 #include "Department.h"
 #include "Visitor.h"
 #include "VisitCard.h"
+#include "ResearcherDoctor.h"
 
 
 #include <algorithm>
@@ -578,7 +579,15 @@ void Hospital::printAllResearchers() const
         cout << "Researchers in Hospital " << name << ":" << endl;
         for (int i = 0; i < researchCenter.getCurrentNumberOfResearchers(); ++i) {
             Researcher* researcher = researchCenter.getResearchers()[i];
-            cout << *researcher << endl;
+            ResearcherDoctor* ResearcherDoctorCopy = dynamic_cast<ResearcherDoctor*>(researcher);
+            if (ResearcherDoctorCopy)
+            {
+                cout << ResearcherDoctorCopy << endl;
+            }
+            else
+            {
+                cout << researcher << endl;
+            }
         }
     }
     else {
@@ -626,6 +635,26 @@ void Hospital::printAllSurgens() const
 	}
 	else
     {
+		cout << "No workers in the hospital." << endl;
+	}
+}
+
+void Hospital::printAllDoctors() const
+{
+	if (workers)
+	{
+		cout << "Doctors in Hospital " << name << ":" << endl;
+		for (int i = 0; i < currentNumberOfWorkers; ++i)
+		{
+			Doctor* tempDoctor = dynamic_cast<Doctor*>(workers[i]);
+			if (tempDoctor)
+			{
+				cout << *tempDoctor << endl;
+			}
+		}
+	}
+	else
+	{
 		cout << "No workers in the hospital." << endl;
 	}
 }

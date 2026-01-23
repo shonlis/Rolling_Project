@@ -95,6 +95,7 @@ public:
 	void printAllResearchers() const;
 	void printAllDepartments() const;
 	void printAllSurgens() const;
+	void printAllDoctors() const;
 	
 	bool DepartmentExist(const Department& department);
 	bool NurseExist(const Nurse& nurse);

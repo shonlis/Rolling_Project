@@ -5,6 +5,7 @@ using namespace std;
 #include <cstring>
 #include "Research_center.h"
 #include "Researcher.h"
+#include "ResearcherDoctor.h"
 
 research_center::research_center(const char* name)
 {
@@ -45,8 +46,19 @@ bool research_center::addResearcher(Researcher& researcher)
 		this->researchers = temp;
 	}
 
-	Researcher* researcherCopy = new Researcher(researcher);
-	this->researchers[currentNumberOfResearchers] = researcherCopy;
+	Researcher* researcherCopy = nullptr;
+	ResearcherDoctor* ResearcherDoctorCopy = dynamic_cast<ResearcherDoctor*>(&researcher);
+	if (ResearcherDoctorCopy)
+	{
+		ResearcherDoctorCopy = new ResearcherDoctor(*ResearcherDoctorCopy);
+		this->researchers[currentNumberOfResearchers] = ResearcherDoctorCopy;
+	}
+	else
+	{
+		researcherCopy = new Researcher(researcher);
+		this->researchers[currentNumberOfResearchers] = researcherCopy;
+	}
+	
 	currentNumberOfResearchers++;
 	return true;
 }
@@ -59,6 +71,7 @@ bool research_center::researcherExist(const Researcher& researcher)
 	}
 	return false;
 }
+
 ostream& operator<<(ostream& os, const research_center& research_center)
 {
 	os << "research_center Details: \nresearch_center:" << research_center.getName() << "and his researchers:" << endl;
