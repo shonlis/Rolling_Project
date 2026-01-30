@@ -1,14 +1,14 @@
 #ifndef Researcher__H_
 #define Researcher__H_
 #include "Worker.h"
+#include "Article.h"
 #include <vector>
-
-class Article;
+#include <ostream>
 
 class Researcher : virtual public Worker
 {
 private:
-    std::vector<Article*> publishedArticles; // store pointers (not owning)
+    std::vector<Article> publishedArticles; // store Article copies (owning)
 
 public:
     Researcher(const string name, int id, int birthYear, Gender gender, Article** articles = nullptr);

@@ -2,6 +2,7 @@ using namespace std;
 #include <iostream>
 #include <limits>
 #include <ctime>
+#include <memory>
 
 
 #include <crtdbg.h>
@@ -258,6 +259,8 @@ int main()
             std::string date = nowDate();
 
             VisitCard vc(purpose, date, *hospital.getDepartmentByName(departmentName.c_str()), std::string());
+            // declare surgery as a pointer so we can conditionally create it and keep scope
+            std::unique_ptr<Surgery> surgeryPtr;
             hospital.printDepartmentMedicalStaff(departmentName.c_str());
             name = askLine("Host doctor/nurse name: ");
             printf("Host worker: %d and %d", !hospital.getDoctorByName(name.c_str()), !hospital.getNurseByName(name.c_str()));
@@ -269,29 +272,38 @@ int main()
             {
                 vc.setHostWorker(hospital.getDoctorByName(name.c_str()) ? hospital.getDoctorByName(name.c_str())->getName() : hospital.getNurseByName(name.c_str())->getName());
             }
-            Surgery s(purpose.c_str(), date.c_str(), *hospital.getDepartmentByName(departmentName.c_str()), std::string(),
-                askInt("Surgery room number: "),
-                (askInt("Is it a fast surgery? (1=Yes, 0=No): ") == 1) ? true : false);
+            if (purpose == "surgery") {
+                int room = askInt("Surgery room number: ");
+                bool fast = (askInt("Is it a fast surgery? (1=Yes, 0=No): ") == 1);
+                surgeryPtr = std::make_unique<Surgery>(purpose.c_str(), date.c_str(), *hospital.getDepartmentByName(departmentName.c_str()), std::string(),
+                    room, fast);
+            }
             if (found)
             {
 
+                Visitor* visitorPtr = hospital.findVisitorById(vid);
+                if (!visitorPtr) { cout << "Visitor lookup failed" << endl; continue; }
+
                 if (purpose == "surgery") {
-                    hospital.findVisitorById(id)->addVisitCard(s);
+                    visitorPtr->addVisitCard(*surgeryPtr);
                 }
                 else {
-                    hospital.findVisitorById(id)->addVisitCard(vc);
+                    visitorPtr->addVisitCard(vc);
                 }
-                hospital.addVisitorToDepartment(*hospital.findVisitorById(vid), departmentName.c_str());
+                hospital.addVisitorToDepartment(*visitorPtr, departmentName.c_str());
             }
             else
             {
+                Visitor* visitorPtr = hospital.findVisitorById(id);
+                if (!visitorPtr) { cout << "Visitor lookup failed after creation" << endl; continue; }
+
                 if (purpose == "surgery") {
-                    hospital.findVisitorById(id)->addVisitCard(s);
+                    visitorPtr->addVisitCard(*surgeryPtr);
                 }
                 else {
-                    hospital.findVisitorById(id)->addVisitCard(vc);
+                    visitorPtr->addVisitCard(vc);
                 }
-                hospital.addVisitorToDepartment(*hospital.findVisitorById(id), departmentName.c_str());
+                hospital.addVisitorToDepartment(*visitorPtr, departmentName.c_str());
             }
         }
         else if (choice == 5)
