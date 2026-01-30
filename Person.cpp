@@ -3,7 +3,7 @@
 using namespace std;
 #include "Person.h"
 
-Person::Person(const string name, int id, int birthYear, Gender gender) : id(id), birthYear(birthYear), gender(gender), name(name ? name : std::string()) {}
+Person::Person(const string name, int id, int birthYear, Gender gender) : id(id), birthYear(birthYear), gender(gender), name(name) {}
 
 Person::Person(const Person& person) : Person(person.name, person.id, person.birthYear, person.gender) {}
 

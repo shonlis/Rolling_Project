@@ -1,4 +1,3 @@
-
 // Article implementation
 #pragma warning(disable: 4996)
 
@@ -11,23 +10,23 @@ Article::Article(Article&& article) noexcept
     : title(std::move(article.title)), publicationDate(std::move(article.publicationDate)), magazinName(std::move(article.magazinName)) {}
 
 Article::Article(const string title, const string publicationDate, const string magazinName)
-    : title(title ? title : std::string()), publicationDate(publicationDate ? publicationDate : std::string()), magazinName(magazinName ? magazinName : std::string()) {}
+    : title(title), publicationDate(publicationDate), magazinName(magazinName) {}
 
 bool Article::setTitle(const string title)
 {
-    this->title = title ? title : std::string();
+    this->title = title;
     return true;
 }
 
 bool Article::setPublicationDate(const string publicationDate)
 {
-    this->publicationDate = publicationDate ? publicationDate : std::string();
+    this->publicationDate = publicationDate;
     return true;
 }
 
 bool Article::setMagazinName(const string magazinName)
 {
-    this->magazinName = magazinName ? magazinName : std::string();
+    this->magazinName = magazinName;
     return true;
 }
 

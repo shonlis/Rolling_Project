@@ -4,7 +4,7 @@
 
 
 Doctor::Doctor(const string name, int id, int birthYear, Gender gender, const string specialization)
-    : Worker(name, id, birthYear, gender), specialization(specialization ? specialization : std::string()) {}
+    : Worker(name, id, birthYear, gender), specialization(specialization) {}
 
 Doctor::Doctor(const Doctor& doctor) : Worker(doctor), specialization(doctor.specialization) {}
 
@@ -12,7 +12,7 @@ Doctor::Doctor(Doctor&& doctor) noexcept : Worker(std::move(doctor)), specializa
 
 bool Doctor::setSpecialization(const string specialization)
 {
-    this->specialization == specialization ? specialization : std::string();
+    this->specialization = specialization;
     return true;
 }
 

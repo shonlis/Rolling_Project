@@ -53,8 +53,15 @@ bool Hospital::addDoctor(Doctor& doctor)
 {
     if (DoctorExist(doctor))
         return false;
-    Worker* doctorCopy = new Doctor(doctor);
-    workers.push_back(doctorCopy);
+    // Preserve actual dynamic type: if doctor is a Surgen, create a Surgen copy
+    if (auto s = dynamic_cast<Surgen*>(&doctor)) {
+        Worker* doctorCopy = new Surgen(*s);
+        workers.push_back(doctorCopy);
+    }
+    else {
+        Worker* doctorCopy = new Doctor(doctor);
+        workers.push_back(doctorCopy);
+    }
     return true;
 }
 
@@ -99,7 +106,7 @@ bool Hospital::addWorkerToDepartment(Worker& worker, const string departmentName
 bool Hospital::addVisit(Visitor& visitor, VisitCard& Visitcard, const string department)
 {
     for (auto d : departments) {
-        if (strcmp(d->getName(), department) == 0) {
+        if (strcmp(d->getName().c_str(), department.c_str()) == 0) {
             addVisitor(visitor);
             for (auto v : visitors) {
                 if (v->getId() == visitor.getId()) {
@@ -117,7 +124,7 @@ bool Hospital::addVisit(Visitor& visitor, VisitCard& Visitcard, const string dep
 bool Hospital::addNurseToDepartment(Nurse& nurse, const string departmentName)
 {
     for (auto d : departments) {
-        if (strcmp(d->getName(), departmentName) == 0) {
+        if (strcmp(d->getName().c_str(), departmentName.c_str()) == 0) {
             addNurse(nurse);
             for (auto w : workers) {
                 if (auto tempNurse = dynamic_cast<Nurse*>(w)) {
@@ -136,7 +143,7 @@ bool Hospital::addNurseToDepartment(Nurse& nurse, const string departmentName)
 bool Hospital::addDoctorToDepartment(Doctor& doctor, const string departmentName)
 {
     for (auto d : departments) {
-        if (strcmp(d->getName(), departmentName) == 0) {
+        if (strcmp(d->getName().c_str(), departmentName.c_str()) == 0) {
             addDoctor(doctor);
             for (auto w : workers) {
                 if (auto tempDoctor = dynamic_cast<Doctor*>(w)) {
@@ -155,7 +162,7 @@ bool Hospital::addDoctorToDepartment(Doctor& doctor, const string departmentName
 bool Hospital::addVisitorToDepartment(Visitor& visitor, const string departmentName)
 {
     for (auto d : departments) {
-        if (strcmp(d->getName(), departmentName) == 0) {
+        if (strcmp(d->getName().c_str(), departmentName.c_str()) == 0) {
             addVisitor(visitor);
             for (auto v : visitors) {
                 if (v->getId() == visitor.getId()) {
@@ -182,8 +189,15 @@ bool Hospital::addArticleToResearchCenter(Researcher& researcher, Article& artic
 
 Hospital& Hospital::operator+=(const Doctor& doctor)
 {
-    Doctor* doctorCopy = new Doctor(doctor);
-    if (!departments.empty()) departments[0]->addDoctor(doctorCopy);
+    // Preserve dynamic type when adding via operator+=
+    if (auto s = dynamic_cast<const Surgen*>(&doctor)) {
+        Surgen* doctorCopy = new Surgen(*s);
+        if (!departments.empty()) departments[0]->addDoctor(doctorCopy);
+    }
+    else {
+        Doctor* doctorCopy = new Doctor(doctor);
+        if (!departments.empty()) departments[0]->addDoctor(doctorCopy);
+    }
     return *this;
 }
 
@@ -253,37 +267,37 @@ Researcher* Hospital::findResearcherById(int id) const
 
 Department* Hospital::getDepartmentByName(const string name) const
 {
-    for (auto d : departments) if (strcmp(d->getName(), name) == 0) return d;
+    for (auto d : departments) if (strcmp(d->getName().c_str(), name.c_str()) == 0) return d;
     return nullptr;
 }
 
 Doctor* Hospital::getDoctorByName(const string name) const
 {
-    for (auto w : workers) if (auto d = dynamic_cast<Doctor*>(w)) if (strcmp(d->getName(), name) == 0) return d;
+    for (auto w : workers) if (auto d = dynamic_cast<Doctor*>(w)) if (strcmp(d->getName().c_str(), name.c_str()) == 0) return d;
     return nullptr;
 }
 
 Nurse* Hospital::getNurseByName(const string name) const
 {
-    for (auto w : workers) if (auto n = dynamic_cast<Nurse*>(w)) if (strcmp(n->getName(), name) == 0) return n;
+    for (auto w : workers) if (auto n = dynamic_cast<Nurse*>(w)) if (strcmp(n->getName().c_str(), name.c_str()) == 0) return n;
     return nullptr;
 }
 
 Visitor* Hospital::getVisitorByName(const string name) const
 {
-    for (auto v : visitors) if (strcmp(v->getName(), name) == 0) return v;
+    for (auto v : visitors) if (strcmp(v->getName().c_str(), name.c_str()) == 0) return v;
     return nullptr;
 }
 
 Researcher* Hospital::getResearcherByName(const string name) const
 {
-    for (auto r : researchCenter.getResearchers()) if (strcmp(r->getName(), name) == 0) return r;
+    for (auto r : researchCenter.getResearchers()) if (strcmp(r->getName().c_str(), name.c_str()) == 0) return r;
     return nullptr;
 }
 
 void Hospital::setName(const string name)
 {
-    this->name = name ? name : std::string();
+    this->name = name;
 }
 
 void Hospital::printDepartmentVisitors(const string departmentName) const
@@ -341,8 +355,8 @@ void Hospital::printAllResearchers() const
     if (researchCenter.getCurrentNumberOfResearchers() > 0) {
         cout << "Researchers in Hospital " << name << ":" << endl;
         for (auto researcher : researchCenter.getResearchers()) {
-            if (auto rd = dynamic_cast<ResearcherDoctor*>(researcher)) cout << rd << endl;
-            else cout << researcher << endl;
+            if (auto rd = dynamic_cast<ResearcherDoctor*>(researcher)) cout << *rd << endl;
+            else cout << *researcher << endl;
         }
     }
     else {
@@ -370,9 +384,9 @@ void Hospital::printAllSurgens() const
     if (!workers.empty()) {
         cout << "Surgeons in Hospital " << name << ":" << endl;
         for (auto w : workers) {
-            if (auto d = dynamic_cast<Doctor*>(w)) {
-                if (auto s = dynamic_cast<Surgen*>(d)) cout << *s << endl;
-            }
+           /* if (auto d = dynamic_cast<Doctor*>(w)) {*/
+                if (auto s = dynamic_cast<Surgen*>(w)) cout << *s << endl;
+            //}
         }
     }
     else {

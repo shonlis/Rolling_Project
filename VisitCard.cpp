@@ -23,7 +23,7 @@ std::ostream& operator<<(std::ostream& os, const VisitCard& vc)
     os << "visit Details: \nvisit card number:" << vc.getVisitCardNumber()
         << ", Purpose = " << vc.getPurposeOfVisit()
         << ", Department = " << vc.getDepartmentsToVisit().getName();
-    if (vc.getHostWorker()) {
+    if (!vc.getHostWorker().empty()) {
         os << ", Host Worker Name = " << vc.getHostWorker() << endl;
     }
     else {

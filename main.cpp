@@ -147,7 +147,11 @@ int main()
         // add a visit card
         VisitCard vc3("test", nowDate(), *hospital.getDepartmentByName("Emergency"), std::string());
         hospital.addVisit(v3, vc3, "Oncology");
- 
+
+        Visitor v4("John Doe4", 4004, 1965, (Person::Gender)0);
+        // add a visit card
+		Surgery srg1("surgery", nowDate(), *hospital.getDepartmentByName("Oncology"), std::string(), 101, true);
+        hospital.addVisit(v4, vc3, "Oncology");
 
     cout << "Initial data added. Today=" << nowDate() << endl;
 
@@ -337,12 +341,17 @@ int main()
         else if (choice == 11)
         {
             int vid = askInt("Enter visitor ID: ");
-            if (hospital.findVisitorById(vid))
+            Visitor* found = hospital.findVisitorById(vid);
+            if (found)
             {
-                cout << "Visitor name: " << hospital.findVisitorById(vid)->getName() << endl;
-				cout << "Visits: " << hospital.findVisitorById(vid) << endl;
+                cout << "Visitor name: " << found->getName() << endl;
+                // Use the Visitor operator<< by dereferencing the pointer
+                cout << "Visits: " << *found << endl;
             }
-            
+            else
+            {
+                cout << "Visitor not found" << endl;
+            }
         }
         else if (choice == 12)
         {

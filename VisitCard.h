@@ -33,11 +33,11 @@ public:
     }
 
     // getters
-    const string getPurposeOfVisit() const { return purposeOfVisit.c_str(); }
-    const string getVisitingDate() const { return visitingDate.c_str(); }
+    const std::string& getPurposeOfVisit() const { return purposeOfVisit; }
+    const std::string& getVisitingDate() const { return visitingDate; }
     int getVisitCardNumber() const { return VisitCardNumber; }
     const Department& getDepartmentsToVisit() const { return departmentsToVisit; }
-    const string getHostWorker() const { return hostWorker.empty() ? nullptr : hostWorker.c_str(); }
+    const std::string& getHostWorker() const { return hostWorker; }
 
 private:
     std::string purposeOfVisit;

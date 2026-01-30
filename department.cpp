@@ -6,7 +6,7 @@ using namespace std;
 #include "Nurse.h"
 #include "Visitor.h"
 
-Department::Department(const string name) : name(name ? name : std::string("none")) {}
+Department::Department(const string name) : name(name) {}
 
 Department::~Department()
 {
