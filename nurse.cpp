@@ -1,6 +1,6 @@
 #include "Nurse.h"
 
-Nurse::Nurse(const char* name, int id, int birthYear, Gender gender, int ExperienceYears)
+Nurse::Nurse(const string name, int id, int birthYear, Gender gender, int ExperienceYears)
 	: Worker(name, id, birthYear, gender), ExperienceYears(ExperienceYears)
 {
 }

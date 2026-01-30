@@ -14,7 +14,7 @@ private:
     std::vector<std::unique_ptr<VisitCard>> visits; // owns visit cards
 public:
 
-    Visitor(const char* name, int id, int birthYear, Gender gender);
+    Visitor(const string name, int id, int birthYear, Gender gender);
     ~Visitor();
 
     Visitor(const Visitor& visitor);

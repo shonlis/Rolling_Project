@@ -43,14 +43,14 @@ static std::string nowDate()
     return std::string(buf);
 }
 
-static int askInt(const char* prompt)
+static int askInt(const std::string& prompt)
 {
-    cout << prompt;
-    int v; cin >> v; cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    std::cout << prompt;
+    int v; std::cin >> v; std::cin.ignore(numeric_limits<std::streamsize>::max(), '\n');
     return v;
 }
 
-static std::string askLine(const char* prompt)
+static std::string askLine(const std::string& prompt)
 {
     std::cout << prompt;
     std::string s;
@@ -289,7 +289,7 @@ int main()
                 name = askLine("Doctor name to promote to researcher: ");
                 Doctor* doc = hospital.getDoctorByName(name.c_str());
                 if (!doc) { cout << "Doctor not found" << endl; continue; }
-				Researcher r((const char*)doc->getName(),doc->getId(), doc->getBirthYear(), doc->getGender());
+				Researcher r(doc->getName().c_str(),doc->getId(), doc->getBirthYear(), doc->getGender());
                 ResearcherDoctor rd(r, *doc);
                 hospital.addResearcher(rd);
 				cout << "Researcher " << name << " added" << endl;

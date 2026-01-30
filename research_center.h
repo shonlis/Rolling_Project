@@ -14,16 +14,16 @@ class research_center
     std::vector<Researcher*> researchers;
 
 public:
-    research_center(const char* name = "There is no Name");
+    research_center(const string name = "There is no Name");
     ~research_center();
 
     // getters
-    const char* getName() const { return name.c_str(); };
+    const string getName() const { return name.c_str(); };
     int getCurrentNumberOfResearchers() const { return static_cast<int>(researchers.size()); }
     std::vector<Researcher*> const& getResearchers() const { return researchers; };
     
     //setters
-    void setName(const char* name);
+    void setName(const string name);
 
     // other methods
     bool addResearcher( Researcher& researcher);

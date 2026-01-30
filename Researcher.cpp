@@ -6,7 +6,7 @@ using namespace std;
 #include "Article.h"
 #include "Worker.h"
 
-Researcher::Researcher(const char* name, int id, int birthYear, Gender gender, Article** articles)
+Researcher::Researcher(const string name, int id, int birthYear, Gender gender, Article** articles)
     : Worker(name, id, birthYear, gender)
 {
     if (articles) {

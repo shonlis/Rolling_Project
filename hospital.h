@@ -26,11 +26,11 @@ class Hospital
     std::vector<Visitor*> visitors;
 
 public:
-    Hospital(const char* name, research_center& researchCenter);
+    Hospital(const string name, research_center& researchCenter);
     ~Hospital();
 
     // getters
-    const char* getName() const { return name.c_str(); };
+    const string getName() const { return name.c_str(); };
     const research_center& getResearchCenter() const { return researchCenter; };
     int getNumberOfDoctors() const;
     int getNumberOfNurses() const;
@@ -38,18 +38,18 @@ public:
     int getNumberOfVisitors() const { return static_cast<int>(visitors.size()); };
     int getNumberOfResearchers() const;
     int getNumberOfDepartments() const { return static_cast<int>(departments.size()); };
-    Department* getDepartmentByName(const char* name) const;
-    Doctor* getDoctorByName(const char* name) const;
-    Nurse* getNurseByName(const char* name) const;
-    Visitor* getVisitorByName(const char* name) const;
-    Researcher* getResearcherByName(const char* name) const;
+    Department* getDepartmentByName(const string name) const;
+    Doctor* getDoctorByName(const string name) const;
+    Nurse* getNurseByName(const string name) const;
+    Visitor* getVisitorByName(const string name) const;
+    Researcher* getResearcherByName(const string name) const;
 
 
     //setters
-    void setName(const char* name);
+    void setName(const string name);
 
-    bool addNurseToDepartment(Nurse& nurse, const char* departmentName);
-    bool addDoctorToDepartment(Doctor& doctor, const char* departmentName);
+    bool addNurseToDepartment(Nurse& nurse, const string departmentName);
+    bool addDoctorToDepartment(Doctor& doctor, const string departmentName);
 
     // other methods
     bool addDepartment(Department& department);
@@ -59,9 +59,9 @@ public:
     bool addNurse(Nurse& nurse);
     bool addWorker(Worker& worker);
 
-    bool addWorkerToDepartment(Worker& worker, const char* departmentName);
-    bool addVisit(Visitor& visitor, VisitCard& Visitcard, const char* department);
-    bool addVisitorToDepartment(Visitor& visitor, const char* departmentName);
+    bool addWorkerToDepartment(Worker& worker, const string departmentName);
+    bool addVisit(Visitor& visitor, VisitCard& Visitcard, const string department);
+    bool addVisitorToDepartment(Visitor& visitor, const string departmentName);
     bool addArticleToResearchCenter(Researcher& researcher, Article& article);
 
     // operator to add staff
@@ -73,9 +73,9 @@ public:
     Visitor* findVisitorById(int id) const;
     Researcher* findResearcherById(int id) const;
 
-    void printDepartmentVisitors(const char* departmentName) const;
+    void printDepartmentVisitors(const string departmentName) const;
     void printAllMedicalStaff() const;
-    void printDepartmentMedicalStaff(const char* departmentName) const;
+    void printDepartmentMedicalStaff(const string departmentName) const;
     void printAllResearchers() const;
     void printAllDepartments() const;
     void printAllSurgens() const;

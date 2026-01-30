@@ -24,9 +24,9 @@ using namespace std;
 
 
 
-Hospital::Hospital(const char* name, research_center& researchCenter) : researchCenter(researchCenter)
+Hospital::Hospital(const string name, research_center& researchCenter) : researchCenter(researchCenter)
 {
-    this->name = name ? name : std::string("");
+    this->name == name ? name : std::string("");
     departments.reserve(2);
     workers.reserve(2);
     visitors.reserve(2);
@@ -89,14 +89,14 @@ bool Hospital::addWorker(Worker& worker)
     return false;
 }
 
-bool Hospital::addWorkerToDepartment(Worker& worker, const char* departmentName)
+bool Hospital::addWorkerToDepartment(Worker& worker, const string departmentName)
 {
     if (auto tempDoctor = dynamic_cast<Doctor*>(&worker)) return addDoctorToDepartment(*tempDoctor, departmentName);
     if (auto tempNurse = dynamic_cast<Nurse*>(&worker)) return addNurseToDepartment(*tempNurse, departmentName);
     return false;
 }
 
-bool Hospital::addVisit(Visitor& visitor, VisitCard& Visitcard, const char* department)
+bool Hospital::addVisit(Visitor& visitor, VisitCard& Visitcard, const string department)
 {
     for (auto d : departments) {
         if (strcmp(d->getName(), department) == 0) {
@@ -114,7 +114,7 @@ bool Hospital::addVisit(Visitor& visitor, VisitCard& Visitcard, const char* depa
     return false;
 }
 
-bool Hospital::addNurseToDepartment(Nurse& nurse, const char* departmentName)
+bool Hospital::addNurseToDepartment(Nurse& nurse, const string departmentName)
 {
     for (auto d : departments) {
         if (strcmp(d->getName(), departmentName) == 0) {
@@ -133,7 +133,7 @@ bool Hospital::addNurseToDepartment(Nurse& nurse, const char* departmentName)
     return false;
 }
 
-bool Hospital::addDoctorToDepartment(Doctor& doctor, const char* departmentName)
+bool Hospital::addDoctorToDepartment(Doctor& doctor, const string departmentName)
 {
     for (auto d : departments) {
         if (strcmp(d->getName(), departmentName) == 0) {
@@ -152,7 +152,7 @@ bool Hospital::addDoctorToDepartment(Doctor& doctor, const char* departmentName)
     return false;
 }
 
-bool Hospital::addVisitorToDepartment(Visitor& visitor, const char* departmentName)
+bool Hospital::addVisitorToDepartment(Visitor& visitor, const string departmentName)
 {
     for (auto d : departments) {
         if (strcmp(d->getName(), departmentName) == 0) {
@@ -251,42 +251,42 @@ Researcher* Hospital::findResearcherById(int id) const
     return nullptr;
 }
 
-Department* Hospital::getDepartmentByName(const char* name) const
+Department* Hospital::getDepartmentByName(const string name) const
 {
     for (auto d : departments) if (strcmp(d->getName(), name) == 0) return d;
     return nullptr;
 }
 
-Doctor* Hospital::getDoctorByName(const char* name) const
+Doctor* Hospital::getDoctorByName(const string name) const
 {
     for (auto w : workers) if (auto d = dynamic_cast<Doctor*>(w)) if (strcmp(d->getName(), name) == 0) return d;
     return nullptr;
 }
 
-Nurse* Hospital::getNurseByName(const char* name) const
+Nurse* Hospital::getNurseByName(const string name) const
 {
     for (auto w : workers) if (auto n = dynamic_cast<Nurse*>(w)) if (strcmp(n->getName(), name) == 0) return n;
     return nullptr;
 }
 
-Visitor* Hospital::getVisitorByName(const char* name) const
+Visitor* Hospital::getVisitorByName(const string name) const
 {
     for (auto v : visitors) if (strcmp(v->getName(), name) == 0) return v;
     return nullptr;
 }
 
-Researcher* Hospital::getResearcherByName(const char* name) const
+Researcher* Hospital::getResearcherByName(const string name) const
 {
     for (auto r : researchCenter.getResearchers()) if (strcmp(r->getName(), name) == 0) return r;
     return nullptr;
 }
 
-void Hospital::setName(const char* name)
+void Hospital::setName(const string name)
 {
     this->name = name ? name : std::string();
 }
 
-void Hospital::printDepartmentVisitors(const char* departmentName) const
+void Hospital::printDepartmentVisitors(const string departmentName) const
 {
     const Department* dept = getDepartmentByName(departmentName);
     if (dept) {
@@ -319,7 +319,7 @@ void Hospital::printAllMedicalStaff() const
     }
 }
 
-void Hospital::printDepartmentMedicalStaff(const char* departmentName) const
+void Hospital::printDepartmentMedicalStaff(const string departmentName) const
 {
     const Department* dept = getDepartmentByName(departmentName);
     if (dept) {

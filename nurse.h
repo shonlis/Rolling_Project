@@ -3,13 +3,14 @@
 
 #include "Worker.h"
 #include <utility>
-
+#include <ostream>
+using namespace std;
 
 class Nurse : public Worker {
     int ExperienceYears;
 public:
 
-    Nurse(const char* name, int id, int birthYear, Gender gender, int ExperienceYears = 0);
+    Nurse(const string name, int id, int birthYear, Gender gender, int ExperienceYears = 0);
     Nurse(const Worker& worker);
     Nurse(const Nurse& nurse);
     Nurse(Nurse&& nurse) noexcept;

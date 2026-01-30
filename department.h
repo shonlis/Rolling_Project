@@ -15,11 +15,11 @@ class Department {
     std::vector<Visitor*> visitors;
 
 public:
-    Department(const char* name = "none");
+    Department(const string name = "none");
     ~Department();
 
     // getters
-    const char* getName() const { return name.c_str(); };
+    const string getName() const { return name.c_str(); };
     int getCurrentNumberOfDoctors() const { return static_cast<int>(doctors.size()); }
     int getCurrentNumberOfNurses() const { return static_cast<int>(nurses.size()); }
     int getCurrentNumberOfVisitors() const { return static_cast<int>(visitors.size()); }
@@ -29,7 +29,7 @@ public:
     const std::vector<Visitor*>& getVisitors() const { return visitors; }
 
     //setters
-    void setName(const char* name);
+    void setName(const string name);
 
     // operators
     Department& operator+=(Doctor& doctor);

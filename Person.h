@@ -19,12 +19,12 @@ protected:
     Person(Person&& person) noexcept; // move c'tor for inheritors only
 
     // constructors and destructor
-    Person(const char* name, int id, int birthYear, Gender gender);
+    Person(const string name, int id, int birthYear, Gender gender);
     virtual ~Person() = default;
 
 public:
     // getters
-    const char* getName() const { return name.c_str(); };
+    const string getName() const { return name; };
     int getId() const { return id; };
     int getBirthYear() const { return birthYear; };
     Gender getGender() const { return gender; };

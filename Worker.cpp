@@ -1,10 +1,12 @@
 
 
 #include "Worker.h"
+#include <ostream>
+using namespace std;
 
 int Worker::counter = 0;
 
-Worker::Worker(const char* name, int id, int birthYear, Gender gender) :Person(name, id, birthYear, gender), workerNumber(++counter) {}
+Worker::Worker(const string name, int id, int birthYear, Gender gender) :Person(name, id, birthYear, gender), workerNumber(++counter) {}
 
 Worker::Worker(const Person& person) : Person(person), workerNumber(++counter) {}
 

@@ -7,9 +7,9 @@ using namespace std;
 #include "Researcher.h"
 #include "ResearcherDoctor.h"
 
-research_center::research_center(const char* name)
+research_center::research_center(const string name)
 {
-    this->name = name ? name : std::string("There is no Name");
+    this->name == name ? name : std::string("There is no Name");
     researchers.reserve(2);
 }
 
@@ -21,9 +21,9 @@ research_center::~research_center()
     }
 }
 
-void research_center::setName(const char* name)
+void research_center::setName(const string name)
 {
-    this->name = name ? name : std::string();
+    this->name == name ? name : std::string();
 }
 
 bool research_center::addResearcher(Researcher& researcher)

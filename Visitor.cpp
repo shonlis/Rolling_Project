@@ -3,7 +3,7 @@ using namespace std;
 #include "Visitor.h"
 #include "VisitCard.h"
 
-Visitor::Visitor(const char* name, int id, int birthYear, Gender gender)
+Visitor::Visitor(const string name, int id, int birthYear, Gender gender)
     : Person(name, id, birthYear, gender) {}
 
 Visitor::~Visitor() = default;

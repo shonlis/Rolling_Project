@@ -2,7 +2,8 @@
 #define ARTICLE_H
 
 #include <string>
-#include <iostream>
+#include <ostream>
+using namespace std;
 
 class Article {
 protected:
@@ -15,18 +16,18 @@ public:
     Article(Article&& article) noexcept;
 
     // constructors and destructor
-    Article(const char* title, const char* publicationDate, const char* magazinName);
+    Article(const string title, const string publicationDate, const string magazinName);
     ~Article() = default;
 
     // getters (keep C-style API by returning c_str())
-    const char* getTitle() const { return title.c_str(); };
-    const char* getPublicationDate() const { return publicationDate.c_str(); };
-    const char* getMagazinName() const { return magazinName.c_str(); };
+    const string getTitle() const { return title.c_str(); };
+    const string getPublicationDate() const { return publicationDate.c_str(); };
+    const string getMagazinName() const { return magazinName.c_str(); };
 
     //setters
-    bool setTitle(const char* title);
-    bool setPublicationDate(const char* publicationDate);
-    bool setMagazinName(const char* magazinName);
+    bool setTitle(const string title);
+    bool setPublicationDate(const string publicationDate);
+    bool setMagazinName(const string magazinName);
 
     // operators overloading
     friend std::ostream& operator<<(std::ostream& os, const Article& a);

@@ -18,7 +18,7 @@ protected:
     Worker(const Worker& worker); // copy c'tor for Researcher
     Worker(Worker&& worker) noexcept; // move c'tor for inheritance.
 
-    Worker(const char* name, int id, int birthYear, Gender gender);
+    Worker(const string name, int id, int birthYear, Gender gender);
     Worker(const Person& person);
 public:
 

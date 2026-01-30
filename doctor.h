@@ -11,16 +11,16 @@ class Doctor : virtual public Worker
     std::string specialization;
 public:
 
-    Doctor(const char* name, int id, int birthYear, Gender gender, const char* specialization = nullptr);
+    Doctor(const string name, int id, int birthYear, Gender gender, const string specialization = nullptr);
     Doctor(const Doctor& other);
     Doctor(Doctor&& other) noexcept;
     ~Doctor() = default;
 
     // getters
-    const char* getSpecialization() const { return specialization.c_str(); };
+    const string getSpecialization() const { return specialization.c_str(); };
 
     // setters
-    bool setSpecialization(const char* specialization);
+    bool setSpecialization(const string specialization);
 
     // other methods
     virtual void showthis() const

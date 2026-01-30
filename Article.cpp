@@ -1,7 +1,6 @@
 
 // Article implementation
 #pragma warning(disable: 4996)
-#include <iostream>
 
 #include "Article.h"
 
@@ -11,22 +10,22 @@ Article::Article(const Article& article)
 Article::Article(Article&& article) noexcept
     : title(std::move(article.title)), publicationDate(std::move(article.publicationDate)), magazinName(std::move(article.magazinName)) {}
 
-Article::Article(const char* title, const char* publicationDate, const char* magazinName)
+Article::Article(const string title, const string publicationDate, const string magazinName)
     : title(title ? title : std::string()), publicationDate(publicationDate ? publicationDate : std::string()), magazinName(magazinName ? magazinName : std::string()) {}
 
-bool Article::setTitle(const char* title)
+bool Article::setTitle(const string title)
 {
     this->title = title ? title : std::string();
     return true;
 }
 
-bool Article::setPublicationDate(const char* publicationDate)
+bool Article::setPublicationDate(const string publicationDate)
 {
     this->publicationDate = publicationDate ? publicationDate : std::string();
     return true;
 }
 
-bool Article::setMagazinName(const char* magazinName)
+bool Article::setMagazinName(const string magazinName)
 {
     this->magazinName = magazinName ? magazinName : std::string();
     return true;

@@ -3,9 +3,9 @@
 using namespace std;
 #include "Person.h"
 
-Person::Person(const char* name, int id, int birthYear, Gender gender) : id(id), birthYear(birthYear), gender(gender), name(name ? name : std::string()) {}
+Person::Person(const string name, int id, int birthYear, Gender gender) : id(id), birthYear(birthYear), gender(gender), name(name ? name : std::string()) {}
 
-Person::Person(const Person& person) : Person(person.name.c_str(), person.id, person.birthYear, person.gender) {}
+Person::Person(const Person& person) : Person(person.name, person.id, person.birthYear, person.gender) {}
 
 Person::Person(Person&& person) noexcept : id(person.id), birthYear(person.birthYear), gender(person.gender), name(std::move(person.name)) {}
 

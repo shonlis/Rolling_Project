@@ -11,7 +11,7 @@ private:
     std::vector<Article*> publishedArticles; // store pointers (not owning)
 
 public:
-    Researcher(const char* name, int id, int birthYear, Gender gender, Article** articles = nullptr);
+    Researcher(const string name, int id, int birthYear, Gender gender, Article** articles = nullptr);
 
     Researcher(const Worker& worker);
     Researcher(const Researcher& researcher);

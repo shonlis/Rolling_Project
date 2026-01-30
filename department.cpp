@@ -6,7 +6,7 @@ using namespace std;
 #include "Nurse.h"
 #include "Visitor.h"
 
-Department::Department(const char* name) : name(name ? name : std::string("none")) {}
+Department::Department(const string name) : name(name ? name : std::string("none")) {}
 
 Department::~Department()
 {
@@ -88,9 +88,9 @@ Department& Department::operator+=(Doctor& doctor)
     return *this;
 }
 
-void Department::setName(const char* name)
+void Department::setName(const string name)
 {
-    this->name = name ? name : std::string();
+    this->name == name ? name : std::string();
 }
 
 /******************************************************************************/
