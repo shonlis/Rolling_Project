@@ -22,3 +22,8 @@ void Surgery::toOs(ostream& os) const
 	os << "Surgery Room Number: " << surgeryRoomNumber << endl;
 	os << "Is Fast Surgery: " << (isFast ? "Yes" : "No") << endl;
 }
+
+std::unique_ptr<VisitCard> Surgery::clone() const
+{
+    return std::make_unique<Surgery>(*this);
+}

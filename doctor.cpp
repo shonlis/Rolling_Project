@@ -3,7 +3,7 @@
 #include "Worker.h"
 
 
-Doctor::Doctor(const string name, int id, int birthYear, Gender gender, const string specialization)
+Doctor::Doctor(const string name, int id, int birthYear, Gender gender, const string& specialization)
     : Worker(name, id, birthYear, gender), specialization(specialization) {}
 
 Doctor::Doctor(const Doctor& doctor) : Worker(doctor), specialization(doctor.specialization) {}

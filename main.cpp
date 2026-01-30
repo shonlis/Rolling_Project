@@ -151,7 +151,7 @@ int main()
         Visitor v4("John Doe4", 4004, 1965, (Person::Gender)0);
         // add a visit card
 		Surgery srg1("surgery", nowDate(), *hospital.getDepartmentByName("Oncology"), std::string(), 101, true);
-        hospital.addVisit(v4, vc3, "Oncology");
+        hospital.addVisit(v4, srg1, "Oncology");
 
     cout << "Initial data added. Today=" << nowDate() << endl;
 
@@ -256,11 +256,6 @@ int main()
                 purpose = askLine("Purpose of visit: test or surgery ");
             }
             std::string date = nowDate();
-            if(purpose == "surgery") {
-                Surgery s(purpose.c_str(), date.c_str(), *hospital.getDepartmentByName(departmentName.c_str()), std::string(),
-                    askInt("Surgery room number: "), 
-                    (askInt("Is it a fast surgery? (1=Yes, 0=No): ") == 1) ? true : false);
-            }
 
             VisitCard vc(purpose, date, *hospital.getDepartmentByName(departmentName.c_str()), std::string());
             hospital.printDepartmentMedicalStaff(departmentName.c_str());
@@ -274,14 +269,28 @@ int main()
             {
                 vc.setHostWorker(hospital.getDoctorByName(name.c_str()) ? hospital.getDoctorByName(name.c_str())->getName() : hospital.getNurseByName(name.c_str())->getName());
             }
+            Surgery s(purpose.c_str(), date.c_str(), *hospital.getDepartmentByName(departmentName.c_str()), std::string(),
+                askInt("Surgery room number: "),
+                (askInt("Is it a fast surgery? (1=Yes, 0=No): ") == 1) ? true : false);
             if (found)
             {
-                hospital.findVisitorById(vid)->addVisitCard(vc);
+
+                if (purpose == "surgery") {
+                    hospital.findVisitorById(id)->addVisitCard(s);
+                }
+                else {
+                    hospital.findVisitorById(id)->addVisitCard(vc);
+                }
                 hospital.addVisitorToDepartment(*hospital.findVisitorById(vid), departmentName.c_str());
             }
             else
             {
-                hospital.findVisitorById(id)->addVisitCard(vc);
+                if (purpose == "surgery") {
+                    hospital.findVisitorById(id)->addVisitCard(s);
+                }
+                else {
+                    hospital.findVisitorById(id)->addVisitCard(vc);
+                }
                 hospital.addVisitorToDepartment(*hospital.findVisitorById(id), departmentName.c_str());
             }
         }
@@ -342,10 +351,8 @@ int main()
         {
             int vid = askInt("Enter visitor ID: ");
             Visitor* found = hospital.findVisitorById(vid);
-            if (found)
-            {
+            if (found) {
                 cout << "Visitor name: " << found->getName() << endl;
-                // Use the Visitor operator<< by dereferencing the pointer
                 cout << "Visits: " << *found << endl;
             }
             else

@@ -11,13 +11,14 @@ class Doctor : virtual public Worker
     std::string specialization;
 public:
 
-    Doctor(const string name, int id, int birthYear, Gender gender, const string specialization = nullptr);
+    // accept string by const-ref and default to empty string (not nullptr)
+    Doctor(const string name, int id, int birthYear, Gender gender, const string& specialization = "");
     Doctor(const Doctor& other);
     Doctor(Doctor&& other) noexcept;
     ~Doctor() = default;
 
     // getters
-    const string getSpecialization() const { return specialization.c_str(); };
+    const string& getSpecialization() const { return specialization; };
 
     // setters
     bool setSpecialization(const string specialization);

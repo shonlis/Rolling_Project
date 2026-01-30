@@ -11,7 +11,7 @@ Visitor::~Visitor() = default;
 Visitor::Visitor(const Visitor& visitor) : Person(visitor)
 {
     visits.clear();
-    for (const auto& v : visitor.visits) visits.push_back(std::make_unique<VisitCard>(*v));
+    for (const auto& v : visitor.visits) visits.push_back(v ? v->clone() : nullptr);
 }
 
 Visitor::Visitor(Visitor&& visitor) noexcept : Person(std::move(visitor)), visits(std::move(visitor.visits)) {}
@@ -28,7 +28,7 @@ void Visitor::showthis() const
 bool Visitor::addVisitCard(const VisitCard& visitCard)
 {
     if (visitCardExist(visitCard)) return false;
-    visits.push_back(std::make_unique<VisitCard>(visitCard));
+    visits.push_back(visitCard.clone());
     return true;
 }
 

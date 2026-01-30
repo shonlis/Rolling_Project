@@ -24,6 +24,8 @@ class Surgery : public VisitCard
 
 		// other methods
 		void toOs(ostream& os) const override;
+		// polymorphic clone override
+		std::unique_ptr<VisitCard> clone() const override;
 
 };
 

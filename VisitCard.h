@@ -4,6 +4,7 @@
 
 #include <string>
 #include <iostream>
+#include <memory>
 #include "Department.h"
 
 class VisitCard
@@ -24,6 +25,8 @@ public:
 
     //operators overloading
     virtual void toOs(std::ostream& os) const {}
+    // polymorphic clone to preserve derived types when storing copies
+    virtual std::unique_ptr<VisitCard> clone() const { return std::make_unique<VisitCard>(*this); }
     friend std::ostream& operator<<(std::ostream& os, const VisitCard& VisitCard);
 
     //setters
