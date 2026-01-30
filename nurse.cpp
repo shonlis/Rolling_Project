@@ -13,14 +13,14 @@ Nurse::Nurse(const Nurse& nurse) : Worker(nurse)
 {
 	this->ExperienceYears = nurse.ExperienceYears;
 }
-Nurse::Nurse(Nurse&& nurse) : Worker(move(nurse)),ExperienceYears(nurse.ExperienceYears) {}
+Nurse::Nurse(Nurse&& nurse) noexcept : Worker(std::move(nurse)), ExperienceYears(nurse.ExperienceYears) {}
 void Nurse::setExperienceYears(int experienceYears)
 {
     ExperienceYears = experienceYears;
 }
 
-void Nurse::toOs(ostream& os) const
+void Nurse::toOs(std::ostream& os) const
 {
     Worker::toOs(os);
-	os << "Experience Years: " << ExperienceYears << endl;
+    os << "Experience Years: " << ExperienceYears << std::endl;
 }

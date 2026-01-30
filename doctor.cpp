@@ -4,49 +4,20 @@
 
 
 Doctor::Doctor(const char* name, int id, int birthYear, Gender gender, const char* specialization)
-    : Worker(name, id, birthYear, gender)
-{
-    if (specialization)
-    {
-        this->specialization = new char[strlen(specialization) + 1];
-        strcpy(this->specialization, specialization);
-    }
-    else
-    {
-        this->specialization = nullptr;
-    }
-}
+    : Worker(name, id, birthYear, gender), specialization(specialization ? specialization : std::string()) {}
 
-Doctor::Doctor(const Doctor& doctor) : Worker(doctor)
-{
-    if (doctor.specialization)
-    {
-        specialization = new char[strlen(doctor.specialization) + 1];
-        strcpy(specialization, doctor.specialization);
-    }
-    else
-        specialization = nullptr;
-}
+Doctor::Doctor(const Doctor& doctor) : Worker(doctor), specialization(doctor.specialization) {}
 
-Doctor::Doctor(Doctor&& doctor) : Worker(move(doctor))
-{
-    specialization = doctor.specialization;
-    doctor.specialization = nullptr;
-}
+Doctor::Doctor(Doctor&& doctor) noexcept : Worker(std::move(doctor)), specialization(std::move(doctor.specialization)) {}
 
 bool Doctor::setSpecialization(const char* specialization)
 {
-    if (this->specialization) delete[] this->specialization;
-    if (specialization) {
-        this->specialization = new char[strlen(specialization) + 1];
-        strcpy(this->specialization, specialization);
-    }
-    else this->specialization = nullptr;
+    this->specialization = specialization ? specialization : std::string();
     return true;
 }
 
 void Doctor::toOs(ostream& os) const
 {
     Worker::toOs(os);
-	os << "Specialization: " << (specialization ? specialization : "not defined") << endl;
+    os << "Specialization: " << (specialization.empty() ? "not defined" : specialization.c_str()) << std::endl;
 }

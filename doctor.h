@@ -2,20 +2,22 @@
 #define DOCTOR_H
 
 #include "Worker.h"
-
+#include <string>
+#include <iostream>
+using namespace std;
 
 class Doctor : virtual public Worker
 {
-    char* specialization;
+    std::string specialization;
 public:
 
     Doctor(const char* name, int id, int birthYear, Gender gender, const char* specialization = nullptr);
     Doctor(const Doctor& other);
-    Doctor(Doctor&& other);
-    ~Doctor() { delete[] specialization; }
+    Doctor(Doctor&& other) noexcept;
+    ~Doctor() = default;
 
     // getters
-    const char* getSpecialization() const { return specialization ? specialization : nullptr; };
+    const char* getSpecialization() const { return specialization.c_str(); };
 
     // setters
     bool setSpecialization(const char* specialization);
@@ -24,7 +26,7 @@ public:
     virtual void showthis() const
     {
         Worker::showthis();
-		cout << "Specialization: " << (specialization ? specialization : "not defined") << endl;
+        cout << "Specialization: " << (this->specialization.empty() ? "not defined" : this->specialization.c_str()) << endl;
     }
     virtual void toOs(ostream& os) const override;
 

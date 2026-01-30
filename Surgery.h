@@ -11,7 +11,7 @@ class Surgery : public VisitCard
 
 	public:
 
-		Surgery(const char* purposeOfVisit, const char* visitingDate, Department& departmentsToVisit, char* hostWorker, int surgeryRoomNumber, bool isFast);
+        Surgery(const std::string& purposeOfVisit, const std::string& visitingDate, Department& departmentsToVisit, const std::string& hostWorker, int surgeryRoomNumber, bool isFast);
 		
 
 		//setters

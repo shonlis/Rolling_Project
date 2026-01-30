@@ -2,52 +2,47 @@
 #define Person__H_
 
 #include <iostream>
-using namespace std;
+#include <string>
 
 class Person
 {
 public:
-	enum Gender { Male, Female, Unknown }; // giving iherritants to use this enum
+    enum Gender { Male, Female, Unknown }; // giving inheritors access to this enum
 
 protected:
+    std::string name;
+    const int id;
+    const int birthYear;
+    Gender gender;
 
-    char* name = nullptr;
-	const int id;
-	const int birthYear;
-	Gender gender;
+    Person(const Person& person); // copy c'tor for inheritors only
+    Person(Person&& person) noexcept; // move c'tor for inheritors only
 
-	Person(const Person& person); // copy c'tor for iherritants only
-	Person(Person&& person); // move c'tor for iherritants only
-	
-	// constructors and destructor
-	Person(const char* name, int id, int birthYear, Gender gender);
-	virtual ~Person() { delete[]name; };
-
+    // constructors and destructor
+    Person(const char* name, int id, int birthYear, Gender gender);
+    virtual ~Person() = default;
 
 public:
+    // getters
+    const char* getName() const { return name.c_str(); };
+    int getId() const { return id; };
+    int getBirthYear() const { return birthYear; };
+    Gender getGender() const { return gender; };
 
+    // setters
+    bool setGender(Gender gender); /* you can change your gender */
 
-	// getters
-	const char* getName() const { return name; };
-	int getId() const { return id; };
-	int getBirthYear() const { return birthYear; };
-	Gender getGender() const { return gender; };
+    //other methods
+    virtual void showthis() const = 0
+    {
+        std::cout << "Person: " << name << ", ID: " << id << ", Birth Year: "
+            << birthYear << ", Gender: " << (gender == Male ? "Male" : gender == Female ? "Female" : "Unknown") << std::endl;
+    };
 
-	// setters
-	bool setGender(Gender gender); /* you can change your gender */
-	
-	//other methods
-	virtual void showthis() const = 0 
-	{
-		cout << "Person: " << name << ", ID: " << id << ", Birth Year: "
-			<< birthYear << ", Gender: " << (gender == Male ? "Male" : gender == Female ? "Female" : "Unknown") << endl;
-	};
+    virtual void toOs(std::ostream& os) const {}
 
-	virtual void toOs(ostream& os) const {}
-
-	//operators overloading
-	friend ostream& operator<<(ostream& os, const Person& p);
-
+    //operators overloading
+    friend std::ostream& operator<<(std::ostream& os, const Person& p);
 };
 
 #endif // !Person__H_

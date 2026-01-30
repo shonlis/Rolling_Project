@@ -13,7 +13,7 @@ class Surgen : public Doctor
 		
 		Surgen(const Doctor& doctor);
 		Surgen(const Surgen& surgen);
-		Surgen(Surgen&& surgen);
+		Surgen(Surgen&& surgen) noexcept;
 
 		// setters
 		void setNumberOfOperations(int numberOfOperations);
@@ -23,7 +23,7 @@ class Surgen : public Doctor
 
 		// other methods
 
-		void toOs(ostream& os) const override;
+        void toOs(std::ostream& os) const override;
 
 };
 

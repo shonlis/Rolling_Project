@@ -7,75 +7,18 @@ using namespace std;
 
 int VisitCard::counter = 0;
 
-VisitCard::VisitCard(const char* purposeOfVisit, const char* visitingDate, Department& departmentsToVisit, char* hostWorker)
-    : departmentsToVisit(departmentsToVisit), hostWorker(nullptr), VisitCardNumber(++counter)
+VisitCard::VisitCard(const std::string& purposeOfVisit, const std::string& visitingDate, const Department& departmentsToVisit, const std::string& hostWorker)
+    : VisitCardNumber(++counter), purposeOfVisit(purposeOfVisit), visitingDate(visitingDate), departmentsToVisit(departmentsToVisit), hostWorker(hostWorker)
 {
-    if (purposeOfVisit)
-    {
-        this->purposeOfVisit = new char[strlen(purposeOfVisit) + 1];
-        strcpy(this->purposeOfVisit, purposeOfVisit);
-    }
-    else
-    {
-        this->purposeOfVisit = nullptr;
-    }
-
-    if (visitingDate)
-    {
-        strncpy(this->visitingDate, visitingDate, sizeof(this->visitingDate) - 1);
-        this->visitingDate[sizeof(this->visitingDate) - 1] = '\0';
-    }
-    else
-    {
-        this->visitingDate[0] = '\0';
-    }
-
-    if (hostWorker)
-    {
-        size_t len = strlen(hostWorker) + 1;
-        this->hostWorker = new char[len];
-        strncpy(this->hostWorker, hostWorker, len);
-        this->hostWorker[len - 1] = '\0';
-    }
-    else
-    {
-        this->hostWorker = nullptr;
-    }
 }
 
-// Copy ctor: create a deep copy and preserve VisitCardNumber from original
+// Copy ctor: preserve VisitCardNumber
 VisitCard::VisitCard(const VisitCard& other)
-    : VisitCardNumber(other.VisitCardNumber), departmentsToVisit(other.departmentsToVisit), hostWorker(nullptr)
+    : VisitCardNumber(other.VisitCardNumber), departmentsToVisit(other.departmentsToVisit), purposeOfVisit(other.purposeOfVisit), visitingDate(other.visitingDate), hostWorker(other.hostWorker)
 {
-    if (other.purposeOfVisit)
-    {
-        size_t len = strlen(other.purposeOfVisit) + 1;
-        purposeOfVisit = new char[len];
-        strncpy(purposeOfVisit, other.purposeOfVisit, len);
-        purposeOfVisit[len - 1] = '\0';
-    }
-    else
-    {
-        purposeOfVisit = nullptr;
-    }
-
-    strncpy(this->visitingDate, other.visitingDate, sizeof(this->visitingDate));
-    this->visitingDate[sizeof(this->visitingDate) - 1] = '\0';
-
-    if (other.hostWorker)
-    {
-        size_t len = strlen(other.hostWorker) + 1;
-        this->hostWorker = new char[len];
-        strncpy(this->hostWorker, other.hostWorker, len);
-        this->hostWorker[len - 1] = '\0';
-    }
-    else
-    {
-        this->hostWorker = nullptr;
-    }
 }
 
-ostream& operator<<(ostream& os, const VisitCard& vc)
+std::ostream& operator<<(std::ostream& os, const VisitCard& vc)
 {
     os << "visit Details: \nvisit card number:" << vc.getVisitCardNumber()
         << ", Purpose = " << vc.getPurposeOfVisit()
@@ -86,18 +29,8 @@ ostream& operator<<(ostream& os, const VisitCard& vc)
     else {
         os << ", Host Worker Name = (none)" << endl;
     }
-	vc.toOs(os);
+    vc.toOs(os);
     return os;
 }
- 
-VisitCard::~VisitCard()
-{
-    if (purposeOfVisit)
-    {
-        delete[] purposeOfVisit;
-    }
-    if (hostWorker)
-    {
-        delete[] hostWorker;
-    }
-}
+
+// destructor defined in header as = default

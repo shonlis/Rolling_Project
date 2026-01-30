@@ -1,33 +1,34 @@
 #ifndef research_center__H_
 #define research_center__H_
 
+#include <string>
+#include <vector>
+
 class Researcher;
 class Doctor;
 class ResearcherDoctor;
 
 class research_center
 {
-	char* name;
-	Researcher** researchers;
-	int currentNumberOfResearchers;
-	int maxNumberOfResearchers;
+    std::string name;
+    std::vector<Researcher*> researchers;
 
 public:
-	research_center(const char* name = "There is no Name");
-	~research_center();
+    research_center(const char* name = "There is no Name");
+    ~research_center();
 
-	// getters
-	const char* getName() const { return name; };
-	int getCurrentNumberOfResearchers() const { return currentNumberOfResearchers; }
-	Researcher* const* getResearchers() const { return researchers; };
-	
-	//setters
-	void setName(const char* name);
+    // getters
+    const char* getName() const { return name.c_str(); };
+    int getCurrentNumberOfResearchers() const { return static_cast<int>(researchers.size()); }
+    std::vector<Researcher*> const& getResearchers() const { return researchers; };
+    
+    //setters
+    void setName(const char* name);
 
-	// other methods
-	bool addResearcher( Researcher& researcher);
-	bool researcherExist(const Researcher& researcher);
-	friend ostream& operator<<(ostream& os, const research_center& research_center);
+    // other methods
+    bool addResearcher( Researcher& researcher);
+    bool researcherExist(const Researcher& researcher);
+    friend std::ostream& operator<<(std::ostream& os, const research_center& research_center);
 };
 
 #endif // !research_center__H_

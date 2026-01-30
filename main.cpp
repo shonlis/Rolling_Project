@@ -29,7 +29,7 @@ using namespace std;
 #define DBG_NEW new
 #endif
 
-static char* nowDate()
+static std::string nowDate()
 {
     time_t t = time(nullptr);
     tm lt;
@@ -38,9 +38,9 @@ static char* nowDate()
 #else
     localtime_r(&t, &lt);
 #endif
-    static char buf[32];
+    char buf[32];
     snprintf(buf, sizeof(buf), "%04d-%02d-%02d", lt.tm_year + 1900, lt.tm_mon + 1, lt.tm_mday);
-    return (buf);
+    return std::string(buf);
 }
 
 static int askInt(const char* prompt)
@@ -50,12 +50,11 @@ static int askInt(const char* prompt)
     return v;
 }
 
-static char* askLine(const char* prompt)
+static std::string askLine(const char* prompt)
 {
-    cout << prompt;
-    const size_t bufsize = 256;
-    char* s = new char[bufsize];
-    cin.getline(s, bufsize);
+    std::cout << prompt;
+    std::string s;
+    std::getline(std::cin, s);
     return s;
 }
 
@@ -99,6 +98,12 @@ int main()
         d3.setSpecialization("Emergency");
 		hospital.addDoctorToDepartment(d3, department3.getName());
 
+        Doctor d4("Dr. Surgeon", 1022, 1922, (Person::Gender)0, "Emergency");
+		d4.setSpecialization("Emergency");
+        Surgen s1(d4);
+        s1.setNumberOfOperations(10);
+		hospital.addDoctorToDepartment(s1, department3.getName());
+
         Nurse n3("Nurse Carol3", 2003, 1990, (Person::Gender)1, 2);
         n3.setExperienceYears(2);
 		hospital.addNurseToDepartment(n3, department1.getName());
@@ -120,25 +125,33 @@ int main()
         Article a3 = Article("Cardiac 3", "2026-01-01", "Journal of Heart2");
         hospital.addArticleToResearchCenter(r2, a3);
 
+        Researcher r3 = Researcher("Res. Fun", 3002, 1975, (Person::Gender)0);
+		ResearcherDoctor rd1(r3, d2);
+        hospital.addResearcher(rd1);
+        // add one article
+        Article a4 = Article("Cardiologgg", "2025-02-01", "Journal of Heart18");
+        hospital.addArticleToResearchCenter(rd1, a4);
+
+
         Visitor v1("John Doe1", 4001, 1965, (Person::Gender)0);
         // add a visit card
-        VisitCard vc1("test", nowDate(), *hospital.getDepartmentByName("Emergency"), nullptr);
+        VisitCard vc1("test", nowDate(), *hospital.getDepartmentByName("Emergency"), std::string());
         hospital.addVisit(v1, vc1, "Emergency");
 
         Visitor v2("John Doe2", 4002, 1965, (Person::Gender)0);
         // add a visit card
-        VisitCard vc2("test", nowDate(), *hospital.getDepartmentByName("Emergency"), nullptr);
+        VisitCard vc2("test", nowDate(), *hospital.getDepartmentByName("Emergency"), std::string());
         hospital.addVisit(v2, vc2, "Cardiology");
 
         Visitor v3("John Doe3", 4003, 1965, (Person::Gender)0);
         // add a visit card
-        VisitCard vc3("test", nowDate(), *hospital.getDepartmentByName("Emergency"), nullptr);
+        VisitCard vc3("test", nowDate(), *hospital.getDepartmentByName("Emergency"), std::string());
         hospital.addVisit(v3, vc3, "Oncology");
  
 
     cout << "Initial data added. Today=" << nowDate() << endl;
 
-    char* name = nullptr;
+    std::string name;
     // Interactive menu
     while (true)
     {
@@ -162,7 +175,7 @@ int main()
         if (choice == 1)
         {
             name = askLine("Department name: ");
-			Department dept(name);
+            Department dept(name.c_str());
             hospital.addDepartment(dept);
             cout << "Added department: " << name << endl;
         }
@@ -171,27 +184,25 @@ int main()
             name = askLine("Nurse name: ");
             int id = askInt("ID (int): ");
             int birth = askInt("Birth year(YYYY): ");
-
-            Nurse n((const char*)name, id, birth, (Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
+            Nurse n(name.c_str(), id, birth, (Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
             int exp = askInt("Experience years: ");
             n.setExperienceYears(exp);
-
+            
             hospital.printAllDepartments();
             name = askLine("Department name to assign(): ");
             cout << "Nurse added to department " << name << endl;
             hospital.addNurse(n);
-            hospital.addNurseToDepartment(n, name);
+            hospital.addNurseToDepartment(n, name.c_str());
         }
         else if (choice == 3)
         {
             name = askLine("Doctor name: ");
             int id = askInt("ID (int): ");
             int birth = askInt("Birth year(YYYY): ");
-
-            Doctor d((const char*)name, id, birth, (Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
+            Doctor d(name.c_str(), id, birth, (Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
             name = askLine("Specialization: ");
-            d.setSpecialization(name);
-            char* is_sutgen = askLine("Doctor is surgeon (1=Yes, 0=No): ");
+            d.setSpecialization(name.c_str());
+            std::string is_sutgen = askLine("Doctor is surgeon (1=Yes, 0=No): ");
             if(is_sutgen == "1" || is_sutgen == "Yes" || is_sutgen == "y" || is_sutgen == "Y") {
                 Surgen s(d);
 				int num_ops = askInt("Number of operations performed: ");
@@ -199,24 +210,24 @@ int main()
 
                 hospital.printAllDepartments();
                 name = askLine("Department name to assign: ");
-                hospital.getDepartmentByName(name);
+                hospital.getDepartmentByName(name.c_str());
                 cout << "Doctor added to department " << name << endl;
                 hospital.addDoctor(s);
-                hospital.addDoctorToDepartment(s, name);
+                hospital.addDoctorToDepartment(s, name.c_str());
             }
             else
             {
                 hospital.printAllDepartments();
                 name = askLine("Department name to assign: ");
-                hospital.getDepartmentByName(name);
+                hospital.getDepartmentByName(name.c_str());
                 cout << "Doctor added to department " << name << endl;
                 hospital.addDoctor(d);
-			    hospital.addDoctorToDepartment(d, name);
+                hospital.addDoctorToDepartment(d, name.c_str());
             }
         }
         else if (choice == 4)
         {
-			char* departmentName = nullptr;
+            std::string departmentName;
             int found = 0;
             int id;
             int vid = askInt("Enter visitor ID: ");
@@ -225,62 +236,58 @@ int main()
                 if (hospital.findVisitorById(vid)->getId() == vid) { found = 1;}
             }
             if (!found){
-
-                char* name = askLine("Visitor name: ");
+                std::string vname = askLine("Visitor name: ");
                 id = askInt("ID (int): ");
                 int birth = askInt("Birth year(YYYY): ");
-				Visitor  v((const char*)name, id, birth, (Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
+                Visitor  v(vname.c_str(), id, birth, (Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
                 hospital.addVisitor(v);
             }
-
             hospital.printAllDepartments();
             departmentName = askLine("Department name for visit: ");
-            if (!hospital.getDepartmentByName(departmentName)) { cout << "Department not found" << endl; continue; }
+            if (!hospital.getDepartmentByName(departmentName.c_str())) { cout << "Department not found" << endl; continue; }
 
-            
-            char* purpose = askLine("Purpose of visit: test or surgery ");
+            std::string purpose = askLine("Purpose of visit: test or surgery ");
             while(purpose != "test" && purpose != "surgery") {
                 cout << "Invalid purpose. Please enter 'test' or 'surgery'." << endl;
                 purpose = askLine("Purpose of visit: test or surgery ");
-			}
-            char* date = nowDate();
+            }
+            std::string date = nowDate();
             if(purpose == "surgery") {
-                Surgery s(purpose, date, *hospital.getDepartmentByName(departmentName), nullptr,
+                Surgery s(purpose.c_str(), date.c_str(), *hospital.getDepartmentByName(departmentName.c_str()), std::string(),
                     askInt("Surgery room number: "), 
-					(askInt("Is it a fast surgery? (1=Yes, 0=No): ") == 1) ? true : false);
-			}
+                    (askInt("Is it a fast surgery? (1=Yes, 0=No): ") == 1) ? true : false);
+            }
 
-            VisitCard vc(purpose, date, *hospital.getDepartmentByName(departmentName), nullptr);
-            hospital.printDepartmentMedicalStaff(departmentName);
+            VisitCard vc(purpose, date, *hospital.getDepartmentByName(departmentName.c_str()), std::string());
+            hospital.printDepartmentMedicalStaff(departmentName.c_str());
             name = askLine("Host doctor/nurse name: ");
-            printf("Host worker: %d and %d", !hospital.getDoctorByName(name), !hospital.getNurseByName(name));
-            if (!hospital.getDoctorByName(name) && !hospital.getNurseByName(name))
+            printf("Host worker: %d and %d", !hospital.getDoctorByName(name.c_str()), !hospital.getNurseByName(name.c_str()));
+            if (!hospital.getDoctorByName(name.c_str()) && !hospital.getNurseByName(name.c_str()))
             {
                 cout << "Host doctor not found" << endl;
             }
             else
             {
-                vc.setHostWorker(hospital.getDoctorByName(name) ? hospital.getDoctorByName(name)->getName() : hospital.getNurseByName(name)->getName());
+                vc.setHostWorker(hospital.getDoctorByName(name.c_str()) ? hospital.getDoctorByName(name.c_str())->getName() : hospital.getNurseByName(name.c_str())->getName());
             }
             if (found)
             {
                 hospital.findVisitorById(vid)->addVisitCard(vc);
-				hospital.addVisitorToDepartment(*hospital.findVisitorById(vid), departmentName);
+                hospital.addVisitorToDepartment(*hospital.findVisitorById(vid), departmentName.c_str());
             }
             else
             {
                 hospital.findVisitorById(id)->addVisitCard(vc);
-                hospital.addVisitorToDepartment(*hospital.findVisitorById(id), departmentName);
+                hospital.addVisitorToDepartment(*hospital.findVisitorById(id), departmentName.c_str());
             }
-			delete[] departmentName;
         }
         else if (choice == 5)
         {
-            char* is_doctor = askLine("Researcher is a doctor (1=Yes, 0=No): ");
+            std::string is_doctor = askLine("Researcher is a doctor (1=Yes, 0=No): ");
             if (is_doctor == "1" || is_doctor == "Yes" || is_doctor == "y" || is_doctor == "Y") {
 				hospital.printAllDoctors();
                 name = askLine("Doctor name to promote to researcher: ");
-                Doctor* doc = hospital.getDoctorByName(name);
+                Doctor* doc = hospital.getDoctorByName(name.c_str());
                 if (!doc) { cout << "Doctor not found" << endl; continue; }
 				Researcher r((const char*)doc->getName(),doc->getId(), doc->getBirthYear(), doc->getGender());
                 ResearcherDoctor rd(r, *doc);
@@ -291,7 +298,7 @@ int main()
                 name = askLine("Researcher name: ");
                 int id = askInt("ID (int): ");
                 int birth = askInt("Birth year(YYYY): ");
-                Researcher r((const char*)name, id, birth, (Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
+                Researcher r(name.c_str(), id, birth, (Person::Gender)askInt("Gender (0=Male, 1=Female, 2=Unknown): "));
 
                 hospital.addResearcher(r);
                 cout << "Researcher " << name << " added" << endl;
@@ -302,19 +309,18 @@ int main()
             hospital.printAllResearchers();
             int rid = askInt("Enter researcher ID to add article to: ");
             if (!hospital.findResearcherById(rid)) { cout << "Researcher not found" << endl; continue; }
-
-            char* title = askLine("Article title: ");
-            char* date = askLine("Publication date(DDMMYYYY): ");
-            char* mag = askLine("Magazine name: ");
-            Article a  = Article(title, date, mag);
-			hospital.addArticleToResearchCenter(*hospital.findResearcherById(rid), a);
+            std::string title = askLine("Article title: ");
+            std::string date = askLine("Publication date(DDMMYYYY): ");
+            std::string mag = askLine("Magazine name: ");
+            Article a  = Article(title.c_str(), date.c_str(), mag.c_str());
+            hospital.addArticleToResearchCenter(*hospital.findResearcherById(rid), a);
             cout << "Article " << a.getTitle() << " added" << endl;
         }
         else if (choice == 7)
         {
             hospital.printAllDepartments();
-            char* dname = askLine("Department name: ");
-            hospital.printDepartmentVisitors(dname);
+            std::string dname = askLine("Department name: ");
+            hospital.printDepartmentVisitors(dname.c_str());
         }
         else if (choice == 8)
         {

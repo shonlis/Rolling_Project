@@ -2,61 +2,49 @@
 #define VisitCard__H_
 #pragma warning(disable: 4996)
 
+#include <string>
+#include <iostream>
 #include "Department.h"
 
 class VisitCard
 {
 public:
-	const int VisitCardNumber;
-	static int counter;
-	// constructors and destructor
+    const int VisitCardNumber;
+    static int counter;
+    
+    VisitCard(const std::string& purposeOfVisit, const std::string& visitingDate, const Department& departmentsToVisit, const std::string& hostWorker);
+    
+    // allow copying - preserve VisitCardNumber
+    VisitCard(const VisitCard& other);
 
-	VisitCard(const char* purposeOfVisit, const char* visitingDate, Department& departmentsToVisit, char* hostWorker);
+    virtual ~VisitCard() = default;
 
-	// allow copying - store same VisitCardNumber so copied object represents same card
-	VisitCard(const VisitCard& other);
+    // disable assignment
+    VisitCard& operator=(const VisitCard&) = delete;
 
-	virtual ~VisitCard();
+    //operators overloading
+    virtual void toOs(std::ostream& os) const {}
+    friend std::ostream& operator<<(std::ostream& os, const VisitCard& VisitCard);
 
-	// disable move & assignment if you want (optional)
-	VisitCard& operator=(const VisitCard&) = delete;
-	VisitCard(VisitCard&&) = delete;
+    //setters
+    void setHostWorker(const std::string& hostWorker)
+    {
+        this->hostWorker = hostWorker;
+    }
 
-	//operators overloading
-	virtual void toOs(ostream& os) const {}
-	friend ostream& operator<<(ostream& os, const VisitCard& VisitCard);
-
-	//setters
-	void setHostWorker(const char* hostWorker)
-	{
-		delete[] this->hostWorker;
-		if (hostWorker)
-		{
-			size_t len = strlen(hostWorker) + 1;
-			this->hostWorker = new char[len];
-			strncpy(this->hostWorker, hostWorker, len);
-			this->hostWorker[len - 1] = '\0';
-		}
-		else
-		{
-			this->hostWorker = nullptr;
-		}
-	}
-
-	// getters
-	const char* getPurposeOfVisit() const { return purposeOfVisit; }
-	const char* getVisitingDate() const { return visitingDate; }
-	int getVisitCardNumber() const { return VisitCardNumber; }
-	const Department& getDepartmentsToVisit() const { return departmentsToVisit; }
-	const char* getHostWorker() const { return hostWorker; }
+    // getters
+    const char* getPurposeOfVisit() const { return purposeOfVisit.c_str(); }
+    const char* getVisitingDate() const { return visitingDate.c_str(); }
+    int getVisitCardNumber() const { return VisitCardNumber; }
+    const Department& getDepartmentsToVisit() const { return departmentsToVisit; }
+    const char* getHostWorker() const { return hostWorker.empty() ? nullptr : hostWorker.c_str(); }
 
 private:
-	char* purposeOfVisit;
-	char visitingDate[32];
-	const Department& departmentsToVisit;
-	char* hostWorker;
+    std::string purposeOfVisit;
+    std::string visitingDate;
+    const Department& departmentsToVisit;
+    std::string hostWorker;
 };
-
 
 
 #endif // !VisitCard__H_

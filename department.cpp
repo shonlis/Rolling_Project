@@ -6,166 +6,91 @@ using namespace std;
 #include "Nurse.h"
 #include "Visitor.h"
 
-Department::Department(const char* name)
-{
-	this->name = new char[strlen(name) + 1];
-	strcpy(this->name, name);
-	maxNumberOfDoctors = 2;
-	doctors = new Doctor * [maxNumberOfDoctors];
-	currentNumberOfDoctors = 0;
+Department::Department(const char* name) : name(name ? name : std::string("none")) {}
 
-	maxNumberOfNurses = 2;
-	nurses = new Nurse * [maxNumberOfNurses];
-	currentNumberOfNurses = 0;
-
-	maxNumberOfVisitors = 2;
-	visitors = new Visitor * [maxNumberOfVisitors];
-	currentNumberOfVisitors = 0;
-
-}
 Department::~Department()
 {
-    // Department owns only the arrays and its own name.
-    // The individual Doctor/Nurse/Visitor objects are owned by Hospital, so DO NOT delete them here.
-	delete[] name;
-
-	if (doctors) {
-		delete[] doctors;
-	}
-
-	if (nurses) {
-		delete[] nurses;
-	}
-	if (visitors) {
-		delete[] visitors;
-	}
+    // Department does not own Doctor/Nurse/Visitor objects; only clears its lists
+    doctors.clear();
+    nurses.clear();
+    visitors.clear();
 }
+
 bool Department::addDoctor(Doctor* doctor)
 {
-	if (DoctorExist(*doctor))
-		return false;
-
-	if (currentNumberOfDoctors == maxNumberOfDoctors)
-	{
-		maxNumberOfDoctors *= 2;
-		Doctor** temp = new Doctor * [maxNumberOfDoctors];
-		for (int i = 0; i < currentNumberOfDoctors; i++)
-			temp[i] = this->doctors[i];
-
-		delete[]this->doctors;
-		this->doctors = temp;
-	}
-
-	this->doctors[currentNumberOfDoctors] = doctor;
-	currentNumberOfDoctors++;
-	return true;
+    if (!doctor) return false;
+    if (DoctorExist(*doctor)) return false;
+    doctors.push_back(doctor);
+    return true;
 }
+
 bool Department::DoctorExist(const Doctor& doctor)
 {
-	for (int i = 0; i < currentNumberOfDoctors; i++)
-	{
-		if (doctors[i]->getId() == doctor.getId())
-			return true;
-	}
-	return false;
+    for (auto d : doctors) if (d && d->getId() == doctor.getId()) return true;
+    return false;
 }
+
 bool Department::addNurse(Nurse* nurse)
 {
-	if (NurseExist(*nurse))
-		return false;
-
-	if (currentNumberOfNurses == maxNumberOfNurses)
-	{
-		maxNumberOfNurses *= 2;
-		Nurse** temp = new Nurse * [maxNumberOfNurses];
-		for (int i = 0; i < currentNumberOfNurses; i++)
-			temp[i] = this->nurses[i];
-
-		delete[]this->nurses;
-		this->nurses = temp;
-	}
-
-	this->nurses[currentNumberOfNurses] = nurse;
-	currentNumberOfNurses++;
-	return true;
+    if (!nurse) return false;
+    if (NurseExist(*nurse)) return false;
+    nurses.push_back(nurse);
+    return true;
 }
+
 bool Department::NurseExist(const Nurse& nurse)
 {
-	for (int i = 0; i < currentNumberOfNurses; i++)
-	{
-		if (nurses[i]->getId() == nurse.getId())
-			return true;
-	}
-	return false;
+    for (auto n : nurses) if (n && n->getId() == nurse.getId()) return true;
+    return false;
 }
+
 bool Department::addVisitor(Visitor* visitor)
 {
-	if (VisitorExist(*visitor))
-		return false;
-
-	if (currentNumberOfVisitors == maxNumberOfVisitors)
-	{
-		maxNumberOfVisitors *= 2;
-		Visitor** temp = new Visitor * [maxNumberOfVisitors];
-		for (int i = 0; i < currentNumberOfVisitors; i++)
-			temp[i] = this->visitors[i];
-
-		delete[]this->visitors;
-		this->visitors = temp;
-	}
-
-	this->visitors[currentNumberOfVisitors] = visitor;
-	currentNumberOfVisitors++;
-	return true;
+    if (!visitor) return false;
+    if (VisitorExist(*visitor)) return false;
+    visitors.push_back(visitor);
+    return true;
 }
+
 bool Department::VisitorExist(const Visitor& visitor)
 {
-	for (int i = 0; i < currentNumberOfVisitors; i++)
-	{
-		if (visitors[i]->getId() == visitor.getId())
-			return true;
-	}
-	return false;
+    for (auto v : visitors) if (v && v->getId() == visitor.getId()) return true;
+    return false;
 }
-/*******************************************************************************/
+
 void Department::printDoctors() const
 {
-	for (int i = 0; i < currentNumberOfDoctors; i++)
-	{
-		cout << doctors[i]->getName();
-		if (i < currentNumberOfDoctors - 1)
-		{
-			cout << ", ";
-		}
-	}
-	cout << endl;
+    for (size_t i = 0; i < doctors.size(); ++i) {
+        cout << doctors[i]->getName();
+        if (i + 1 < doctors.size()) cout << ", ";
+    }
+    cout << endl;
 }
+
 void Department::printNurses() const 
 {
-	for (int i = 0; i < currentNumberOfNurses; i++)
-	{
-		cout << nurses[i]->getName();
-		if (i < currentNumberOfNurses - 1)
-		{
-			cout << ", ";
-		}
-	}
-	cout << endl;
+    for (size_t i = 0; i < nurses.size(); ++i) {
+        cout << nurses[i]->getName();
+        if (i + 1 < nurses.size()) cout << ", ";
+    }
+    cout << endl;
 }
+
 Department& Department::operator+=(Nurse& nurse)
 {
-	addNurse(&nurse);
-	return *this;
+    addNurse(&nurse);
+    return *this;
 }
+
 Department& Department::operator+=(Doctor& doctor)
 {
-	addDoctor(&doctor);
-	return *this;
+    addDoctor(&doctor);
+    return *this;
 }
+
 void Department::setName(const char* name)
 {
-	delete[]this->name;
-	this->name = new char[strlen(name) + 1];
-	strcpy(this->name, name);
+    this->name = name ? name : std::string();
 }
+
 /******************************************************************************/
