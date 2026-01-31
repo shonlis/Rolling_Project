@@ -1,50 +1,72 @@
 #pragma warning(disable: 4996)
-#include <iostream>
-using namespace std;
 
 #include "Researcher.h"
 #include "Article.h"
-#include "Worker.h"
 
-Researcher::Researcher(const string name, int id, int birthYear, Gender gender, Article** articles)
-    : Worker(name, id, birthYear, gender)
+Researcher::Researcher(const string& name, int id, int birthYear, Gender gender)
+	: Worker(name, id, birthYear, gender), maxNumberOfArticles(2), currentNumberOfArticles(0)
 {
-    if (articles) {
-        // assume null-terminated or at least two entries isn't guaranteed -> copy until nullptr
-        for (int i = 0; articles[i]; ++i) publishedArticles.push_back(Article(*articles[i]));
-    }
+	this->publishedArticles.reserve(maxNumberOfArticles);
 }
 
-Researcher::Researcher(const Worker& worker) : Worker(worker) {}
-
-Researcher::Researcher(const Researcher& researcher) : Worker(researcher), publishedArticles(researcher.publishedArticles) {}
-
-Researcher::Researcher(Researcher&& researcher) noexcept : Worker(std::move(researcher)), publishedArticles(std::move(researcher.publishedArticles)) {}
-
+Researcher::Researcher(const Researcher& researcher) :
+	Researcher(researcher.getName(), researcher.getId(), researcher.getBirthYear() ,researcher.getGender())
+{
+	this->publishedArticles = researcher.publishedArticles;
+	this->maxNumberOfArticles = researcher.maxNumberOfArticles;
+	this->currentNumberOfArticles = researcher.currentNumberOfArticles;
+}
 
 bool Researcher::addArticle(Article& article)
 {
-    if (articleExist(article)) return false;
-    // store a copy to keep ownership local and ensure lifetime
-    publishedArticles.push_back(article);
-    return true;
+
+	if (articleExist(article))
+		return false;
+
+
+	if (currentNumberOfArticles == maxNumberOfArticles)
+	{
+		maxNumberOfArticles *= 2;
+		this->publishedArticles.reserve(maxNumberOfArticles);
+	}
+	Article* articleCopy = new Article(article.getTitle(), article.getPublicationDate(), article.getMagazinName());
+	this->publishedArticles.push_back(articleCopy);
+	currentNumberOfArticles++;
+	return true;
 }
 
 void Researcher::showthis() const
 {
-    Worker::showthis();
-    cout << "Number of Published Articles: " << getCurrentNumberOfArticles() << endl;
-    for (size_t i = 0; i < publishedArticles.size(); ++i) {
-        cout << "Article " << i + 1 << ": " << publishedArticles[i].getTitle() << endl;
-    }
-}
+	vector<Article*>::const_iterator itr = publishedArticles.begin();
+	vector<Article*>::const_iterator itrEnd = publishedArticles.end();
+
+	Worker::showthis();
+	cout << "Number of Published Articles: " << currentNumberOfArticles << endl;
+	for (int i = 0; itr < itrEnd; ++itr, i++)
+	{
+		cout << "Article " << i + 1 << ": ";
+		if ((*itr)->getTitle().empty())
+		{
+			cout << "not defined" << endl;
+		}
+		else
+		{
+			cout << (*itr)->getTitle() << endl;
+		}
+	}
+};
 
 bool Researcher::articleExist(const Article& article) const
 {
-    for (const auto& a : publishedArticles) {
-        if (a == article) return true;
-    }
-    return false;
+	vector<Article*>::const_iterator itr = publishedArticles.begin();
+	vector<Article*>::const_iterator itrEnd = publishedArticles.end();
+
+	for (; itr < itrEnd; ++itr)
+	{
+		if (((*itr)->getTitle() == article.getTitle()) && ((*itr)->getMagazinName() == article.getMagazinName()) && ((*itr)->getPublicationDate() == article.getPublicationDate())) // we need to create operator== in Article class
+			return true;
+	}
+	return false;
 }
 
 bool Researcher::operator<(const Researcher& researcher) const
@@ -57,13 +79,25 @@ bool Researcher::operator>(const Researcher& researcher) const
     return getCurrentNumberOfArticles() > researcher.getCurrentNumberOfArticles();
 }
 
-// assignment operator intentionally deleted in header
 
-void Researcher::toOs(std::ostream& os) const
+void Researcher::toOs(ostream& os) const
 {
-    Worker::toOs(os);
-    os << "Number of Published Articles: " << getCurrentNumberOfArticles() << std::endl;
-    for (size_t i = 0; i < publishedArticles.size(); ++i) {
-        os << "Article " << i + 1 << ": " << publishedArticles[i].getTitle() << std::endl;
-    }
+	vector<Article*>::const_iterator itr = publishedArticles.begin();
+	vector<Article*>::const_iterator itrEnd = publishedArticles.end();
+
+	Worker::toOs(os);
+	os << "Number of Published Articles: " << currentNumberOfArticles << endl;
+	for (int i = 0; itr < itrEnd; ++itr)
+	{
+		os << "Article " << i + 1 << ": ";
+		if ((*itr)->getTitle().empty())
+		{
+			os << "not defined" << endl;
+		}
+		else
+		{
+			os << (*itr)->getTitle() << endl;
+		}
+		i++;
+	}
 }

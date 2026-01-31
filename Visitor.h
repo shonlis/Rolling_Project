@@ -4,32 +4,30 @@
 
 #include "Person.h"
 #include <vector>
-#include <memory>
+using namespace std;
 
 class VisitCard;
 
 class Visitor : public Person
 {
-private:
-    std::vector<std::unique_ptr<VisitCard>> visits; // owns visit cards
+	vector<VisitCard*> visits;
+	int maxNumberOfVisits;
+	int currentNumberOfVisits;
+
 public:
 
-    Visitor(const string name, int id, int birthYear, Gender gender);
-    ~Visitor();
-
-    Visitor(const Visitor& visitor);
-    Visitor(Visitor&& visitor) noexcept;
+	Visitor(const string& name, int id, int birthYear, Gender gender);
 
     //getters
-    int getNumbrtOfCurrentVisits() const { return static_cast<int>(visits.size()); }
+    int getNumbrtOfCurrentVisits() const { return currentNumberOfVisits; }
 
     // other methods
     void showthis() const override;
-    bool addVisitCard(const VisitCard& visitCard);
+    bool addVisitCard(VisitCard& visitCard);
     bool visitCardExist(const VisitCard& visitCard) const;
 
     //operators overloading
-    friend std::ostream& operator<<(std::ostream& os, const Visitor& Visitor);
+    friend ostream& operator<<(ostream& os, const Visitor& Visitor);
 };
 
 #endif // !Visitor__H_

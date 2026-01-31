@@ -1,52 +1,41 @@
 #ifndef VisitCard__H_
 #define VisitCard__H_
-#pragma warning(disable: 4996)
-
-#include <string>
-#include <iostream>
-#include <memory>
 #include "Department.h"
 
 class VisitCard
 {
-public:
+private:
     const int VisitCardNumber;
     static int counter;
-    
-    VisitCard(const std::string& purposeOfVisit, const std::string& visitingDate, const Department& departmentsToVisit, const std::string& hostWorker);
-    
-    // allow copying - preserve VisitCardNumber
-    VisitCard(const VisitCard& other);
 
-    virtual ~VisitCard() = default;
+    string purposeOfVisit;
+    string visitingDate;
+    const Department& departmentsToVisit;
+    string hostWorker;
+
+public:
+	VisitCard(const string& purposeOfVisit, const string& visitingDate, const Department& departmentsToVisit, const string& hostWorker = "there isn't");
 
     // disable assignment
     VisitCard& operator=(const VisitCard&) = delete;
 
-    //operators overloading
-    virtual void toOs(std::ostream& os) const {}
-    // polymorphic clone to preserve derived types when storing copies
-    virtual std::unique_ptr<VisitCard> clone() const { return std::make_unique<VisitCard>(*this); }
-    friend std::ostream& operator<<(std::ostream& os, const VisitCard& VisitCard);
+	//operators overloading
+	friend ostream& operator<<(ostream& os, const VisitCard& VisitCard);
 
-    //setters
-    void setHostWorker(const std::string& hostWorker)
-    {
-        this->hostWorker = hostWorker;
-    }
+	//setters
+	void setHostWorker(const string& hostWorker)
+	{
+		this->hostWorker = hostWorker;
+	}
 
-    // getters
-    const std::string& getPurposeOfVisit() const { return purposeOfVisit; }
-    const std::string& getVisitingDate() const { return visitingDate; }
-    int getVisitCardNumber() const { return VisitCardNumber; }
-    const Department& getDepartmentsToVisit() const { return departmentsToVisit; }
-    const std::string& getHostWorker() const { return hostWorker; }
+	// getters
+	const string& getPurposeOfVisit() const { return purposeOfVisit; }
+	const string& getVisitingDate() const { return visitingDate; }
+	int getVisitCardNumber() const { return VisitCardNumber; }
+	const Department& getDepartmentsToVisit() const { return departmentsToVisit; }
+	const string& getHostWorker() const { return hostWorker; }
 
-private:
-    std::string purposeOfVisit;
-    std::string visitingDate;
-    const Department& departmentsToVisit;
-    std::string hostWorker;
+	virtual void toOs(ostream& os) const {};
 };
 
 

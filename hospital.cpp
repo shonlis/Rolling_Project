@@ -1,8 +1,5 @@
 #pragma warning(disable: 4996)
 
-#include <iostream>
-using namespace std;
-
 #include "Worker.h"
 #include "Hospital.h"
 #include "Doctor.h"
@@ -16,27 +13,27 @@ using namespace std;
 #include "VisitCard.h"
 #include "ResearcherDoctor.h"
 
-
 #include <algorithm>
 #include <ctime>
 #include <cstring>
 #include <memory>
 
-
-
-Hospital::Hospital(const string name, research_center& researchCenter) : researchCenter(researchCenter)
+Hospital::Hospital(const string& name, research_center& researchCenter) : researchCenter(researchCenter)
 {
-    this->name == name ? name : std::string("");
-    departments.reserve(2);
-    workers.reserve(2);
-    visitors.reserve(2);
-}
+    setName(name);
 
-Hospital::~Hospital()
-{
-    for (auto d : departments) delete d;
-    for (auto w : workers) delete w;
-    for (auto v : visitors) delete v;
+    maxNumberOfDepartments = 2;
+    this->departments.reserve(maxNumberOfDepartments);
+    currentNumberOfDepartments = 0;
+
+    maxNumberOfWorkers = 2;
+    this->workers.reserve(maxNumberOfWorkers);
+    currentNumberOfWorkers = 0;
+
+    maxNumberOfVisitors = 2;
+    this->visitors.reserve(maxNumberOfVisitors);
+    currentNumberOfVisitors = 0;
+    
 }
 
 bool Hospital::addDepartment(Department& department)
@@ -44,8 +41,16 @@ bool Hospital::addDepartment(Department& department)
     if (DepartmentExist(department))
         return false;
 
+    // Resize if needed
+    if (currentNumberOfDepartments == maxNumberOfDepartments)
+    {
+        maxNumberOfDepartments *= 2;
+        this->departments.reserve(maxNumberOfDepartments);
+    }
+
     Department* departmentCopy = new Department(department.getName());
     departments.push_back(departmentCopy);
+    currentNumberOfDepartments++;
     return true;
 }
 
@@ -53,15 +58,24 @@ bool Hospital::addDoctor(Doctor& doctor)
 {
     if (DoctorExist(doctor))
         return false;
-    // Preserve actual dynamic type: if doctor is a Surgen, create a Surgen copy
-    if (auto s = dynamic_cast<Surgen*>(&doctor)) {
-        Worker* doctorCopy = new Surgen(*s);
-        workers.push_back(doctorCopy);
+
+    if (currentNumberOfWorkers == maxNumberOfWorkers)
+    {
+        maxNumberOfWorkers *= 2;
+        this->workers.reserve(maxNumberOfWorkers);
     }
-    else {
-        Worker* doctorCopy = new Doctor(doctor);
-        workers.push_back(doctorCopy);
+    Surgen* tempSurgen = dynamic_cast<Surgen*>(&doctor);
+    if (tempSurgen)
+    {
+        Worker* SurgenCopy = new Surgen(*tempSurgen);
+        this->workers.push_back(SurgenCopy);
     }
+    else
+    {
+        Worker* doctorCopy = new Doctor(doctor.getName(), doctor.getId(), doctor.getBirthYear(), doctor.getGender(), doctor.getSpecialization());
+        this->workers.push_back(doctorCopy);
+    }
+    currentNumberOfWorkers++;
     return true;
 }
 
@@ -69,8 +83,16 @@ bool Hospital::addNurse(Nurse& nurse)
 {
     if (NurseExist(nurse))
         return false;
-    Worker* nurseCopy = new Nurse(nurse);
-    workers.push_back(nurseCopy);
+
+    if (currentNumberOfWorkers == maxNumberOfWorkers)
+    {
+        maxNumberOfWorkers *= 2;
+        this->workers.reserve(maxNumberOfWorkers);
+    }
+
+    Worker* nurseCopy = new Nurse(nurse.getName(), nurse.getId(), nurse.getBirthYear(), nurse.getGender(), nurse.getExperienceYears());
+    this->workers.push_back(nurseCopy);
+    currentNumberOfWorkers++;
     return true;
 }
 
@@ -78,8 +100,16 @@ bool Hospital::addVisitor(Visitor& visitor)
 {
     if (visitorExist(visitor))
         return false;
-    Visitor* visitorCopy = new Visitor(visitor);
+
+    if (currentNumberOfVisitors == maxNumberOfVisitors)
+    {
+        maxNumberOfVisitors *= 2;
+        this->visitors.reserve(maxNumberOfVisitors);
+    }
+
+    Visitor* visitorCopy = new Visitor(visitor.getName(), visitor.getId(), visitor.getBirthYear(), visitor.getGender());
     visitors.push_back(visitorCopy);
+    currentNumberOfVisitors++;
     return true;
 }
 
@@ -88,138 +118,194 @@ bool Hospital::addResearcher(Researcher& researcher)
     return this->researchCenter.addResearcher(researcher);
 }
 
-bool Hospital::addWorker(Worker& worker)
-{
-    // use dynamic_cast to test type
-    if (auto tempDoctor = dynamic_cast<Doctor*>(&worker)) return addDoctor(*tempDoctor);
-    if (auto tempNurse = dynamic_cast<Nurse*>(&worker)) return addNurse(*tempNurse);
-    return false;
-}
 
-bool Hospital::addWorkerToDepartment(Worker& worker, const string departmentName)
+bool Hospital::addVisit(Visitor& visitor, VisitCard& Visitcard, const string& department)
 {
-    if (auto tempDoctor = dynamic_cast<Doctor*>(&worker)) return addDoctorToDepartment(*tempDoctor, departmentName);
-    if (auto tempNurse = dynamic_cast<Nurse*>(&worker)) return addNurseToDepartment(*tempNurse, departmentName);
-    return false;
-}
+	vector<Department*>::iterator departmentItr = departments.begin();
+    vector<Department*>::iterator departmentItrEnd = departments.end();
+    vector<Department*>::iterator foundDepartment = find_if(departmentItr, departmentItrEnd, [&department](const Department* def)
+        {return def->getName() == department; });
 
-bool Hospital::addVisit(Visitor& visitor, VisitCard& Visitcard, const string department)
-{
-    for (auto d : departments) {
-        if (strcmp(d->getName().c_str(), department.c_str()) == 0) {
+        
+
+        if (foundDepartment != departmentItrEnd)
+        {
             addVisitor(visitor);
-            for (auto v : visitors) {
-                if (v->getId() == visitor.getId()) {
-                    v->addVisitCard(Visitcard);
-                    d->addVisitor(v);
+
+            vector<Visitor*>::iterator visitorItr = visitors.begin();
+            vector<Visitor*>::iterator visitorItrEnd = visitors.end();
+            vector<Visitor*>::iterator foundVisitor = find_if(visitorItr, visitorItrEnd, [&visitor](const Visitor* v)
+                {return v->getName() == visitor.getName(); });
+
+            if (foundVisitor != visitorItrEnd)
+            {
+                (*foundVisitor)->addVisitCard(Visitcard);
+                (*foundDepartment)->addVisitor(*foundVisitor);
+                return true;
+            }
+            else
+                return false;
+        }
+        else
+            return false;// department not found
+}
+bool Hospital::addNurseToDepartment(Nurse& nurse, const string& departmentName)
+{
+    Department* department = getDepartmentByName(departmentName);
+
+    if (department != nullptr)
+    {
+        addNurse(nurse);
+        vector <Worker*>::iterator workerItr = workers.begin();
+        vector <Worker*>::iterator workerItrEnd = workers.end();
+
+        for ( ; workerItr < workerItrEnd; ++workerItr)
+        {
+            Nurse* tempNurse = dynamic_cast<Nurse*>(*workerItr);
+            if (tempNurse)
+            {
+                if (tempNurse->getId() == nurse.getId())
+                {
+                    department->addNurse(tempNurse);
+                    return true;
+                }
+            }
+
+        }
+    }
+    return false;
+}
+
+bool Hospital::addDoctorToDepartment(Doctor& doctor, const string& departmentName)
+{
+    Department* department = getDepartmentByName(departmentName);
+
+    if (department != nullptr)
+    {
+
+        addDoctor(doctor);
+        vector <Worker*>::iterator workerItr = workers.begin();
+        vector <Worker*>::iterator workerItrEnd = workers.end();
+
+        for (; workerItr < workerItrEnd; ++workerItr)
+        {
+			Doctor* tempDoctor = dynamic_cast<Doctor*>(*workerItr);
+            if (tempDoctor)
+            {
+                if (tempDoctor->getId() == doctor.getId())
+                {
+                     department->addDoctor(tempDoctor);
+                    return true;
+                }
+            }
+                
+        }
+            // found department but doctor not present in hospital -> fail
+            return false;
+    }
+    return false;
+}
+
+bool Hospital::addVisitorToDepartment(Visitor& visitor, const string& departmentName)
+{
+    Department* department = getDepartmentByName(departmentName);
+
+    if (department != nullptr)
+    {
+            addVisitor(visitor);
+            vector <Visitor*>::iterator visitorItr = visitors.begin();
+            vector <Visitor*>::iterator visitorItrEnd = visitors.end();
+
+            for ( ; visitorItr < visitorItrEnd; visitorItr++)
+            {
+                if ((*visitorItr)->getId() == visitor.getId())
+                {
+                    department->addVisitor(*visitorItr);
                     return true;
                 }
             }
             return false;
-        }
-    }
-    return false;
-}
-
-bool Hospital::addNurseToDepartment(Nurse& nurse, const string departmentName)
-{
-    for (auto d : departments) {
-        if (strcmp(d->getName().c_str(), departmentName.c_str()) == 0) {
-            addNurse(nurse);
-            for (auto w : workers) {
-                if (auto tempNurse = dynamic_cast<Nurse*>(w)) {
-                    if (tempNurse->getId() == nurse.getId()) {
-                        d->addNurse(tempNurse);
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-    }
-    return false;
-}
-
-bool Hospital::addDoctorToDepartment(Doctor& doctor, const string departmentName)
-{
-    for (auto d : departments) {
-        if (strcmp(d->getName().c_str(), departmentName.c_str()) == 0) {
-            addDoctor(doctor);
-            for (auto w : workers) {
-                if (auto tempDoctor = dynamic_cast<Doctor*>(w)) {
-                    if (tempDoctor->getId() == doctor.getId()) {
-                        d->addDoctor(tempDoctor);
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-    }
-    return false;
-}
-
-bool Hospital::addVisitorToDepartment(Visitor& visitor, const string departmentName)
-{
-    for (auto d : departments) {
-        if (strcmp(d->getName().c_str(), departmentName.c_str()) == 0) {
-            addVisitor(visitor);
-            for (auto v : visitors) {
-                if (v->getId() == visitor.getId()) {
-                    d->addVisitor(v);
-                    return true;
-                }
-            }
-            return false;
-        }
     }
     return false;
 }
 
 bool Hospital::addArticleToResearchCenter(Researcher& researcher, Article& article)
 {
-    for (auto r : researchCenter.getResearchers()) {
-        if (r->getId() == researcher.getId()) {
-            r->addArticle(article);
+    vector <Researcher*>::const_iterator ResearcherItr = researchCenter.getResearchers().begin();
+    vector <Researcher*>::const_iterator ResearcherItrEnd = researchCenter.getResearchers().end();
+
+    for ( ;ResearcherItr < ResearcherItrEnd; ++ResearcherItr)
+    {
+        if ((*ResearcherItr)->getId() == researcher.getId())
+        {
+            (*ResearcherItr)->addArticle(article);
             return true;
         }
     }
     return false;
 }
 
-Hospital& Hospital::operator+=(const Doctor& doctor)
+const Hospital& Hospital::operator+=(const Doctor& doctor)
 {
-    // Preserve dynamic type when adding via operator+=
-    if (auto s = dynamic_cast<const Surgen*>(&doctor)) {
-        Surgen* doctorCopy = new Surgen(*s);
+    const Surgen* surgen = dynamic_cast<const Surgen*>(&doctor);
+    if (surgen)
+    {
+        Surgen* doctorCopy = new Surgen(*surgen);
         if (!departments.empty()) departments[0]->addDoctor(doctorCopy);
     }
     else {
-        Doctor* doctorCopy = new Doctor(doctor);
+        Doctor* doctorCopy = new Doctor(doctor.getName(), doctor.getId(), doctor.getBirthYear(), doctor.getGender(), doctor.getSpecialization());
         if (!departments.empty()) departments[0]->addDoctor(doctorCopy);
     }
     return *this;
 }
 
-Hospital& Hospital::operator+=(const Nurse& nurse)
+const Hospital& Hospital::operator+=(const Nurse& nurse)
 {
-    Nurse* n = new Nurse(nurse);
-    if (!departments.empty()) departments[0]->addNurse(n);
+    Nurse* nurseCopy = new Nurse(nurse.getName(), nurse.getId(), nurse.getBirthYear(), nurse.getGender(), nurse.getExperienceYears());
+    if (!departments.empty())
+    {
+        departments[0]->addNurse(nurseCopy);
+    }
     return *this;
 }
 
 int Hospital::getNumberOfNurses() const
 {
-    int numberOfNurses = 0;
-    for (auto w : workers) if (dynamic_cast<Nurse*>(w)) ++numberOfNurses;
-    return numberOfNurses;
+
+    vector <Worker*>::const_iterator workerItr = workers.begin();
+    vector <Worker*>::const_iterator workerItrEnd = workers.end();
+
+	int numberOfNurses = 0;
+    for ( ; workerItr < workerItrEnd; ++workerItr)
+    {
+        Nurse* tempNurse = dynamic_cast<Nurse*>(*workerItr);
+        if (tempNurse)
+        {
+            numberOfNurses++;
+        }
+
+    }
+	return numberOfNurses;
 }
 
 int Hospital::getNumberOfDoctors() const
 {
+    vector <Worker*>::const_iterator workerItr = workers.begin();
+    vector <Worker*>::const_iterator workerItrEnd = workers.end();
+
     int numberOfDoctors = 0;
-    for (auto w : workers) if (dynamic_cast<Doctor*>(w)) ++numberOfDoctors;
-    return numberOfDoctors;
+
+    for ( ; workerItr < workerItrEnd; ++workerItr)
+    {
+        Doctor* tempDoctor = dynamic_cast<Doctor*>(*workerItr);
+        if (tempDoctor)
+        {
+            numberOfDoctors++;
+        }
+
+    }
+	return numberOfDoctors;
 }
 
 int Hospital::getNumberOfResearchers() const
@@ -227,104 +313,269 @@ int Hospital::getNumberOfResearchers() const
     return researchCenter.getCurrentNumberOfResearchers();
 }
 
-Doctor* Hospital::findDoctorById(int id) const
+  Doctor* Hospital::findDoctorById(int id) const
 {
-    for (auto w : workers) {
-        if (auto d = dynamic_cast<Doctor*>(w)) {
-            if (d->getId() == id) return d;
+     vector <Worker*>::const_iterator workerItr = workers.begin();
+     vector <Worker*>::const_iterator workerItrEnd = workers.end();
+
+    if (!workers.empty())
+    {
+        for ( ; workerItr < workerItrEnd; ++workerItr)
+        {
+			Doctor* tempDoctor = dynamic_cast<Doctor*>(*workerItr);
+            if (tempDoctor)
+            {
+                if (tempDoctor->getId() == id)
+                {
+                    return tempDoctor;
+                }
+            }
+            
         }
     }
     cout << "Doctor with ID " << id << " not found." << endl;
     return nullptr;
-}
+ }
 
-Nurse* Hospital::findNurseById(int id) const
+
+  Nurse* Hospital::findNurseById(int id) const
 {
-    for (auto w : workers) {
-        if (auto n = dynamic_cast<Nurse*>(w)) {
-            if (n->getId() == id) return n;
+     vector <Worker*>::const_iterator workerItr = workers.begin();
+     vector <Worker*>::const_iterator workerItrEnd = workers.end();
+
+    if (!workers.empty())
+    {
+        for ( ; workerItr < workerItrEnd; ++workerItr)
+        {
+			Nurse* tempNurse = dynamic_cast<Nurse*>(*workerItr);
+			if (tempNurse)
+			{
+				if (tempNurse->getId() == id)
+				{
+					return tempNurse;
+				}
+			}
         }
     }
     cout << "Nurse with ID " << id << " not found." << endl;
     return nullptr;
 }
 
-Visitor* Hospital::findVisitorById(int id) const
+ Visitor* Hospital::findVisitorById(int id) const
 {
-    for (auto v : visitors) {
-        if (v->getId() == id) return v;
+     vector <Visitor*>::const_iterator visitorItr = visitors.begin();
+     vector <Visitor*>::const_iterator visitorItrEnd = visitors.end();
+
+    if (!visitors.empty())
+    {
+        for ( ; visitorItr < visitorItrEnd; ++visitorItr)
+        {
+            if ((*visitorItr)->getId() == id)
+            {
+                return *visitorItr;
+            }
+        }
     }
     cout << "Visitor with ID " << id << " not found." << endl;
     return nullptr;
 }
 
-Researcher* Hospital::findResearcherById(int id) const
+  Researcher* Hospital::findResearcherById(int id) const
 {
-    for (auto r : researchCenter.getResearchers()) if (r->getId() == id) return r;
+     vector <Researcher*> Researchers = researchCenter.getResearchers();
+    if (!Researchers.empty())
+    {
+        vector <Researcher*>::const_iterator researcherItr = Researchers.begin();
+        vector <Researcher*>::const_iterator researcherItrEnd = Researchers.end();
+
+        for ( ; researcherItr < researcherItrEnd; ++researcherItr)
+        {
+            if ((*researcherItr)->getId() == id)
+            {
+                return *researcherItr;
+            }
+        }
+    }
     cout << "Researcher with ID " << id << " not found." << endl;
     return nullptr;
 }
 
-Department* Hospital::getDepartmentByName(const string name) const
+
+ void Hospital::setName(const string& name)
+ {
+     this->name = name;
+ }
+ Department* Hospital::getDepartmentByName(const string& name) const
 {
-    for (auto d : departments) if (strcmp(d->getName().c_str(), name.c_str()) == 0) return d;
+     vector <Department*>::const_iterator departmentItr = departments.begin();
+     vector <Department*>::const_iterator departmentItrEnd = departments.end();
+
+    if (!departments.empty())
+    {
+        vector <Department*>::const_iterator foundDepartment = find_if(departmentItr, departmentItrEnd, [&name](const Department* def)
+            {return def->getName() == name; });
+        if (foundDepartment != departmentItrEnd)
+            return *foundDepartment;
+        else
+            return nullptr;
+    }
     return nullptr;
 }
 
-Doctor* Hospital::getDoctorByName(const string name) const
+ Doctor* Hospital::getDoctorByName(const string& name) const
 {
-    for (auto w : workers) if (auto d = dynamic_cast<Doctor*>(w)) if (strcmp(d->getName().c_str(), name.c_str()) == 0) return d;
-    return nullptr;
-}
+     vector <Worker*>::const_iterator workerItr = workers.begin();
+     vector <Worker*>::const_iterator workerItrEnd = workers.end();
 
-Nurse* Hospital::getNurseByName(const string name) const
-{
-    for (auto w : workers) if (auto n = dynamic_cast<Nurse*>(w)) if (strcmp(n->getName().c_str(), name.c_str()) == 0) return n;
-    return nullptr;
-}
-
-Visitor* Hospital::getVisitorByName(const string name) const
-{
-    for (auto v : visitors) if (strcmp(v->getName().c_str(), name.c_str()) == 0) return v;
-    return nullptr;
-}
-
-Researcher* Hospital::getResearcherByName(const string name) const
-{
-    for (auto r : researchCenter.getResearchers()) if (strcmp(r->getName().c_str(), name.c_str()) == 0) return r;
-    return nullptr;
-}
-
-void Hospital::setName(const string name)
-{
-    this->name = name;
-}
-
-void Hospital::printDepartmentVisitors(const string departmentName) const
-{
-    const Department* dept = getDepartmentByName(departmentName);
-    if (dept) {
-        cout << "Visitors in Department " << departmentName << ":" << endl;
-        for (int i = 0; i < dept->getCurrentNumberOfVisitors(); ++i) {
-            cout << *(dept->getVisitors()[i]) << endl;
+    if (!workers.empty())
+    {
+        for ( ; workerItr < workerItrEnd; ++workerItr)
+        {
+			Doctor* tempDoctor = dynamic_cast<Doctor*>(*workerItr);
+			if (tempDoctor)
+			{
+				if (tempDoctor->getName() == name)
+                {
+					return tempDoctor;
+				}
+			}
         }
     }
+    return nullptr;
+}
+
+Nurse* Hospital::getNurseByName(const string& name) const
+{
+     vector <Worker*>::const_iterator workerItr = workers.begin();
+     vector <Worker*>::const_iterator workerItrEnd = workers.end();
+
+    if (!workers.empty())
+    {
+        for ( ; workerItr < workerItrEnd; ++workerItr)
+        {
+			Nurse* tempNurse = dynamic_cast<Nurse*>(*workerItr);
+            if (tempNurse)
+            {
+				if (tempNurse->getName() == name)
+                {
+					return tempNurse;
+				}
+            }
+        }
+    }
+    return nullptr;
+}   
+
+Visitor* Hospital::getVisitorByName(const string& name) const
+{
+     vector <Visitor*>::const_iterator visitorItr = visitors.begin();
+     vector <Visitor*>::const_iterator visitorItrEnd = visitors.end();
+
+    if (!visitors.empty())
+    {
+        vector <Visitor*>::const_iterator foundVisitor = find_if(visitorItr, visitorItrEnd, [&name](const Visitor* visitor)
+            {return visitor->getName() == name; });
+        if (foundVisitor != visitorItrEnd)
+            return *foundVisitor;
+        else
+            return nullptr;
+    }
+    return nullptr;
+}
+
+Researcher* Hospital::getResearcherByName(const string& name) const
+{
+     vector <Researcher*> Researchers = researchCenter.getResearchers();
+    if (!Researchers.empty())
+    {
+        vector <Researcher*>::const_iterator researcherItr = Researchers.begin();
+        vector <Researcher*>::const_iterator researcherItrEnd = Researchers.end();
+        vector <Researcher*>::const_iterator foundResearcherItr = find_if(researcherItr, researcherItrEnd, [&name](const Researcher* res)
+            {return res->getName() == name; });
+
+            if (foundResearcherItr != researcherItrEnd)
+                return *foundResearcherItr;
+            else
+                return nullptr;
+	}
+	return nullptr;
+}
+
+void Hospital::printDepartmentVisitors(const string& departmentName) const
+{
+    
+    if (!departments.empty())
+    {
+        Department* department = getDepartmentByName(departmentName);
+        
+        if (department)
+        {
+            vector<Visitor*>::const_iterator visitorItr = department->getVisitors().begin();
+            vector<Visitor*>::const_iterator visitorItrEnd = department->getVisitors().end();
+
+            cout << "Visitors in Department " << departmentName << ":" << endl;
+            for ( ; visitorItr < visitorItrEnd; ++visitorItr)
+            {
+                cout << *(*visitorItr) << endl;
+            }
+        }
+        else {
+            cout << "Department " << departmentName << " not found." << endl;
+        }
+	}
+}
+
+void Hospital::printDepartmentMedicalStaff(const string& departmentName) const
+{
+    Department* department = this->getDepartmentByName(departmentName);
+    if (department)
+    {
+        cout << "Medical Staff in Department " << departmentName << ":" << endl;
+            vector<Doctor*>::const_iterator doctorItr = department->getDoctors().begin();
+            vector<Doctor*>::const_iterator doctorItrEnd = department->getDoctors().end();
+
+            vector<Nurse*>::const_iterator nurseItr = department->getNurses().begin();
+            vector<Nurse*>::const_iterator nurseItrEnd = department->getNurses().end();
+
+            for (; doctorItr < doctorItrEnd; ++doctorItr)
+            {
+                cout << *(*doctorItr) << endl;
+            }
+            for (; nurseItr < nurseItrEnd; ++nurseItr)
+            {
+                cout << *(*nurseItr) << endl;
+            }
+    }
     else {
-        cout << "Department " << departmentName << " not found." << endl;
+        cout << "No department in the hospital." << endl;
     }
 }
 
 void Hospital::printAllMedicalStaff() const
 {
-    if (!departments.empty()) {
+    
+    if (!departments.empty())
+    {
+        vector<Department*>::const_iterator departmentItr = departments.begin();
+        vector<Department*>::const_iterator departmentItrEnd = departments.end();
+
         cout << "Medical Staff in Hospital " << name << ":" << endl;
-        for (auto dept : departments) {
-            cout << "Department: " << dept->getName() << endl;
-            for (int j = 0; j < dept->getCurrentNumberOfDoctors(); ++j) {
-                cout << *(dept->getDoctors()[j]) << endl;
+        for ( ; departmentItr < departmentItrEnd; ++departmentItr)
+        {
+            vector<Doctor*>::const_iterator doctorItr = (*departmentItr)->getDoctors().begin();
+            vector<Doctor*>::const_iterator doctorItrEnd = (*departmentItr)->getDoctors().end();
+
+            vector<Nurse*>::const_iterator nurseItr = (*departmentItr)->getNurses().begin();
+            vector<Nurse*>::const_iterator nurseItrEnd = (*departmentItr)->getNurses().end();
+
+            cout << "Department: " << (*departmentItr)->getName() << endl;
+            for ( ; doctorItr < doctorItrEnd; ++doctorItr)
+            {
+                cout << *(*doctorItr) << endl;
             }
-            for (int k = 0; k < dept->getCurrentNumberOfNurses(); ++k) {
-                cout << *(dept->getNurses()[k]) << endl;
+            for ( ; nurseItr < nurseItrEnd; ++nurseItr)
+            {
+                cout << *(*nurseItr) << endl;
             }
         }
     }
@@ -333,44 +584,49 @@ void Hospital::printAllMedicalStaff() const
     }
 }
 
-void Hospital::printDepartmentMedicalStaff(const string departmentName) const
-{
-    const Department* dept = getDepartmentByName(departmentName);
-    if (dept) {
-        cout << "Medical Staff in Department " << departmentName << ":" << endl;
-        cout << "Doctors:";
-        dept->printDoctors();
-        cout << endl;
-        cout << "Nurses:";
-        dept->printNurses();
-        cout << endl;
-    }
-    else {
-        cout << "Department " << departmentName << " not found." << endl;
-    }
-}
 
 void Hospital::printAllResearchers() const
 {
-    if (researchCenter.getCurrentNumberOfResearchers() > 0) {
+    if (!researchCenter.getResearchers().empty())
+    {
         cout << "Researchers in Hospital " << name << ":" << endl;
-        for (auto researcher : researchCenter.getResearchers()) {
-            if (auto rd = dynamic_cast<ResearcherDoctor*>(researcher)) cout << *rd << endl;
-            else cout << *researcher << endl;
+        vector <Researcher*>::const_iterator researcherItr = researchCenter.getResearchers().begin();
+        vector <Researcher*>::const_iterator researcherItrEnd = researchCenter.getResearchers().end();
+
+        for ( ; researcherItr < researcherItrEnd; ++researcherItr)
+        {
+                ResearcherDoctor* ResearcherDoctorCopy = dynamic_cast<ResearcherDoctor*>(*researcherItr);
+                if (ResearcherDoctorCopy)
+                {
+                    cout << *ResearcherDoctorCopy << endl;
+                }
+                else
+                {
+                    cout << *(*researcherItr) << endl;
+                }
         }
     }
-    else {
+    else
         cout << "No researchers in the hospital." << endl;
-    }
 }
 
 void Hospital::printAllDepartments() const
 {
-    if (!departments.empty()) {
+
+    if (!departments.empty())
+    {
+        vector<Department*>::const_iterator departmentItr = departments.begin();
+        vector<Department*>::const_iterator departmentItrEnd = departments.end();
+
         cout << "Departments in Hospital " << name << ": ";
-        for (size_t i = 0; i < departments.size(); ++i) {
-            cout << departments[i]->getName();
-            if (i + 1 < departments.size()) cout << ", ";
+        for (int i = 0 ; departmentItr < departmentItrEnd; ++departmentItr, ++i)
+        {
+            
+            cout << (*departmentItr)->getName();
+            if (i < currentNumberOfDepartments - 1)
+            {
+                cout << ", ";
+            }
         }
         cout << endl;
     }
@@ -381,51 +637,111 @@ void Hospital::printAllDepartments() const
 
 void Hospital::printAllSurgens() const
 {
-    if (!workers.empty()) {
-        cout << "Surgeons in Hospital " << name << ":" << endl;
-        for (auto w : workers) {
-           /* if (auto d = dynamic_cast<Doctor*>(w)) {*/
-                if (auto s = dynamic_cast<Surgen*>(w)) cout << *s << endl;
-            //}
-        }
-    }
-    else {
-        cout << "No workers in the hospital." << endl;
-    }
+
+	if (!workers.empty())
+    {
+        vector<Worker*>::const_iterator workerItr = workers.begin();
+        vector<Worker*>::const_iterator workerItrEnd = workers.end();
+
+		cout << "Surgens in Hospital " << name << ":" << endl;
+		for (; workerItr < workerItrEnd; ++workerItr)
+        {
+			Doctor* tempDoctor = dynamic_cast<Doctor*>(*workerItr);
+			if (tempDoctor)
+            {
+                Surgen* tempSurgen = dynamic_cast<Surgen*>(tempDoctor);
+                if (tempSurgen)
+                {
+					cout << *tempSurgen << endl;
+					
+                }
+			}
+		}
+	}
+	else
+    {
+		cout << "No workers in the hospital." << endl;
+	}
 }
 
 void Hospital::printAllDoctors() const
 {
-    if (!workers.empty()) {
-        cout << "Doctors in Hospital " << name << ":" << endl;
-        for (auto w : workers) if (auto d = dynamic_cast<Doctor*>(w)) cout << *d << endl;
-    }
-    else {
-        cout << "No workers in the hospital." << endl;
-    }
+
+	if (!workers.empty())
+	{
+        vector<Worker*>::const_iterator workerItr = workers.begin();
+        vector<Worker*>::const_iterator workerItrEnd = workers.end();
+
+		cout << "Doctors in Hospital " << name << ":" << endl;
+		for (; workerItr < workerItrEnd; ++workerItr)
+		{
+			Doctor* tempDoctor = dynamic_cast<Doctor*>(*workerItr);
+			if (tempDoctor)
+			{
+				cout << *tempDoctor << endl;
+			}
+		}
+	}
+	else
+	{
+		cout << "No workers in the hospital." << endl;
+	}
 }
 
 bool Hospital::DepartmentExist(const Department& department)
 {
-    for (auto d : departments) if (d->getName() == department.getName()) return true;
+	vector<Department*>::iterator departmentItr = departments.begin();
+	vector<Department*>::iterator departmentItrEnd = departments.end();
+
+    for (; departmentItr < departmentItrEnd; ++departmentItr)
+    {
+        if ((*departmentItr)->getName() == department.getName())
+            return true;
+    }
     return false;
 }
-
 bool Hospital::NurseExist(const Nurse& nurse)
 {
-    for (auto w : workers) if (auto n = dynamic_cast<Nurse*>(w)) if (n->getId() == nurse.getId()) return true;
+	vector<Worker*>::iterator workerItr = workers.begin();
+	vector<Worker*>::iterator workerItrEnd = workers.end();
+
+    for (; workerItr < workerItrEnd; ++workerItr)
+    {
+        Nurse* tempNurse = dynamic_cast<Nurse*>(*workerItr);
+        if (tempNurse)
+        {
+            if (tempNurse->getId() == nurse.getId())
+                return true;
+        }
+    }
     return false;
 }
-
 bool Hospital::DoctorExist(const Doctor& doctor)
 {
-    for (auto w : workers) if (auto d = dynamic_cast<Doctor*>(w)) if (d->getId() == doctor.getId()) return true;
+	vector<Worker*>::iterator workerItr = workers.begin();
+	vector<Worker*>::iterator workerItrEnd = workers.end();
+
+    for (; workerItr < workerItrEnd; ++workerItr)
+    {
+		Doctor* tempDoctor = dynamic_cast<Doctor*>(*workerItr);
+        if (tempDoctor)
+        {
+			if (tempDoctor->getId() == doctor.getId())
+				return true;
+        }
+    }
     return false;
 }
-
 bool Hospital::visitorExist(const Visitor& visitor)
 {
-    for (auto v : visitors) if (v->getId() == visitor.getId()) return true;
+	vector<Visitor*>::iterator visitorItr = visitors.begin();
+	vector<Visitor*>::iterator visitorItrEnd = visitors.end();
+
+    for (; visitorItr < visitorItrEnd; ++visitorItr)
+    {
+        if ((*visitorItr)->getId() == visitor.getId())
+            return true;
+    }
     return false;
 }
 

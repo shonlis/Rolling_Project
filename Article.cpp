@@ -1,33 +1,34 @@
-// Article implementation
 #pragma warning(disable: 4996)
 
 #include "Article.h"
 
-Article::Article(const Article& article)
-    : title(article.title), publicationDate(article.publicationDate), magazinName(article.magazinName) {}
-
-Article::Article(Article&& article) noexcept
-    : title(std::move(article.title)), publicationDate(std::move(article.publicationDate)), magazinName(std::move(article.magazinName)) {}
-
-Article::Article(const string title, const string publicationDate, const string magazinName)
-    : title(title), publicationDate(publicationDate), magazinName(magazinName) {}
-
-bool Article::setTitle(const string title)
+Article::Article(const string& title, const string& publicationDate, const string& magazinName)
 {
-    this->title = title;
-    return true;
+	this->title = title;
+	this->publicationDate = publicationDate;
+	this->magazinName = magazinName;
 }
 
-bool Article::setPublicationDate(const string publicationDate)
+
+bool Article::setTitle(const string& title)
 {
-    this->publicationDate = publicationDate;
-    return true;
+	this->title = title;
+
+	return true;
 }
 
-bool Article::setMagazinName(const string magazinName)
+bool Article::setPublicationDate(const string& publicationDate)
 {
-    this->magazinName = magazinName;
-    return true;
+	this->publicationDate = publicationDate;
+
+	return true;
+}
+
+bool Article::setMagazinName(const string& magazinName)
+{
+	this->magazinName = magazinName;
+
+	return true;
 }
 
 bool Article::operator==(const Article& other) const

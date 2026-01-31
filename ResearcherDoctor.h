@@ -11,7 +11,7 @@ using namespace std;
 class ResearcherDoctor : public Researcher, public Doctor
 {
 public:
-	ResearcherDoctor(const Researcher& researcher, const Doctor doctor);
+	ResearcherDoctor(const Researcher& researcher, const Doctor& doctor);
 	ResearcherDoctor(const ResearcherDoctor& researcherdoctor);
 	virtual void toOs(ostream& os) const override;
 

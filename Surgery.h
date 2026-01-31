@@ -11,7 +11,7 @@ class Surgery : public VisitCard
 
 	public:
 
-        Surgery(const std::string& purposeOfVisit, const std::string& visitingDate, Department& departmentsToVisit, const std::string& hostWorker, int surgeryRoomNumber, bool isFast);
+		Surgery(const string& purposeOfVisit, const string& visitingDate, Department& departmentsToVisit, const string& hostWorker, int surgeryRoomNumber, bool isFast);
 		
 
 		//setters
@@ -22,10 +22,7 @@ class Surgery : public VisitCard
 		int getSurgeryRoomNumber() const { return surgeryRoomNumber; }
 		bool getIsFast() const { return isFast; }
 
-		// other methods
 		void toOs(ostream& os) const override;
-		// polymorphic clone override
-		std::unique_ptr<VisitCard> clone() const override;
 
 };
 

@@ -3,33 +3,44 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
+using namespace std;
 
 class Doctor;
 class Nurse;
 class Visitor;
 
-class Department {
-    std::string name;
-    std::vector<Doctor*> doctors;
-    std::vector<Nurse*> nurses;
-    std::vector<Visitor*> visitors;
+class Department
+{
+	string name;
+	vector <Doctor*> doctors;
+	vector <Nurse*> nurses;
+	vector <Visitor*> visitors;
+
+	int currentNumberOfDoctors;
+	int maxNumberOfDoctors;
+	
+	int currentNumberOfNurses;
+	int maxNumberOfNurses;
+	
+	int currentNumberOfVisitors;
+	int maxNumberOfVisitors;
 
 public:
-    Department(const string name = "none");
-    ~Department();
+	Department(const string& name);
 
-    // getters
-    const string getName() const { return name.c_str(); };
-    int getCurrentNumberOfDoctors() const { return static_cast<int>(doctors.size()); }
-    int getCurrentNumberOfNurses() const { return static_cast<int>(nurses.size()); }
-    int getCurrentNumberOfVisitors() const { return static_cast<int>(visitors.size()); }
+	// getters
+	const string& getName() const { return name; };
+	int getCurrentNumberOfDoctors() const { return currentNumberOfDoctors; }
+	int getCurrentNumberOfNurses() const { return currentNumberOfNurses; }
+	int getCurrentNumberOfVisitors() const { return currentNumberOfVisitors; }
 
-    const std::vector<Doctor*>& getDoctors() const { return doctors; }
-    const std::vector<Nurse*>& getNurses() const { return nurses; }
-    const std::vector<Visitor*>& getVisitors() const { return visitors; }
+	const vector <Doctor*>& getDoctors() const { return doctors; }
+	const vector <Nurse*>& getNurses() const { return nurses; }
+	const vector <Visitor*>& getVisitors() const { return visitors; }
 
-    //setters
-    void setName(const string name);
+	//setters
+	void setName(const string& name);
 
     // operators
     Department& operator+=(Doctor& doctor);

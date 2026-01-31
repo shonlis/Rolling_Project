@@ -1,48 +1,67 @@
-#include <iostream>
-using namespace std;
+
 #include "Visitor.h"
 #include "VisitCard.h"
 
-Visitor::Visitor(const string name, int id, int birthYear, Gender gender)
-    : Person(name, id, birthYear, gender) {}
-
-Visitor::~Visitor() = default;
-
-Visitor::Visitor(const Visitor& visitor) : Person(visitor)
+Visitor::Visitor(const string& name, int id, int birthYear, Gender gender)
+	: Person(name, id, birthYear, gender), maxNumberOfVisits(2), currentNumberOfVisits(0)
 {
-    visits.clear();
-    for (const auto& v : visitor.visits) visits.push_back(v ? v->clone() : nullptr);
+	this->visits.reserve(maxNumberOfVisits);
 }
-
-Visitor::Visitor(Visitor&& visitor) noexcept : Person(std::move(visitor)), visits(std::move(visitor.visits)) {}
 
 void Visitor::showthis() const
 {
+    vector<VisitCard*>::const_iterator itr = visits.begin();
+    vector<VisitCard*>::const_iterator itrEnd = visits.end();
+
     Person::showthis();
-    std::cout << "Number of visits: " << getNumbrtOfCurrentVisits() << std::endl;
-    for (const auto& v : visits) {
-        if (v) std::cout << *v << std::endl;
-    }
+    cout << "Number of visits: " << currentNumberOfVisits << endl;
+    for (int i = 0; itr < itrEnd; ++itr)
+    {
+       cout << *itr << endl;
+	}
 }
 
-bool Visitor::addVisitCard(const VisitCard& visitCard)
+bool Visitor::addVisitCard(VisitCard& visitCard)
 {
-    if (visitCardExist(visitCard)) return false;
-    visits.push_back(visitCard.clone());
+    if (visitCardExist(visitCard))
+        return false;
+
+    if (currentNumberOfVisits == maxNumberOfVisits)
+    {
+        maxNumberOfVisits *= 2;
+        this->visits.reserve(maxNumberOfVisits);
+    }
+    
+    VisitCard* Visitcard = new VisitCard(visitCard.getPurposeOfVisit(), visitCard.getVisitingDate() , visitCard.getDepartmentsToVisit() , visitCard.getHostWorker());
+    this->visits.push_back(Visitcard);
+    currentNumberOfVisits++;
     return true;
 }
 
 bool Visitor::visitCardExist(const VisitCard& visitCard) const
 {
-    for (const auto& v : visits) {
-        if (v && v->getVisitCardNumber() == visitCard.getVisitCardNumber()) return true;
+
+	vector<VisitCard*>::const_iterator itr = visits.begin();
+    vector<VisitCard*>::const_iterator itrEnd = visits.end();
+
+    for ( ; itr < itrEnd; ++itr)
+    {
+        if ((*itr)->getVisitCardNumber() == visitCard.getVisitCardNumber())
+            return true;
     }
     return false;
 }
 
 ostream& operator<<(ostream& os, const Visitor& Visitor)
 {
+	
+    vector<VisitCard*>::const_iterator itr = Visitor.visits.begin();
+    vector<VisitCard*>::const_iterator itrEnd = Visitor.visits.end();
+
     os << "Visitor Details: " << Visitor.getName() << ": ID = " << Visitor.getId() << ", number of visits = " << Visitor.getNumbrtOfCurrentVisits() << endl;
-    for (const auto& v : Visitor.visits) os << *v << endl;
+    for (; itr < itrEnd; ++itr)
+    {
+        os << *(*itr) << endl;
+    }
     return os;
 }

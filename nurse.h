@@ -2,19 +2,13 @@
 #define NURSE_H
 
 #include "Worker.h"
-#include <utility>
-#include <ostream>
-using namespace std;
 
-class Nurse : public Worker {
+class Nurse : public Worker
+{
     int ExperienceYears;
 public:
 
-    Nurse(const string name, int id, int birthYear, Gender gender, int ExperienceYears = 0);
-    Nurse(const Worker& worker);
-    Nurse(const Nurse& nurse);
-    Nurse(Nurse&& nurse) noexcept;
-
+	Nurse(const string& name, int id, int birthYear, Gender gender, int ExperienceYears = 0);
 
     // getters
     int getExperienceYears() const { return ExperienceYears; }
@@ -23,12 +17,13 @@ public:
     void setExperienceYears(int experienceYears);
 
     // other methods
-    virtual void showthis() const override {
+    virtual void showthis() const override
+    {
         Worker::showthis();
-        std::cout << "Experience Years: " << ExperienceYears << std::endl;
+        cout << "Experience Years: " << ExperienceYears << std::endl;
     }
 
-    virtual void toOs(std::ostream& os) const override;
+    virtual void toOs(ostream& os) const override;
 
 };
 

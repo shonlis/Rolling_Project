@@ -2,48 +2,45 @@
 #define Person__H_
 
 #include <iostream>
-using namespace std;
 #include <string>
+using namespace std;
+
 
 class Person
 {
 public:
-    enum Gender { Male, Female, Unknown }; // giving inheritors access to this enum
+	enum Gender { Male, Female, Unknown }; 
 
 protected:
-    std::string name;
-    const int id;
-    const int birthYear;
-    Gender gender;
+    
+    string name;
+	const int id;
+	const int birthYear;
+	Gender gender;
 
-    Person(const Person& person); // copy c'tor for inheritors only
-    Person(Person&& person) noexcept; // move c'tor for inheritors only
-
-    // constructors and destructor
-    Person(const string name, int id, int birthYear, Gender gender);
-    virtual ~Person() = default;
+	Person(const string& name, int id, int birthYear, Gender gender);
 
 public:
-    // getters
-    const string getName() const { return name; };
-    int getId() const { return id; };
-    int getBirthYear() const { return birthYear; };
-    Gender getGender() const { return gender; };
-
+    
     // setters
-    bool setGender(Gender gender); /* you can change your gender */
+    bool setGender(Gender gender); 
 
     //other methods
     virtual void showthis() const = 0
     {
-        std::cout << "Person: " << name << ", ID: " << id << ", Birth Year: "
+        cout << "Person: " << name << ", ID: " << id << ", Birth Year: "
             << birthYear << ", Gender: " << (gender == Male ? "Male" : gender == Female ? "Female" : "Unknown") << std::endl;
     };
+	// getters
+	const string& getName() const { return name; };
+	int getId() const { return id; };
+	int getBirthYear() const { return birthYear; };
+	Gender getGender() const { return gender; };
 
-    virtual void toOs(std::ostream& os) const {}
+    virtual void toOs(ostream& os) const {}
 
     //operators overloading
-    friend std::ostream& operator<<(std::ostream& os, const Person& p);
+    friend ostream& operator<<(ostream& os, const Person& p);
 };
 
 #endif // !Person__H_

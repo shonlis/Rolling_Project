@@ -8,26 +8,24 @@ using namespace std;
 
 class Doctor : virtual public Worker
 {
-    std::string specialization;
+    string specialization;
 public:
 
-    // accept string by const-ref and default to empty string (not nullptr)
-    Doctor(const string name, int id, int birthYear, Gender gender, const string& specialization = "");
-    Doctor(const Doctor& other);
-    Doctor(Doctor&& other) noexcept;
-    ~Doctor() = default;
+    Doctor(const string& name, int id, int birthYear, Gender gender, const string& specialization = "there isn't");
+    Doctor(const Doctor& doctor);
+    Doctor(Doctor&& doctor) = delete;
 
     // getters
     const string& getSpecialization() const { return specialization; };
 
     // setters
-    bool setSpecialization(const string specialization);
+    bool setSpecialization(const string& specialization);
 
     // other methods
     virtual void showthis() const
     {
         Worker::showthis();
-        cout << "Specialization: " << (this->specialization.empty() ? "not defined" : this->specialization.c_str()) << endl;
+        cout << "Specialization: " << (this->specialization.empty() ? "not defined" : this->specialization) << endl;
     }
     virtual void toOs(ostream& os) const override;
 
